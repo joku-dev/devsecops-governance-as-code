@@ -95,6 +95,18 @@ Read how other repositories integrate this governance repository:
 sed -n '1,320p' docs/how-other-repos-use-this-governance-repo.md
 ```
 
+Read the application repository onboarding guide:
+
+```bash
+sed -n '1,260p' docs/application-repo-onboarding.md
+```
+
+Use the generic GitHub Actions onboarding template:
+
+```bash
+sed -n '1,180p' examples/github-actions/workflows/application-devsecops-baseline-template.yml
+```
+
 Read the operational governance enforcement options:
 
 ```bash
