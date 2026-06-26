@@ -97,6 +97,26 @@ class RepoValidationTests(unittest.TestCase):
         self.assertIn("gap_id", csv_path.read_text(encoding="utf-8").splitlines()[0])
         self.assertIn("GAP-DOC-DEVSECOPS-POL-001", md_path.read_text(encoding="utf-8"))
 
+    def test_governance_documents_are_rendered(self):
+        result = subprocess.run(
+            ["python3", str(ROOT / "scripts" / "render_governance_documents.py")],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+        policy_md = ROOT / "generated" / "documents" / "devsecops-pol-001.rendered.md"
+        policy_html = ROOT / "generated" / "documents" / "devsecops-pol-001.html"
+        directive_md = ROOT / "generated" / "documents" / "devsecops-dir-001.rendered.md"
+        directive_html = ROOT / "generated" / "documents" / "devsecops-dir-001.html"
+        self.assertTrue(policy_md.exists())
+        self.assertTrue(policy_html.exists())
+        self.assertTrue(directive_md.exists())
+        self.assertTrue(directive_html.exists())
+        self.assertIn("Document ID: `DEVSECOPS-POL-001`", policy_md.read_text(encoding="utf-8"))
+        self.assertIn("<html", policy_html.read_text(encoding="utf-8"))
+
 
 if __name__ == "__main__":
     unittest.main()

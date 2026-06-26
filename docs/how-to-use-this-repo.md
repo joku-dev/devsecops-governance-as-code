@@ -99,6 +99,7 @@ Generate the core outputs:
 python3 scripts/generate_traceability_csv.py
 python3 scripts/generate_document_control_matrix.py
 python3 scripts/generate_open_gap_report.py
+python3 scripts/render_governance_documents.py
 ```
 
 Important outputs:
@@ -108,6 +109,10 @@ Important outputs:
 - `generated/xlsx/open_gap_report.csv`
 - `generated/reports/document-control-matrix.md`
 - `generated/reports/open-gap-report.md`
+- `generated/documents/devsecops-pol-001.rendered.md`
+- `generated/documents/devsecops-pol-001.html`
+- `generated/documents/devsecops-dir-001.rendered.md`
+- `generated/documents/devsecops-dir-001.html`
 
 ### 4. Run Regression Checks
 

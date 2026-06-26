@@ -83,6 +83,8 @@ Read the practical usage guide:
 sed -n '1,240p' docs/how-to-use-this-repo.md
 ```
 
+GitHub Actions runs the same core checks automatically on pushes and pull requests via `.github/workflows/governance-ci.yml`.
+
 Generate the first traceability CSV:
 
 ```bash
@@ -99,6 +101,12 @@ Generate the open gap report:
 
 ```bash
 python scripts/generate_open_gap_report.py
+```
+
+Render the Policy and Directive into review-ready files:
+
+```bash
+python scripts/render_governance_documents.py
 ```
 
 ## Important Principle
