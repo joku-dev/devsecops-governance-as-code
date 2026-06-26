@@ -14,6 +14,9 @@ They are intentionally generic. In a real pilot, the input model must be adapted
 | `artifact_integrity.rego` | `DSCB-L1-REQ-011` |
 | `dependency_source_control.rego` | `DSCB-L2-REQ-006` |
 | `iac_required.rego` | `DSCB-L2-REQ-009`, `DSCB-L2-REQ-010` |
+| `access_control.rego` | `DSCB-L2-REQ-003`, `DSCB-L2-REQ-004` |
+| `artifact_signing.rego` | `DSCB-L2-REQ-007`, `DSCB-L2-REQ-008` |
+| `pipeline_security_gates.rego` | `DSCB-L2-REQ-011`, `DSCB-L2-REQ-012` |
 | `waiver_validity.rego` | `DSCB-GOV-REQ-005` |
 
 ## Important

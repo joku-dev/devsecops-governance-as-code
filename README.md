@@ -54,9 +54,20 @@ The first implementation should focus on:
 5. Store generated evidence from pipelines and platform checks.
 6. Use waivers only as controlled, time-limited exceptions.
 
+## Local Commands
+
+Validate repository consistency:
+
+```bash
+python scripts/validate_governance_repo.py
+```
+
+Generate the first traceability CSV:
+
+```bash
+python scripts/generate_traceability_csv.py
+```
+
 ## Important Principle
 
 Not every requirement should become executable policy. Some requirements are governance obligations, some are evidence obligations, and some are enforceable technical gates. The repository keeps these concerns connected but distinct.
-# devsecops-governance-as-code
-# devsecops-governance-as-code
-# devsecops-governance-as-code
