@@ -20,7 +20,7 @@
     },
     "risk_classification": {
       "type": "string",
-      "enum": ["low", "medium", "high_cybersecurity", "high_safety"]
+      "enum": ["low", "medium", "high_cybersecurity", "high_safety", "critical"]
     },
     "compensating_controls": {
       "type": "array",

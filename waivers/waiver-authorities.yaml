@@ -7,3 +7,5 @@ authorities:
     approval_authority: CISO
   high_safety:
     approval_authority: Safety Authority
+  critical:
+    approval_authority: CDO and CSCSO jointly

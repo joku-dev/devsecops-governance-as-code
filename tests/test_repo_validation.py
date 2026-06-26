@@ -81,6 +81,22 @@ class RepoValidationTests(unittest.TestCase):
         self.assertIn("document_id", csv_path.read_text(encoding="utf-8").splitlines()[0])
         self.assertIn("DEVSECOPS-DIR-001", md_path.read_text(encoding="utf-8"))
 
+    def test_open_gap_report_is_generated(self):
+        result = subprocess.run(
+            ["python3", str(ROOT / "scripts" / "generate_open_gap_report.py")],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+        csv_path = ROOT / "generated" / "xlsx" / "open_gap_report.csv"
+        md_path = ROOT / "generated" / "reports" / "open-gap-report.md"
+        self.assertTrue(csv_path.exists())
+        self.assertTrue(md_path.exists())
+        self.assertIn("gap_id", csv_path.read_text(encoding="utf-8").splitlines()[0])
+        self.assertIn("GAP-DOC-DEVSECOPS-POL-001", md_path.read_text(encoding="utf-8"))
+
 
 if __name__ == "__main__":
     unittest.main()
