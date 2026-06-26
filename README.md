@@ -62,6 +62,12 @@ Validate repository consistency:
 python scripts/validate_governance_repo.py
 ```
 
+Run the lightweight regression checks:
+
+```bash
+python -m unittest discover -s tests
+```
+
 Generate the first traceability CSV:
 
 ```bash

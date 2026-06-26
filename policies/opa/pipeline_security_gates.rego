@@ -1,12 +1,14 @@
 package devsecops.pipeline_security_gates
 
-deny[msg] {
+import rego.v1
+
+deny contains msg if {
   input.release_candidate == true
   not input.pipeline.security_gates.enforced
   msg := "DSCB-L2-REQ-011: DevSecOps pipelines must enforce security gates."
 }
 
-deny[msg] {
+deny contains msg if {
   input.release_candidate == true
   input.pipeline.security_thresholds_exceeded == true
   not input.release.approved_waiver.exists

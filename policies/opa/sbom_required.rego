@@ -1,12 +1,14 @@
 package devsecops.sbom
 
-deny[msg] {
+import rego.v1
+
+deny contains msg if {
   input.release_candidate == true
   not input.evidence.sbom.exists
   msg := "DSCB-L1-REQ-006: Release candidates require an SBOM."
 }
 
-deny[msg] {
+deny contains msg if {
   input.release_candidate == true
   input.evidence.sbom.exists
   not input.evidence.sbom.linked_to_artifact
