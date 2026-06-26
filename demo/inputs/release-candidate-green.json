@@ -1,0 +1,64 @@
+{
+  "release_candidate": true,
+  "required_platform_level": "PRA-Level 2",
+  "repository": {
+    "protected_branch": true,
+    "direct_push_allowed": false,
+    "review_required": true
+  },
+  "platform": {
+    "privileged_access": true,
+    "mfa_enforced": true,
+    "central_identity_management": true
+  },
+  "evidence": {
+    "sbom": {
+      "exists": true,
+      "linked_to_artifact": true
+    },
+    "vulnerability_scan": {
+      "exists": true
+    }
+  },
+  "artifact": {
+    "digest": {
+      "exists": true,
+      "linked_to_artifact": true
+    },
+    "signature": {
+      "exists": true
+    }
+  },
+  "signing": {
+    "keys_protected": true
+  },
+  "pipeline": {
+    "external_direct_downloads_detected": false,
+    "security_gates": {
+      "enforced": true
+    },
+    "security_thresholds_exceeded": false
+  },
+  "release": {
+    "approved_waiver": {
+      "exists": false
+    }
+  },
+  "dependencies": [
+    {
+      "name": "example-library",
+      "source_approved": true
+    }
+  ],
+  "infrastructure": {
+    "iac_repository": {
+      "exists": true,
+      "version_controlled": true
+    }
+  },
+  "deployment": {
+    "required": true
+  },
+  "vulnerabilities": [],
+  "waivers": []
+}

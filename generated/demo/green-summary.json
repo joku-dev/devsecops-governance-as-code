@@ -1,0 +1,48 @@
+{
+  "scenario": "green",
+  "input_file": "demo/inputs/release-candidate-green.json",
+  "pass": true,
+  "failing_policies": [],
+  "policy_results": {
+    "branch_protection": {
+      "pass": true,
+      "deny_messages": []
+    },
+    "sbom": {
+      "pass": true,
+      "deny_messages": []
+    },
+    "vulnerability_gate": {
+      "pass": true,
+      "deny_messages": []
+    },
+    "artifact_integrity": {
+      "pass": true,
+      "deny_messages": []
+    },
+    "access_control": {
+      "pass": true,
+      "deny_messages": []
+    },
+    "dependency_source_control": {
+      "pass": true,
+      "deny_messages": []
+    },
+    "iac": {
+      "pass": true,
+      "deny_messages": []
+    },
+    "artifact_signing": {
+      "pass": true,
+      "deny_messages": []
+    },
+    "pipeline_security_gates": {
+      "pass": true,
+      "deny_messages": []
+    },
+    "waiver_validity": {
+      "pass": true,
+      "deny_messages": []
+    }
+  }
+}

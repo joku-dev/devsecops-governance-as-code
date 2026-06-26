@@ -1,0 +1,69 @@
+{
+  "release_candidate": true,
+  "required_platform_level": "PRA-Level 2",
+  "repository": {
+    "protected_branch": true,
+    "direct_push_allowed": true,
+    "review_required": false
+  },
+  "platform": {
+    "privileged_access": true,
+    "mfa_enforced": false,
+    "central_identity_management": false
+  },
+  "evidence": {
+    "sbom": {
+      "exists": false,
+      "linked_to_artifact": false
+    },
+    "vulnerability_scan": {
+      "exists": false
+    }
+  },
+  "artifact": {
+    "digest": {
+      "exists": false,
+      "linked_to_artifact": false
+    },
+    "signature": {
+      "exists": false
+    }
+  },
+  "signing": {
+    "keys_protected": false
+  },
+  "pipeline": {
+    "external_direct_downloads_detected": true,
+    "security_gates": {
+      "enforced": false
+    },
+    "security_thresholds_exceeded": true
+  },
+  "release": {
+    "approved_waiver": {
+      "exists": false
+    }
+  },
+  "dependencies": [
+    {
+      "name": "example-library",
+      "source_approved": false
+    }
+  ],
+  "infrastructure": {
+    "iac_repository": {
+      "exists": false,
+      "version_controlled": false
+    }
+  },
+  "deployment": {
+    "required": true
+  },
+  "vulnerabilities": [
+    {
+      "id": "CVE-DEMO-0001",
+      "severity": "critical"
+    }
+  ],
+  "waivers": []
+}

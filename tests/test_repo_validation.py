@@ -160,6 +160,23 @@ class RepoValidationTests(unittest.TestCase):
         self.assertIn("Governance Status Viewer", content)
         self.assertIn("Open Gap Report", content)
 
+    def test_demo_run_succeeds(self):
+        result = subprocess.run(
+            ["python3", str(ROOT / "scripts" / "run_demo.py")],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+        overview = ROOT / "generated" / "demo" / "demo-run.md"
+        green = ROOT / "generated" / "demo" / "green-summary.json"
+        red = ROOT / "generated" / "demo" / "red-summary.json"
+        self.assertTrue(overview.exists())
+        self.assertTrue(green.exists())
+        self.assertTrue(red.exists())
+        self.assertIn("Governance Demo Run", overview.read_text(encoding="utf-8"))
+
 
 if __name__ == "__main__":
     unittest.main()

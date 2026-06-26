@@ -177,6 +177,20 @@ python3 -m unittest discover -s tests
 opa check policies/opa
 ```
 
+### Demo Run
+
+```bash
+python3 scripts/run_demo.py
+```
+
+This generates:
+
+- `generated/demo/demo-run.md`
+- `generated/demo/green-summary.json`
+- `generated/demo/green-summary.md`
+- `generated/demo/red-summary.json`
+- `generated/demo/red-summary.md`
+
 ### Evaluate A Single Policy
 
 ```bash
