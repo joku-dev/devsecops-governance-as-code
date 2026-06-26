@@ -57,3 +57,4 @@ The first implementation should focus on:
 ## Important Principle
 
 Not every requirement should become executable policy. Some requirements are governance obligations, some are evidence obligations, and some are enforceable technical gates. The repository keeps these concerns connected but distinct.
+# devsecops-governance-as-code
