@@ -101,6 +101,15 @@ Read the operational governance enforcement options:
 sed -n '1,240p' docs/operational-governance-enforcement-options.md
 ```
 
+Generate an extended machine-readable governance compliance result:
+
+```bash
+python3 scripts/generate_governance_compliance_result.py \
+  --target-repo . \
+  --input-file policies/example-input.release-candidate.json \
+  --output-file governance-compliance-result.json
+```
+
 GitHub Actions runs the same core checks automatically on pushes and pull requests via `.github/workflows/governance-ci.yml`.
 
 Generate the first traceability CSV:

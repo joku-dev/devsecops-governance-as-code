@@ -151,6 +151,26 @@ class RepoValidationTests(unittest.TestCase):
             self.assertEqual(payload["status"], "pass")
             self.assertEqual(len(payload["checks"]), 3)
 
+    def test_extended_governance_compliance_result_is_generated(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            output = Path(tempdir) / "governance-compliance-result.json"
+            result = self.run_command(
+                "python3",
+                str(ROOT / "scripts" / "generate_governance_compliance_result.py"),
+                "--target-repo",
+                str(ROOT),
+                "--input-file",
+                str(ROOT / "demo" / "inputs" / "release-candidate-green.json"),
+                "--skip-unit-tests",
+                "--output-file",
+                str(output),
+            )
+            self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+            payload = json.loads(output.read_text(encoding="utf-8"))
+            self.assertIn("execution", payload)
+            self.assertIn("policy_evaluations", payload)
+            self.assertIn("artifacts", payload)
+
 
 if __name__ == "__main__":
     unittest.main()

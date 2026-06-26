@@ -28,6 +28,16 @@ The schema for that result is defined in:
 An example is provided in:
 
 - `docs/governance-compliance-result.example.json`
+- `docs/governance-compliance-result.extended.example.json`
+
+An extended result can be generated with:
+
+```bash
+python3 scripts/generate_governance_compliance_result.py \
+  --target-repo /path/to/target-repo \
+  --input-file /path/to/release-candidate.json \
+  --output-file governance-compliance-result.json
+```
 
 ### 3. Integration Scanner
 

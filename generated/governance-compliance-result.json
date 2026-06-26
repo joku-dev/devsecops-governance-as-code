@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0.0",
+  "governance_repo": "devsecops-governance-as-code",
+  "target_repo": "devsecops-governance-as-code",
+  "timestamp": "2026-06-26T16:22:49Z",
+  "status": "pass",
+  "checks": [
+    {
+      "check_id": "governance_ci_file_present",
+      "description": "A CI pipeline file is present in the target repository.",
+      "status": "pass",
+      "details": "Found CI files: .github/workflows/governance-ci.yml"
+    },
+    {
+      "check_id": "governance_reference_present",
+      "description": "The target repository references the governance repository or governance templates.",
+      "status": "pass",
+      "details": ".github/workflows/governance-ci.yml -> validate_governance_repo.py"
+    },
+    {
+      "check_id": "governance_commands_present",
+      "description": "The target repository CI includes expected governance validation commands.",
+      "status": "pass",
+      "details": ".github/workflows/governance-ci.yml -> validate_governance_repo.py; .github/workflows/governance-ci.yml -> unittest discover -s tests"
+    }
+  ],
+  "execution": {
+    "validator": {
+      "status": "pass",
+      "command": "python3 scripts/validate_governance_repo.py"
+    },
+    "unit_tests": {
+      "status": "pass",
+      "command": "skipped in nested/test context"
+    },
+    "opa_check": {
+      "status": "pass",
+      "command": "opa check policies/opa"
+    }
+  },
+  "policy_evaluations": [
+    {
+      "policy_id": "branch_protection",
+      "status": "pass",
+      "deny_count": 0
+    },
+    {
+      "policy_id": "sbom",
+      "status": "pass",
+      "deny_count": 0
+    },
+    {
+      "policy_id": "vulnerability_gate",
+      "status": "pass",
+      "deny_count": 0
+    },
+    {
+      "policy_id": "artifact_integrity",
+      "status": "pass",
+      "deny_count": 0
+    },
+    {
+      "policy_id": "access_control",
+      "status": "pass",
+      "deny_count": 0
+    },
+    {
+      "policy_id": "dependency_source_control",
+      "status": "pass",
+      "deny_count": 0
+    },
+    {
+      "policy_id": "iac",
+      "status": "pass",
+      "deny_count": 0
+    },
+    {
+      "policy_id": "artifact_signing",
+      "status": "pass",
+      "deny_count": 0
+    },
+    {
+      "policy_id": "pipeline_security_gates",
+      "status": "pass",
+      "deny_count": 0
+    },
+    {
+      "policy_id": "waiver_validity",
+      "status": "pass",
+      "deny_count": 0
+    }
+  ],
+  "artifacts": [
+    {
+      "artifact_id": "traceability_matrix",
+      "path": "generated/xlsx/traceability_matrix.csv",
+      "status": "present"
+    },
+    {
+      "artifact_id": "document_control_matrix",
+      "path": "generated/xlsx/document_control_matrix.csv",
+      "status": "present"
+    },
+    {
+      "artifact_id": "open_gap_report",
+      "path": "generated/xlsx/open_gap_report.csv",
+      "status": "present"
+    },
+    {
+      "artifact_id": "status_viewer",
+      "path": "generated/viewer/status-viewer.html",
+      "status": "present"
+    },
+    {
+      "artifact_id": "policy_render",
+      "path": "generated/documents/devsecops-pol-001.html",
+      "status": "present"
+    },
+    {
+      "artifact_id": "directive_render",
+      "path": "generated/documents/devsecops-dir-001.html",
+      "status": "present"
+    }
+  ]
+}
