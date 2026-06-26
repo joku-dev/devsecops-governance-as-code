@@ -19,10 +19,18 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: future
+    rationale: Reproducible build verification can be automated after deterministic build tooling is established.
+    check_type: integrity
+    machine_readable_evidence_required: true
+  verification_requirement: Rebuild verification evidence SHALL show that the same source code and build configuration can reproduce the expected
+    build output within defined tolerance.
 - id: DSCB-L3-REQ-002
   domain: deterministic_builds
   title: Deterministic Builds
@@ -40,10 +48,18 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: immediate
+    rationale: Build configuration version control can be checked through repository metadata.
+    check_type: linkage
+    machine_readable_evidence_required: true
+  verification_requirement: Build configuration evidence SHALL show that build definitions are maintained in version control and linked to the
+    build execution.
 - id: DSCB-L3-REQ-003
   domain: build_environment_isolation
   title: Build Environment Isolation
@@ -61,10 +77,17 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: tool_integration_required
+    rationale: Build environment isolation can be checked through runner/container evidence.
+    check_type: configuration
+    machine_readable_evidence_required: true
+  verification_requirement: Pipeline evidence SHALL show that builds are executed in isolated build environments.
 - id: DSCB-L3-REQ-004
   domain: build_environment_isolation
   title: Build Environment Isolation
@@ -82,10 +105,17 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: tool_integration_required
+    rationale: Recreated build environments can be checked through pipeline environment metadata.
+    check_type: configuration
+    machine_readable_evidence_required: true
+  verification_requirement: Pipeline environment evidence SHALL show that build environments are recreated for each controlled pipeline execution.
 - id: DSCB-L3-REQ-005
   domain: dependency_provenance
   title: Dependency Provenance
@@ -104,10 +134,17 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: future
+    rationale: Dependency provenance requires provenance-capable tooling and metadata.
+    check_type: provenance
+    machine_readable_evidence_required: true
+  verification_requirement: Dependency metadata SHALL provide verifiable provenance information for dependencies used in the build.
 - id: DSCB-L3-REQ-006
   domain: dependency_provenance
   title: Dependency Provenance
@@ -126,10 +163,17 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: future
+    rationale: Build-time provenance recording requires provenance capture tooling.
+    check_type: provenance
+    machine_readable_evidence_required: true
+  verification_requirement: Build evidence SHALL record dependency provenance metadata during the build process.
 - id: DSCB-L3-REQ-007
   domain: trusted_artifact_signing
   title: Trusted Artifact Signing
@@ -147,11 +191,18 @@ requirements:
     method: automated
     frequency: release_candidate
   policy_as_code:
-    candidate: false
-    enforcement: evidence_review
+    candidate: true
+    enforcement: automated_gate
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: blocking_gate
+    maturity: tool_integration_required
+    rationale: Enterprise signing infrastructure can enforce artifact signing.
+    check_type: integrity
+    machine_readable_evidence_required: true
+  verification_requirement: Artifact signature evidence SHALL show that released artifacts are signed using enterprise signing infrastructure.
 - id: DSCB-L3-REQ-008
   domain: trusted_artifact_signing
   title: Trusted Artifact Signing
@@ -170,10 +221,17 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: tool_integration_required
+    rationale: Central key management is evidenced by signing infrastructure configuration.
+    check_type: configuration
+    machine_readable_evidence_required: true
+  verification_requirement: Trust infrastructure evidence SHALL show that signing keys are centrally managed.
 - id: DSCB-L3-REQ-009
   domain: end_to_end_traceability
   title: End-to-End Traceability
@@ -193,10 +251,18 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: future
+    rationale: End-to-end traceability can be graph-checked after ALM/repo/pipeline integration.
+    check_type: linkage
+    machine_readable_evidence_required: true
+  verification_requirement: Each release candidate SHALL provide end-to-end traceability evidence linking requirements, source code, verification
+    results, build artifacts, deployment metadata, and deployed software.
 - id: DSCB-L3-REQ-010
   domain: runtime_integrity_verification
   title: Runtime Integrity Verification
@@ -213,10 +279,17 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: CISO
+  automation:
+    type: evidence_check
+    maturity: future
+    rationale: Runtime integrity verification requires runtime attestation or verification telemetry.
+    check_type: integrity
+    machine_readable_evidence_required: true
+  verification_requirement: Runtime evidence SHALL show integrity verification results for deployed software artifacts.
 - id: DSCB-L3-REQ-011
   domain: continuous_compliance_evidence
   title: Continuous Compliance Evidence
@@ -235,7 +308,15 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: tool_integration_required
+    rationale: Continuous compliance evidence can be checked through evidence repository completeness.
+    check_type: linkage
+    machine_readable_evidence_required: true
+  verification_requirement: The DevSecOps platform SHALL provide machine-readable compliance evidence covering lifecycle activities and linked
+    control identifiers.

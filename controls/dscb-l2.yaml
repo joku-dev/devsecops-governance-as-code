@@ -20,10 +20,17 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: tool_integration_required
+    rationale: Central management evidence can be checked through endpoint or platform inventory.
+    check_type: configuration
+    machine_readable_evidence_required: true
+  verification_requirement: Platform inventory or configuration management evidence SHALL show that development environments are centrally managed.
 - id: DSCB-L2-REQ-002
   domain: secure_development_environments
   title: Secure Development Environments
@@ -42,10 +49,17 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: tool_integration_required
+    rationale: Configuration baseline compliance can be checked through endpoint/configuration evidence.
+    check_type: configuration
+    machine_readable_evidence_required: true
+  verification_requirement: Development environment evidence SHALL show compliance with the applicable enterprise security configuration baseline.
 - id: DSCB-L2-REQ-003
   domain: devsecops_platform_access_control
   title: DevSecOps Platform Access Control
@@ -65,10 +79,18 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: tool_integration_required
+    rationale: Central identity management can be checked through platform configuration.
+    check_type: configuration
+    machine_readable_evidence_required: true
+  verification_requirement: Platform configuration evidence SHALL show that DevSecOps platform access is integrated with centralized identity
+    management.
 - id: DSCB-L2-REQ-004
   domain: devsecops_platform_access_control
   title: DevSecOps Platform Access Control
@@ -93,6 +115,14 @@ requirements:
   waiver:
     allowed: true
     authority: CISO
+  automation:
+    type: blocking_gate
+    maturity: tool_integration_required
+    rationale: Privileged access without MFA can be detected and blocked.
+    check_type: configuration
+    machine_readable_evidence_required: true
+  verification_requirement: Privileged access evidence SHALL show that multi-factor authentication is enforced for privileged DevSecOps platform
+    roles.
 - id: DSCB-L2-REQ-005
   domain: dependency_source_control
   title: Dependency Source Control
@@ -110,11 +140,18 @@ requirements:
     method: automated
     frequency: release_candidate
   policy_as_code:
-    candidate: false
-    enforcement: evidence_review
+    candidate: true
+    enforcement: automated_gate
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: blocking_gate
+    maturity: tool_integration_required
+    rationale: Approved dependency repository use can be enforced in build configuration.
+    check_type: configuration
+    machine_readable_evidence_required: true
+  verification_requirement: Build and dependency configuration SHALL show that software dependencies are retrieved from approved repositories.
 - id: DSCB-L2-REQ-006
   domain: dependency_source_control
   title: Dependency Source Control
@@ -138,6 +175,13 @@ requirements:
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: blocking_gate
+    maturity: immediate
+    rationale: Direct external downloads can be detected in pipelines and build logs.
+    check_type: configuration
+    machine_readable_evidence_required: true
+  verification_requirement: Pipeline, build, or dependency logs SHALL show that direct downloads from non-approved external sources are not used.
 - id: DSCB-L2-REQ-007
   domain: artifact_signing
   title: Artifact Signing
@@ -161,6 +205,13 @@ requirements:
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: blocking_gate
+    maturity: tool_integration_required
+    rationale: Unsigned artifacts can be blocked before release.
+    check_type: integrity
+    machine_readable_evidence_required: true
+  verification_requirement: Each releasable artifact SHALL provide signature evidence created before release.
 - id: DSCB-L2-REQ-008
   domain: artifact_signing
   title: Artifact Signing
@@ -179,10 +230,18 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: tool_integration_required
+    rationale: Key protection requires evidence from key management or signing infrastructure.
+    check_type: configuration
+    machine_readable_evidence_required: true
+  verification_requirement: Signing infrastructure evidence SHALL show that signing keys are protected and managed according to enterprise security
+    policy.
 - id: DSCB-L2-REQ-009
   domain: infrastructure_as_code
   title: Infrastructure as Code
@@ -206,6 +265,13 @@ requirements:
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: tool_integration_required
+    rationale: IaC presence can be checked through repository and deployment metadata.
+    check_type: linkage
+    machine_readable_evidence_required: true
+  verification_requirement: Deployment evidence SHALL reference version-controlled Infrastructure as Code definitions for the deployed infrastructure.
 - id: DSCB-L2-REQ-010
   domain: infrastructure_as_code
   title: Infrastructure as Code
@@ -229,6 +295,13 @@ requirements:
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: immediate
+    rationale: Version control for IaC can be checked through repository metadata.
+    check_type: configuration
+    machine_readable_evidence_required: true
+  verification_requirement: Infrastructure definition evidence SHALL show that IaC sources are maintained in version control with change history.
 - id: DSCB-L2-REQ-011
   domain: pipeline_security_gates
   title: Pipeline Security Gates
@@ -252,6 +325,13 @@ requirements:
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: blocking_gate
+    maturity: immediate
+    rationale: Security gate execution can be enforced in pipeline templates.
+    check_type: presence
+    machine_readable_evidence_required: true
+  verification_requirement: Pipeline execution evidence SHALL show that required security gates were executed for the relevant lifecycle stage.
 - id: DSCB-L2-REQ-012
   domain: pipeline_security_gates
   title: Pipeline Security Gates
@@ -275,6 +355,14 @@ requirements:
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: blocking_gate
+    maturity: immediate
+    rationale: Release can be blocked when thresholds are exceeded without waiver.
+    check_type: threshold
+    machine_readable_evidence_required: true
+  verification_requirement: Release decision evidence SHALL show that releases are blocked when security thresholds are exceeded unless an approved
+    waiver exists.
 - id: DSCB-L2-REQ-013
   domain: security_monitoring
   title: Security Monitoring
@@ -293,10 +381,17 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: tool_integration_required
+    rationale: Security event generation can be checked through logging configuration or telemetry evidence.
+    check_type: presence
+    machine_readable_evidence_required: true
+  verification_requirement: Operational system evidence SHALL show that defined security-relevant events are generated.
 - id: DSCB-L2-REQ-014
   domain: security_monitoring
   title: Security Monitoring
@@ -315,7 +410,15 @@ requirements:
     frequency: release_candidate
   policy_as_code:
     candidate: false
-    enforcement: evidence_review
+    enforcement: evidence_check
   waiver:
     allowed: true
     authority: DevSecOps Governance Board
+  automation:
+    type: evidence_check
+    maturity: tool_integration_required
+    rationale: Forwarding to monitoring can be checked through logging/monitoring configuration evidence.
+    check_type: configuration
+    machine_readable_evidence_required: true
+  verification_requirement: Monitoring configuration or telemetry evidence SHALL show that security events are forwarded to approved monitoring
+    systems.

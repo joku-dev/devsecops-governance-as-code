@@ -1,0 +1,19 @@
+reporting_requirements:
+  source_requirements:
+    - DSPOL-REQ-021
+    - DSDIR-REQ-020
+    - DSDIR-REQ-021
+  required_metrics:
+    - platform_adoption_rate
+    - devsecops_maturity_distribution
+    - open_waivers_by_risk_category
+    - vulnerability_remediation_performance
+    - compliance_audit_findings
+  recipients:
+    - CDO
+    - relevant_governance_bodies
+  verification_evidence:
+    - reporting_period
+    - report_delivery_record
+    - metric_dataset
+    - recipient_record

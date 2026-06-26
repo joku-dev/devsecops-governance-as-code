@@ -8,16 +8,25 @@ Migrate all 46 Control Baseline requirements into structured YAML. The current r
 
 Extend `platform/platform-capabilities.yaml` until every relevant control requirement has at least one mapped platform capability.
 
-## Step 3: Generate Traceability Outputs
+## Step 3: Review Verification Requirements
+
+Review the new `verification_requirement` fields with Security, Quality, Platform Owner, and program representatives. The review should confirm that each verification requirement is technically checkable, audit-relevant, and does not weaken the original normative requirement.
+
+## Step 4: Review Policy and Directive Governance Requirements
+
+Review `governance/policy-requirements.yaml` and `governance/directive-requirements.yaml` with the governance owners. Confirm that policy principles, directive responsibilities, adoption rules, waiver management, reporting obligations, and document hierarchy are represented correctly.
+
+## Step 5: Generate Traceability Outputs
 
 Create scripts to generate:
 
 - Control-to-platform traceability matrix
+- Policy/Directive-to-Control traceability matrix
 - Control-to-evidence matrix
 - Policy candidate matrix
 - Open gap report
 
-## Step 4: Select Pilot Repository
+## Step 6: Select Pilot Repository
 
 Select a demo or real project repository and define the input model for:
 
@@ -28,7 +37,7 @@ Select a demo or real project repository and define the input model for:
 - vulnerability findings
 - waivers
 
-## Step 5: Run Initial Policy-as-Code Gates
+## Step 7: Run Initial Policy-as-Code Gates
 
 Start with:
 
@@ -41,6 +50,6 @@ Start with:
 7. Infrastructure as Code presence
 8. waiver validity
 
-## Step 6: Decide Source-of-Truth Model
+## Step 8: Decide Source-of-Truth Model
 
 After the pilot, decide whether YAML becomes the formal master source or remains synchronized with an external BMS/document management system.

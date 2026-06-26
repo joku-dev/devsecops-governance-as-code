@@ -68,6 +68,24 @@ Generate the first traceability CSV:
 python scripts/generate_traceability_csv.py
 ```
 
+Generate Policy/Directive governance traceability:
+
+```bash
+python scripts/generate_governance_traceability_csv.py
+```
+
+Generate the automation coverage report:
+
+```bash
+python scripts/generate_automation_report.py
+```
+
+Generate the CI/CD pipeline baseline report:
+
+```bash
+python scripts/generate_pipeline_baseline_report.py
+```
+
 ## Important Principle
 
 Not every requirement should become executable policy. Some requirements are governance obligations, some are evidence obligations, and some are enforceable technical gates. The repository keeps these concerns connected but distinct.

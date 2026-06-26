@@ -1,0 +1,31 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Code Checks') {
+      steps {
+        echo 'Run branch protection, review evidence, secret scanning, and SAST checks here.'
+      }
+    }
+    stage('Controlled Build') {
+      steps {
+        echo 'Run controlled build and produce artifact metadata here.'
+      }
+    }
+    stage('Test and Security Gates') {
+      steps {
+        echo 'Run vulnerability scanning and policy threshold checks here.'
+      }
+    }
+    stage('Package and Evidence') {
+      steps {
+        echo 'Generate SBOM, artifact digest, signature, and repository metadata here.'
+      }
+    }
+    stage('Release Decision') {
+      steps {
+        echo 'Evaluate release approval, waiver status, and evidence bundle completeness here.'
+      }
+    }
+  }
+}
