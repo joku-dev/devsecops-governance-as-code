@@ -89,6 +89,12 @@ Read the beginner step-by-step operations guide:
 sed -n '1,320p' docs/beginner-step-by-step-operations-guide.md
 ```
 
+Read how other repositories integrate this governance repository:
+
+```bash
+sed -n '1,320p' docs/how-other-repos-use-this-governance-repo.md
+```
+
 GitHub Actions runs the same core checks automatically on pushes and pull requests via `.github/workflows/governance-ci.yml`.
 
 Generate the first traceability CSV:
