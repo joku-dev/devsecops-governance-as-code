@@ -171,6 +171,29 @@ class RepoValidationTests(unittest.TestCase):
             self.assertIn("policy_evaluations", payload)
             self.assertIn("artifacts", payload)
 
+    def test_reusable_workflow_derives_governance_signals(self):
+        workflow = (ROOT / ".github" / "workflows" / "devsecops-baseline-reusable.yml").read_text(encoding="utf-8")
+        self.assertIn("Resolve repository governance context", workflow)
+        self.assertIn("signature_path:", workflow)
+        self.assertIn("security_thresholds_exceeded = severity_order.get(max_seen, 99)", workflow)
+        self.assertNotIn('DIRECT_PUSH_ALLOWED: "false"', workflow)
+        self.assertNotIn('REVIEW_REQUIRED: "true"', workflow)
+        self.assertNotIn('ARTIFACT_SIGNATURE_EXISTS: "false"', workflow)
+
+    def test_onboarding_examples_pin_governance_workflow(self):
+        onboarding = (ROOT / "docs" / "application-repo-onboarding.md").read_text(encoding="utf-8")
+        template = (
+            ROOT
+            / "examples"
+            / "github-actions"
+            / "workflows"
+            / "application-devsecops-baseline-template.yml"
+        ).read_text(encoding="utf-8")
+        self.assertNotIn("devsecops-baseline-reusable.yml@main", onboarding)
+        self.assertNotIn("devsecops-baseline-reusable.yml@main", template)
+        self.assertIn("pull-requests: read", onboarding)
+        self.assertIn("pull-requests: read", template)
+
 
 if __name__ == "__main__":
     unittest.main()

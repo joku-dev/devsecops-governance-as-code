@@ -68,6 +68,7 @@ on:
 permissions:
   contents: read
   actions: read
+  pull-requests: read
 
 jobs:
   prepare-devsecops-evidence:
@@ -116,7 +117,7 @@ jobs:
   devsecops-baseline:
     name: Central DevSecOps Baseline
     needs: prepare-devsecops-evidence
-    uses: joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-reusable.yml@main
+    uses: joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-reusable.yml@528bee5fd067ab7f65c3030863ca338e0553cfdf
     with:
       level: L1
       max_allowed_severity: high
@@ -125,6 +126,7 @@ jobs:
       vulnerability_scan_path: security/vulnerability-scan.json
       application_evidence_artifact_name: application-evidence
       generate_demo_evidence: false
+      signature_path: ''
 ```
 
 ## Step-By-Step Onboarding
@@ -169,7 +171,7 @@ artifact_path: dist/application-source.tar.gz
 
 ### Step 4: Run The Workflow
 
-Open a pull request.
+Open a pull request against the protected target branch.
 
 Expected jobs:
 
@@ -250,11 +252,12 @@ Do not:
 
 | Problem | Likely Cause | Fix |
 |---|---|---|
-| Reusable workflow cannot be found | Governance repo unavailable or wrong path | Check `uses: joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-reusable.yml@main` |
+| Reusable workflow cannot be found | Governance repo unavailable or wrong path | Check the pinned `uses:` reference to the governance workflow |
 | Baseline job cannot find artifact | Artifact paths do not match workflow inputs | Align uploaded artifact paths with `artifact_path`, `sbom_path`, and `vulnerability_scan_path` |
 | Vulnerability gate fails | Scan result severity exceeds threshold | Fix findings or use an approved waiver process |
-| L2 fails on branch protection | Branch protection not enabled | Enable branch protection before moving to L2 |
-| L3 fails on signature | Artifact signature missing | Add signing evidence before enabling L3 |
+| L2 fails on branch protection | Target branch is not protected or pull request reviews are not enforced | Enable branch protection and required PR reviews before moving to L2 |
+| L2 fails because direct push status is unknown | Workflow could not read branch protection details | Confirm the repository exposes branch protection metadata to Actions and retry |
+| L3 fails on signature | Artifact signature missing | Generate a signature file and pass `signature_path` before enabling L3 |
 
 ## Rollout Recommendation
 
@@ -277,3 +280,15 @@ Use this rollout order:
 | Fixing findings | Application team |
 | Waiver approval | Defined waiver authority |
 | Required check enforcement | Repository owner with governance approval |
+
+## Pinning Requirement
+
+Application repositories should pin the reusable governance workflow to a release tag or a commit SHA.
+
+Recommended example:
+
+```yaml
+uses: joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-reusable.yml@528bee5fd067ab7f65c3030863ca338e0553cfdf
+```
+
+Do not use `@main` for long-lived production onboarding because the effective governance gate could change without review in the application repository.

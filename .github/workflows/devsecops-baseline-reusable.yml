@@ -28,6 +28,11 @@ on:
         required: false
         default: security/vulnerability-scan.json
         type: string
+      signature_path:
+        description: Optional path to an artifact signature file in the application repository workspace.
+        required: false
+        default: ""
+        type: string
       generate_demo_evidence:
         description: Generate demo artifact, SBOM, and vulnerability evidence if no real evidence exists.
         required: false
@@ -52,19 +57,12 @@ on:
 permissions:
   contents: read
   actions: read
+  pull-requests: read
 
 jobs:
   devsecops-baseline:
     name: DevSecOps Baseline Gate
     runs-on: ubuntu-latest
-
-    env:
-      SECURITY_GATES_ENFORCED: "true"
-      SECURITY_THRESHOLDS_EXCEEDED: "false"
-      PROTECTED_BRANCH: ${{ github.ref_protected }}
-      DIRECT_PUSH_ALLOWED: "false"
-      REVIEW_REQUIRED: "true"
-      ARTIFACT_SIGNATURE_EXISTS: "false"
 
     steps:
       - name: Checkout application repository
@@ -107,6 +105,87 @@ jobs:
           }
           JSON
 
+      - name: Resolve repository governance context
+        working-directory: application
+        env:
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_API_URL: ${{ github.api_url }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+          from pathlib import Path
+
+          repository = os.environ["GITHUB_REPOSITORY"]
+          branch = os.environ.get("GITHUB_BASE_REF") or os.environ.get("GITHUB_REF_NAME") or "main"
+          api_url = os.environ["GITHUB_API_URL"].rstrip("/")
+          token = os.environ["GITHUB_TOKEN"]
+          branch_encoded = urllib.parse.quote(branch, safe="")
+
+          def github_get(path):
+              request = urllib.request.Request(
+                  f"{api_url}{path}",
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                      "User-Agent": "devsecops-governance-baseline",
+                  },
+              )
+              with urllib.request.urlopen(request) as response:
+                  return json.loads(response.read().decode("utf-8"))
+
+          protected_branch = None
+          review_required = None
+          direct_push_allowed = None
+          branch_protection_lookup = {"status": "not_attempted"}
+
+          try:
+              branch_data = github_get(f"/repos/{repository}/branches/{branch_encoded}")
+              protected_branch = bool(branch_data.get("protected", False))
+              branch_protection_lookup = {"status": "branch_checked"}
+
+              if protected_branch:
+                  try:
+                      protection = github_get(f"/repos/{repository}/branches/{branch_encoded}/protection")
+                      required_pull_request_reviews = protection.get("required_pull_request_reviews")
+                      review_required = bool(required_pull_request_reviews)
+                      direct_push_allowed = not review_required
+                      branch_protection_lookup = {"status": "protection_checked"}
+                  except urllib.error.HTTPError as error:
+                      branch_protection_lookup = {
+                          "status": "protection_unavailable",
+                          "http_status": error.code,
+                      }
+              else:
+                  review_required = False
+                  direct_push_allowed = True
+          except urllib.error.HTTPError as error:
+              branch_protection_lookup = {
+                  "status": "branch_lookup_failed",
+                  "http_status": error.code,
+              }
+
+          payload = {
+              "target_branch": branch,
+              "protected_branch": protected_branch,
+              "review_required": review_required,
+              "direct_push_allowed": direct_push_allowed,
+              "branch_protection_lookup": branch_protection_lookup,
+          }
+
+          output = Path("generated/evidence/governance-context.json")
+          output.parent.mkdir(parents=True, exist_ok=True)
+          output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+          print(f"Wrote {output}")
+          PY
+
       - name: Collect pipeline evidence
         working-directory: application
         run: |
@@ -136,13 +215,28 @@ jobs:
                   return os.environ.get("VULNERABILITY_MAX_SEVERITY", "none")
               return str(data.get("max_severity", os.environ.get("VULNERABILITY_MAX_SEVERITY", "none"))).lower()
 
+          severity_order = {
+              "none": 0,
+              "info": 1,
+              "low": 2,
+              "medium": 3,
+              "high": 4,
+              "critical": 5,
+          }
+
           artifact = Path("${{ inputs.artifact_path }}")
           sbom = Path("${{ inputs.sbom_path }}")
           vulnerability_scan = Path("${{ inputs.vulnerability_scan_path }}")
+          signature_path_value = "${{ inputs.signature_path }}"
+          signature = Path(signature_path_value) if signature_path_value else None
+          governance_context = json.loads(Path("generated/evidence/governance-context.json").read_text(encoding="utf-8"))
           artifact_exists = artifact.is_file()
           commit_id = os.environ.get("GITHUB_SHA", "local")
           run_id = os.environ.get("GITHUB_RUN_ID", "local")
           repository = os.environ.get("GITHUB_REPOSITORY", "local/repository")
+          max_allowed_severity = "${{ inputs.max_allowed_severity }}".lower()
+          max_seen = load_scan_max_severity(vulnerability_scan)
+          security_thresholds_exceeded = severity_order.get(max_seen, 99) > severity_order.get(max_allowed_severity, 99)
 
           evidence = {
               "release_candidate": as_bool("${{ inputs.release_candidate }}"),
@@ -151,16 +245,17 @@ jobs:
                   "pipeline_run_id": run_id,
                   "commit_id": commit_id,
                   "status": "success",
-                  "security_gates": {"enforced": as_bool(os.environ.get("SECURITY_GATES_ENFORCED", "true"))},
-                  "security_thresholds_exceeded": as_bool(os.environ.get("SECURITY_THRESHOLDS_EXCEEDED", "false")),
+                  "security_gates": {"enforced": True},
+                  "security_thresholds_exceeded": security_thresholds_exceeded,
                   "external_direct_downloads_detected": as_bool(os.environ.get("EXTERNAL_DIRECT_DOWNLOADS_DETECTED", "false")),
               },
               "repository": {
                   "repository_id": repository,
-                  "branch": os.environ.get("GITHUB_REF_NAME", "local"),
-                  "protected_branch": as_bool(os.environ.get("PROTECTED_BRANCH", "false")),
-                  "direct_push_allowed": as_bool(os.environ.get("DIRECT_PUSH_ALLOWED", "false")),
-                  "review_required": as_bool(os.environ.get("REVIEW_REQUIRED", "true")),
+                  "branch": governance_context.get("target_branch", os.environ.get("GITHUB_REF_NAME", "local")),
+                  "protected_branch": governance_context.get("protected_branch"),
+                  "direct_push_allowed": governance_context.get("direct_push_allowed"),
+                  "review_required": governance_context.get("review_required"),
+                  "branch_protection_lookup": governance_context.get("branch_protection_lookup", {}),
               },
               "artifact": {
                   "artifact_id": artifact.name,
@@ -172,7 +267,10 @@ jobs:
                       "algorithm": "sha256",
                       "value": sha256(artifact) if artifact_exists else "",
                   },
-                  "signature": {"exists": as_bool(os.environ.get("ARTIFACT_SIGNATURE_EXISTS", "false"))},
+                  "signature": {
+                      "exists": bool(signature and signature.is_file()),
+                      "path": str(signature) if signature else "",
+                  },
               },
               "evidence": {
                   "sbom": {
@@ -183,7 +281,7 @@ jobs:
                   "vulnerability_scan": {
                       "exists": vulnerability_scan.is_file(),
                       "path": str(vulnerability_scan),
-                      "max_severity": load_scan_max_severity(vulnerability_scan),
+                      "max_severity": max_seen,
                   },
                   "pipeline_execution": {
                       "evidence_id": f"github-actions-{run_id}",
@@ -270,6 +368,11 @@ jobs:
           if level in {"L2", "L3"}:
               require(errors, data, "repository.protected_branch", True)
               require(errors, data, "repository.review_required", True)
+              direct_push_allowed = get(data, "repository.direct_push_allowed")
+              if direct_push_allowed is None:
+                  errors.append("unable to determine whether direct pushes are allowed on the target branch")
+              elif direct_push_allowed:
+                  errors.append("direct pushes are allowed on the target branch")
 
           if level == "L3":
               require(errors, data, "artifact.signature.exists", True)

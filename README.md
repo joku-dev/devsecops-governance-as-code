@@ -95,6 +95,12 @@ Read how other repositories integrate this governance repository:
 sed -n '1,320p' docs/how-other-repos-use-this-governance-repo.md
 ```
 
+Read the step-by-step central governance baseline integration guide:
+
+```bash
+sed -n '1,320p' docs/how-other-repositories-use-the-central-governance-baseline.md
+```
+
 Read the application repository onboarding guide:
 
 ```bash
