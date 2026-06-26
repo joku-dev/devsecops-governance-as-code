@@ -86,6 +86,7 @@ def main() -> int:
     validate_schema(errors, ROOT / "schemas" / "governance-document-catalog.schema.json", ROOT / "documents" / "governance-documents.yaml")
     validate_schema(errors, ROOT / "schemas" / "document-control-traceability.schema.json", ROOT / "traceability" / "document-to-control.yaml")
     validate_schema(errors, ROOT / "schemas" / "governance-document-rendering.schema.json", ROOT / "documents" / "governance-document-rendering.yaml")
+    validate_schema(errors, ROOT / "schemas" / "governance-compliance-result.schema.json", ROOT / "docs" / "governance-compliance-result.example.json")
 
     for path in sorted((ROOT / "controls").glob("dscb-*.yaml")):
         data = load_yaml(path)

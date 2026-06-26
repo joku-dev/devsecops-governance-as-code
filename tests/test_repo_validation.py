@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 import subprocess
+import tempfile
 import unittest
 
 
@@ -113,6 +114,42 @@ class RepoValidationTests(unittest.TestCase):
         self.assertTrue(green.exists())
         self.assertTrue(red.exists())
         self.assertIn("Governance Demo Run", overview.read_text(encoding="utf-8"))
+
+    def test_repo_governance_integration_scanner(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            repo = Path(tempdir)
+            workflows = repo / ".github" / "workflows"
+            workflows.mkdir(parents=True, exist_ok=True)
+            workflow = workflows / "governance.yml"
+            workflow.write_text(
+                "\n".join(
+                    [
+                        "name: Governance",
+                        "jobs:",
+                        "  governance:",
+                        "    steps:",
+                        "      - run: git clone https://github.com/example/devsecops-governance-as-code.git governance",
+                        "      - run: python3 governance/scripts/validate_governance_repo.py",
+                        "      - run: python3 -m unittest discover -s governance/tests",
+                        "      - run: opa check governance/policies/opa",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            result_path = repo / "governance-compliance-result.json"
+            result = self.run_command(
+                "python3",
+                str(ROOT / "scripts" / "check_repo_governance_integration.py"),
+                "--target-repo",
+                str(repo),
+                "--output-file",
+                str(result_path),
+            )
+            self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+            payload = json.loads(result_path.read_text(encoding="utf-8"))
+            self.assertEqual(payload["status"], "pass")
+            self.assertEqual(len(payload["checks"]), 3)
 
 
 if __name__ == "__main__":
