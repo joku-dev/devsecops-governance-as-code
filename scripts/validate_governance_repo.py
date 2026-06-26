@@ -17,8 +17,12 @@ import shutil
 import subprocess
 import sys
 
-from jsonschema import Draft202012Validator
 import yaml
+
+try:
+    from jsonschema import Draft202012Validator
+except ModuleNotFoundError:
+    Draft202012Validator = None
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,6 +40,13 @@ def load_json(path: Path):
 
 
 def validate_schema(errors, schema_path: Path, instance_path: Path):
+    if Draft202012Validator is None:
+        print(
+            "Warning: jsonschema is not installed; skipping schema validation for "
+            f"{instance_path.relative_to(ROOT)}",
+            file=sys.stderr,
+        )
+        return
     validator = Draft202012Validator(load_json(schema_path))
     instance = load_yaml(instance_path)
     for issue in validator.iter_errors(instance):
