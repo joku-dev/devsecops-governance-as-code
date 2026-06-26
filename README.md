@@ -77,6 +77,12 @@ Run the lightweight regression checks:
 python -m unittest discover -s tests
 ```
 
+Read the practical usage guide:
+
+```bash
+sed -n '1,240p' docs/how-to-use-this-repo.md
+```
+
 Generate the first traceability CSV:
 
 ```bash
