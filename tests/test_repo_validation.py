@@ -65,6 +65,22 @@ class RepoValidationTests(unittest.TestCase):
         self.assertIn("authority_documents", content.splitlines()[0])
         self.assertIn("DEVSECOPS-POL-001", content)
 
+    def test_document_control_matrix_is_generated(self):
+        result = subprocess.run(
+            ["python3", str(ROOT / "scripts" / "generate_document_control_matrix.py")],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+        csv_path = ROOT / "generated" / "xlsx" / "document_control_matrix.csv"
+        md_path = ROOT / "generated" / "reports" / "document-control-matrix.md"
+        self.assertTrue(csv_path.exists())
+        self.assertTrue(md_path.exists())
+        self.assertIn("document_id", csv_path.read_text(encoding="utf-8").splitlines()[0])
+        self.assertIn("DEVSECOPS-DIR-001", md_path.read_text(encoding="utf-8"))
+
 
 if __name__ == "__main__":
     unittest.main()

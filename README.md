@@ -83,6 +83,12 @@ Generate the first traceability CSV:
 python scripts/generate_traceability_csv.py
 ```
 
+Generate the governance document authority matrix:
+
+```bash
+python scripts/generate_document_control_matrix.py
+```
+
 ## Important Principle
 
 Not every requirement should become executable policy. Some requirements are governance obligations, some are evidence obligations, and some are enforceable technical gates. The repository keeps these concerns connected but distinct.
