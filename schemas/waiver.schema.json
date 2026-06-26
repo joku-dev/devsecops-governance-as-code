@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DevSecOps Waiver",
+  "type": "object",
+  "required": [
+    "id",
+    "scope",
+    "affected_requirements",
+    "risk_classification",
+    "approval_authority",
+    "expiry",
+    "status"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "scope": { "type": "string" },
+    "affected_requirements": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "risk_classification": {
+      "type": "string",
+      "enum": ["low", "medium", "high_cybersecurity", "high_safety"]
+    },
+    "compensating_controls": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "approval_authority": { "type": "string" },
+    "expiry": { "type": "string", "format": "date" },
+    "status": {
+      "type": "string",
+      "enum": ["requested", "approved", "rejected", "expired", "revoked"]
+    }
+  }
+}

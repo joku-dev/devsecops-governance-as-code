@@ -1,0 +1,47 @@
+capabilities:
+  - id: approved_version_control
+    area: Source Control
+    required_from: PRA-Level 1
+    supports_requirements:
+      - DSCB-L1-REQ-002
+      - DSCB-L1-REQ-003
+
+  - id: sbom_generation
+    area: Artifact and Dependency Management
+    required_from: PRA-Level 1
+    supports_requirements:
+      - DSCB-L1-REQ-006
+
+  - id: vulnerability_scanning
+    area: Security and Compliance Controls
+    required_from: PRA-Level 1
+    supports_requirements:
+      - DSCB-L1-REQ-009
+      - DSCB-L1-REQ-010
+
+  - id: mfa_privileged_access
+    area: Developer Workspace
+    required_from: PRA-Level 2
+    supports_requirements:
+      - DSCB-L2-REQ-004
+
+  - id: approved_dependency_repositories
+    area: Artifact and Dependency Management
+    required_from: PRA-Level 2
+    supports_requirements:
+      - DSCB-L2-REQ-005
+      - DSCB-L2-REQ-006
+
+  - id: iac_repository
+    area: Infrastructure as Code / Environment Configuration
+    required_from: PRA-Level 2
+    supports_requirements:
+      - DSCB-L2-REQ-009
+      - DSCB-L2-REQ-010
+
+  - id: reproducible_build_verification
+    area: Pipeline Execution
+    required_from: PRA-Level 3
+    supports_requirements:
+      - DSCB-L3-REQ-001
+      - DSCB-L3-REQ-002

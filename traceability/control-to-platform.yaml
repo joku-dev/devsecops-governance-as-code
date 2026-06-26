@@ -1,0 +1,49 @@
+mappings:
+  - control: DSCB-L1-REQ-003
+    platform_level: PRA-Level 1
+    platform_capabilities:
+      - approved_version_control
+      - branch_protection
+    evidence:
+      - branch_protection_configuration
+      - repository_audit_log
+    policy_candidate: true
+
+  - control: DSCB-L1-REQ-006
+    platform_level: PRA-Level 1
+    platform_capabilities:
+      - sbom_generation
+      - evidence_repository
+    evidence:
+      - sbom_file
+      - pipeline_log
+      - artifact_metadata
+    policy_candidate: true
+
+  - control: DSCB-L2-REQ-004
+    platform_level: PRA-Level 2
+    platform_capabilities:
+      - central_iam
+      - mfa_privileged_access
+    evidence:
+      - authentication_logs
+      - mfa_policy_evidence
+    policy_candidate: true
+
+  - control: DSCB-L2-REQ-009
+    platform_level: PRA-Level 2
+    platform_capabilities:
+      - iac_repository
+      - environment_configuration_management
+    evidence:
+      - infrastructure_repository
+      - infrastructure_change_history
+    policy_candidate: true
+
+  - control: DSCB-L3-REQ-010
+    platform_level: PRA-Level 3
+    platform_capabilities:
+      - runtime_integrity_verification
+    evidence:
+      - runtime_integrity_verification_logs
+    policy_candidate: true

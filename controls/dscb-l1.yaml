@@ -1,0 +1,115 @@
+level: L1
+name: Enterprise DevSecOps Baseline
+required_platform_level: PRA-Level 1
+requirements:
+  - id: DSCB-L1-REQ-001
+    domain: traceability
+    title: Requirements traceability
+    requirement: All software components SHALL be traceable to defined system or software requirements and the corresponding Testcases and Reports.
+    required_platform_level: PRA-Level 1
+    platform_capabilities:
+      - evidence_and_traceability_layer
+      - traceability_database
+      - pipeline_audit_logs
+    evidence:
+      - requirements_traceability_records
+      - configuration_management_records
+    verification:
+      method: hybrid
+      frequency: release_candidate
+    policy_as_code:
+      candidate: false
+      enforcement: evidence_review
+    waiver:
+      allowed: true
+      authority: DevSecOps Governance Board
+
+  - id: DSCB-L1-REQ-003
+    domain: source_code_integrity
+    title: Protected branch modification
+    requirement: Direct modification of protected branches SHALL be prohibited.
+    required_platform_level: PRA-Level 1
+    platform_capabilities:
+      - approved_version_control
+      - branch_protection
+      - code_review
+    evidence:
+      - branch_protection_configuration
+      - repository_audit_log
+    verification:
+      method: automated
+      frequency: each_repository_scan
+    policy_as_code:
+      candidate: true
+      enforcement: repository_gate
+      rule: policies/opa/branch_protection.rego
+    waiver:
+      allowed: true
+      authority: DevSecOps Governance Board
+
+  - id: DSCB-L1-REQ-006
+    domain: software_supply_chain_transparency
+    title: SBOM generation
+    requirement: A Software Bill of Materials (SBOM) SHALL be generated for releasable artifacts.
+    required_platform_level: PRA-Level 1
+    platform_capabilities:
+      - sbom_generation
+      - evidence_repository
+    evidence:
+      - sbom_file
+      - pipeline_log
+      - artifact_metadata
+    verification:
+      method: automated
+      frequency: each_release_candidate
+    policy_as_code:
+      candidate: true
+      enforcement: release_gate
+      rule: policies/opa/sbom_required.rego
+    waiver:
+      allowed: true
+      authority: DevSecOps Governance Board
+
+  - id: DSCB-L1-REQ-009
+    domain: vulnerability_identification
+    title: Vulnerability scanning
+    requirement: Automated vulnerability scanning SHALL be performed during build or test stages.
+    required_platform_level: PRA-Level 1
+    platform_capabilities:
+      - vulnerability_scanning
+      - pipeline_evidence_generation
+    evidence:
+      - vulnerability_scan_report
+      - pipeline_log
+    verification:
+      method: automated
+      frequency: each_build
+    policy_as_code:
+      candidate: true
+      enforcement: pipeline_gate
+      rule: policies/opa/vulnerability_gate.rego
+    waiver:
+      allowed: true
+      authority: DevSecOps Governance Board
+
+  - id: DSCB-L1-REQ-011
+    domain: artifact_integrity
+    title: Artifact integrity protection
+    requirement: Releasable software artifacts SHALL be protected against tampering by approved repository integrity controls and cryptographic integrity mechanisms such as checksums, digests, or signatures, as applicable to the required control baseline level.
+    required_platform_level: PRA-Level 1
+    platform_capabilities:
+      - artifact_repository_integrity
+      - checksum_or_digest_records
+    evidence:
+      - artifact_checksum_or_digest_record
+      - artifact_repository_metadata
+    verification:
+      method: automated
+      frequency: each_release_candidate
+    policy_as_code:
+      candidate: true
+      enforcement: release_gate
+      rule: policies/opa/artifact_integrity.rego
+    waiver:
+      allowed: true
+      authority: DevSecOps Governance Board

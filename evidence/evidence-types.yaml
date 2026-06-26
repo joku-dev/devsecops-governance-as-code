@@ -1,0 +1,44 @@
+evidence_types:
+  - id: sbom_file
+    name: Software Bill of Materials
+    category: artifact
+    producer: ci_pipeline
+    format:
+      - cyclonedx-json
+      - spdx-json
+    retention: project_lifecycle
+    supports_requirements:
+      - DSCB-L1-REQ-006
+
+  - id: vulnerability_scan_report
+    name: Vulnerability Scan Report
+    category: security
+    producer: ci_pipeline
+    format:
+      - sarif
+      - json
+    retention: project_lifecycle
+    supports_requirements:
+      - DSCB-L1-REQ-009
+      - DSCB-L1-REQ-010
+
+  - id: branch_protection_configuration
+    name: Branch Protection Configuration
+    category: repository
+    producer: source_control_platform
+    format:
+      - json
+    retention: project_lifecycle
+    supports_requirements:
+      - DSCB-L1-REQ-003
+
+  - id: artifact_checksum_or_digest_record
+    name: Artifact Checksum or Digest Record
+    category: artifact
+    producer: artifact_repository
+    format:
+      - json
+      - text
+    retention: project_lifecycle
+    supports_requirements:
+      - DSCB-L1-REQ-011

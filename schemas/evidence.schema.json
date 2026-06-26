@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DevSecOps Evidence Type",
+  "type": "object",
+  "required": ["id", "name", "category", "producer", "retention"],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "category": {
+      "type": "string",
+      "enum": ["pipeline", "repository", "artifact", "security", "platform", "waiver", "audit"]
+    },
+    "producer": { "type": "string" },
+    "format": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "retention": { "type": "string" },
+    "supports_requirements": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

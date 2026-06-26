@@ -1,0 +1,73 @@
+level: L2
+name: Secure DevSecOps
+required_platform_level: PRA-Level 2
+requirements:
+  - id: DSCB-L2-REQ-004
+    domain: devsecops_platform_access_control
+    title: MFA for privileged access
+    requirement: Multi-factor authentication SHALL be enforced for privileged access.
+    required_platform_level: PRA-Level 2
+    platform_capabilities:
+      - central_iam
+      - rbac
+      - mfa_privileged_access
+    evidence:
+      - authentication_logs
+      - access_control_configuration
+      - mfa_policy_evidence
+    verification:
+      method: automated
+      frequency: daily_platform_scan
+    policy_as_code:
+      candidate: true
+      enforcement: platform_configuration_gate
+    waiver:
+      allowed: true
+      authority: CISO
+
+  - id: DSCB-L2-REQ-006
+    domain: dependency_source_control
+    title: External direct downloads prohibited
+    requirement: Direct downloads from external sources SHALL NOT be permitted.
+    required_platform_level: PRA-Level 2
+    platform_capabilities:
+      - approved_dependency_repositories
+      - dependency_proxy
+      - external_download_prevention
+    evidence:
+      - repository_configuration
+      - dependency_management_logs
+    verification:
+      method: automated
+      frequency: each_build
+    policy_as_code:
+      candidate: true
+      enforcement: pipeline_gate
+      rule: policies/opa/dependency_source_control.rego
+    waiver:
+      allowed: true
+      authority: DevSecOps Governance Board
+
+  - id: DSCB-L2-REQ-009
+    domain: infrastructure_as_code
+    title: Infrastructure as Code
+    requirement: Infrastructure used for software deployment SHALL be defined through Infrastructure as Code.
+    required_platform_level: PRA-Level 2
+    platform_capabilities:
+      - iac_repository
+      - environment_configuration_management
+      - iac_validation
+    evidence:
+      - infrastructure_repository
+      - infrastructure_change_history
+      - iac_validation_log
+    verification:
+      method: hybrid
+      frequency: release_candidate
+    policy_as_code:
+      candidate: true
+      enforcement: release_gate
+      rule: policies/opa/iac_required.rego
+    waiver:
+      allowed: true
+      authority: DevSecOps Governance Board
