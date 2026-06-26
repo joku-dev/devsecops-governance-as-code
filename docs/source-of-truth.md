@@ -7,6 +7,13 @@ The current authoritative content exists in DOCX documents:
 - `docs/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx`
 - `docs/source-documents/DevSecOps-Platform-Reference-Architecture-Standard_aligned_with_Control_Baseline.docx`
 
+The repository now also contains working draft representations for:
+
+- `docs/policy/devsecops-policy.md`
+- `docs/directive/devsecops-directive.md`
+
+These are not yet the formal master documents, but they allow the repository to model governance intent and execution semantics above the standards layer.
+
 ## Pilot Decision
 
 For the pilot, the structured YAML files should become the working governance data model. The DOCX documents remain comparison and review inputs.

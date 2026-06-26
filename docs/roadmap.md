@@ -14,6 +14,7 @@ Create scripts to generate:
 
 - Control-to-platform traceability matrix
 - Control-to-evidence matrix
+- Document-to-control authority matrix
 - Policy candidate matrix
 - Open gap report
 

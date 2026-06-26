@@ -2,6 +2,8 @@
 
 This repository is the starting structure for transforming the DevSecOps Control Baseline and DevSecOps Platform Reference Architecture into a Doc-as-Code and Policy-as-Code operating model.
 
+The repository also models the governance stack above those standards: a `Policy` defines mandatory intent, a `Directive` defines binding operational execution, and the Standards define the detailed controls and platform expectations.
+
 ## Purpose
 
 The repository separates four concerns:
@@ -9,6 +11,7 @@ The repository separates four concerns:
 | Area | Purpose |
 |---|---|
 | `docs/source-documents` | Approved or working DOCX source documents brought into the repository for traceable migration. |
+| `documents` | Structured catalog of policy, directive, and standard source documents. |
 | `controls` | Structured DevSecOps control baseline requirements. |
 | `platform` | Platform Reference Architecture levels and platform capabilities. |
 | `traceability` | Mapping between controls, platform capabilities, evidence, and policy candidates. |
@@ -60,6 +63,12 @@ Validate repository consistency:
 
 ```bash
 python scripts/validate_governance_repo.py
+```
+
+Review the governance document hierarchy:
+
+```bash
+sed -n '1,200p' docs/governance-document-hierarchy.md
 ```
 
 Run the lightweight regression checks:

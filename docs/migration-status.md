@@ -5,6 +5,9 @@
 | Area | Status |
 |---|---|
 | Source DOCX documents imported | Complete |
+| Policy and Directive working drafts | Complete |
+| Governance document catalog | Complete |
+| Document-to-control traceability | Complete |
 | L1 control requirements | 16 / 16 complete |
 | L2 control requirements | 14 / 14 complete |
 | L3 control requirements | 11 / 11 complete |

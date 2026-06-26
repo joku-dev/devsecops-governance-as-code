@@ -65,11 +65,15 @@ def main() -> int:
     controls = []
     capabilities = load_yaml(ROOT / "platform" / "platform-capabilities.yaml")
     evidence_catalog = load_yaml(ROOT / "evidence" / "evidence-types.yaml")
+    governance_documents = load_yaml(ROOT / "documents" / "governance-documents.yaml")
+    document_traceability = load_yaml(ROOT / "traceability" / "document-to-control.yaml")
 
     validate_schema(errors, ROOT / "schemas" / "control.schema.json", ROOT / "controls" / "dscb-l1.yaml")
     validate_schema(errors, ROOT / "schemas" / "control.schema.json", ROOT / "controls" / "dscb-l2.yaml")
     validate_schema(errors, ROOT / "schemas" / "control.schema.json", ROOT / "controls" / "dscb-l3.yaml")
     validate_schema(errors, ROOT / "schemas" / "control.schema.json", ROOT / "controls" / "dscb-gov.yaml")
+    validate_schema(errors, ROOT / "schemas" / "governance-document-catalog.schema.json", ROOT / "documents" / "governance-documents.yaml")
+    validate_schema(errors, ROOT / "schemas" / "document-control-traceability.schema.json", ROOT / "traceability" / "document-to-control.yaml")
 
     for path in sorted((ROOT / "controls").glob("dscb-*.yaml")):
         data = load_yaml(path)
@@ -94,6 +98,7 @@ def main() -> int:
     known = set(ids)
     known_capabilities = {item["id"] for item in capabilities.get("capabilities", [])}
     known_evidence = {item["id"] for item in evidence_catalog.get("evidence_types", [])}
+    known_documents = {item["id"] for item in governance_documents.get("documents", [])}
 
     missing_traceability = sorted(known - traced)
     if missing_traceability:
@@ -115,6 +120,11 @@ def main() -> int:
             if evidence not in known_evidence:
                 errors.append(f"Unknown evidence type on {item['id']}: {evidence}")
 
+    for document in governance_documents.get("documents", []):
+        document_path = ROOT / document["repository_path"]
+        if not document_path.exists():
+            errors.append(f"Governance document path missing for {document['id']}: {document['repository_path']}")
+
     for mapping in traceability.get("mappings", []):
         control_id = mapping["control"]
         for capability in mapping.get("platform_capabilities", []):
@@ -123,6 +133,14 @@ def main() -> int:
         for evidence in mapping.get("evidence", []):
             if evidence not in known_evidence:
                 errors.append(f"Unknown traceability evidence on {control_id}: {evidence}")
+
+    for mapping in document_traceability.get("mappings", []):
+        document_id = mapping["document_id"]
+        if document_id not in known_documents:
+            errors.append(f"Document traceability references unknown document: {document_id}")
+        for control_id in mapping.get("control_ids", []):
+            if control_id not in known:
+                errors.append(f"Document traceability references unknown control: {control_id}")
 
     run_opa_check(errors)
 

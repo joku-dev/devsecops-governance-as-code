@@ -51,6 +51,20 @@ class RepoValidationTests(unittest.TestCase):
         payload = json.loads(result.stdout)
         self.assertEqual(payload["result"][0]["expressions"][0]["value"], [])
 
+    def test_traceability_csv_includes_authority_documents(self):
+        result = subprocess.run(
+            ["python3", str(ROOT / "scripts" / "generate_traceability_csv.py")],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+        csv_path = ROOT / "generated" / "xlsx" / "traceability_matrix.csv"
+        content = csv_path.read_text(encoding="utf-8")
+        self.assertIn("authority_documents", content.splitlines()[0])
+        self.assertIn("DEVSECOPS-POL-001", content)
+
 
 if __name__ == "__main__":
     unittest.main()

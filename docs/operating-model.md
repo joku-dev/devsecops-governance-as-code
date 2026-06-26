@@ -4,6 +4,8 @@
 
 During the pilot, the structured YAML files in this repository should be treated as the working source for governance-as-code. The DOCX files in `docs/source-documents` remain the authoritative baseline for comparison until the organization formally decides to make the structured model the master source.
 
+The working source includes not only structured controls and platform mappings, but also the governance document catalog in `documents/governance-documents.yaml`. This makes the relationship between Policy, Directive, and Standards explicit and reviewable.
+
 ## Roles
 
 | Role | Responsibility |
