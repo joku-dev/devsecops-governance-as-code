@@ -100,6 +100,7 @@ python3 scripts/generate_traceability_csv.py
 python3 scripts/generate_document_control_matrix.py
 python3 scripts/generate_open_gap_report.py
 python3 scripts/render_governance_documents.py
+python3 scripts/generate_status_viewer.py
 ```
 
 Important outputs:
@@ -113,6 +114,7 @@ Important outputs:
 - `generated/documents/devsecops-pol-001.html`
 - `generated/documents/devsecops-dir-001.rendered.md`
 - `generated/documents/devsecops-dir-001.html`
+- `generated/viewer/status-viewer.html`
 
 ### 4. Run Regression Checks
 

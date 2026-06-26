@@ -117,6 +117,49 @@ class RepoValidationTests(unittest.TestCase):
         self.assertIn("Document ID: `DEVSECOPS-POL-001`", policy_md.read_text(encoding="utf-8"))
         self.assertIn("<html", policy_html.read_text(encoding="utf-8"))
 
+    def test_status_viewer_is_generated(self):
+        subprocess.run(
+            ["python3", str(ROOT / "scripts" / "generate_traceability_csv.py")],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        subprocess.run(
+            ["python3", str(ROOT / "scripts" / "generate_document_control_matrix.py")],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        subprocess.run(
+            ["python3", str(ROOT / "scripts" / "generate_open_gap_report.py")],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        subprocess.run(
+            ["python3", str(ROOT / "scripts" / "render_governance_documents.py")],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        result = subprocess.run(
+            ["python3", str(ROOT / "scripts" / "generate_status_viewer.py")],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+        viewer = ROOT / "generated" / "viewer" / "status-viewer.html"
+        self.assertTrue(viewer.exists())
+        content = viewer.read_text(encoding="utf-8")
+        self.assertIn("Governance Status Viewer", content)
+        self.assertIn("Open Gap Report", content)
+
 
 if __name__ == "__main__":
     unittest.main()

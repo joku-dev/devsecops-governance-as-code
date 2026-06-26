@@ -109,6 +109,12 @@ Render the Policy and Directive into review-ready files:
 python scripts/render_governance_documents.py
 ```
 
+Generate the static governance status viewer:
+
+```bash
+python scripts/generate_status_viewer.py
+```
+
 ## Important Principle
 
 Not every requirement should become executable policy. Some requirements are governance obligations, some are evidence obligations, and some are enforceable technical gates. The repository keeps these concerns connected but distinct.
