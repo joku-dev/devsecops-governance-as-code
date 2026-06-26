@@ -223,7 +223,7 @@ capabilities:
   - DSCB-L2-REQ-005
   - DSCB-L2-REQ-006
 - id: external_download_prevention
-  area: TBD
+  area: Artifact and Dependency Management
   required_from: PRA-Level 2
   supports_requirements:
   - DSCB-L2-REQ-005
@@ -235,13 +235,13 @@ capabilities:
   - DSCB-L2-REQ-007
   - DSCB-L2-REQ-008
 - id: signing_key_management
-  area: TBD
+  area: Enterprise Trust and Key Management
   required_from: PRA-Level 2
   supports_requirements:
   - DSCB-L2-REQ-007
   - DSCB-L2-REQ-008
 - id: signature_verification
-  area: TBD
+  area: Artifact and Dependency Management
   required_from: PRA-Level 2
   supports_requirements:
   - DSCB-L2-REQ-007
@@ -325,7 +325,7 @@ capabilities:
   - DSCB-L3-REQ-003
   - DSCB-L3-REQ-004
 - id: provenance_capture
-  area: TBD
+  area: Evidence and Traceability
   required_from: PRA-Level 3
   supports_requirements:
   - DSCB-L3-REQ-005
@@ -343,13 +343,13 @@ capabilities:
   - DSCB-L3-REQ-005
   - DSCB-L3-REQ-006
 - id: enterprise_trust_infrastructure
-  area: TBD
+  area: Enterprise Trust and Key Management
   required_from: PRA-Level 3
   supports_requirements:
   - DSCB-L3-REQ-007
   - DSCB-L3-REQ-008
 - id: central_signing_key_management
-  area: TBD
+  area: Enterprise Trust and Key Management
   required_from: PRA-Level 3
   supports_requirements:
   - DSCB-L3-REQ-007
