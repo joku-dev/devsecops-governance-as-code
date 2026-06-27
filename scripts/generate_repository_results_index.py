@@ -30,6 +30,12 @@ def main() -> int:
         parsed = [load_json(path) for path in results]
         parsed.sort(key=lambda item: item.get("generated_at", ""))
         latest = parsed[-1]
+        latest_main = None
+        for item in reversed(parsed):
+            if item.get("repository", {}).get("branch") == "main":
+                latest_main = item
+                break
+        representative = latest_main or latest
         result_count += len(parsed)
         for item in parsed:
             if item.get("overall_status") == "pass":
@@ -55,16 +61,20 @@ def main() -> int:
         repositories.append(
             {
                 "repository_id": latest["repository_id"],
-                "baseline_level": latest.get("baseline_level", "unknown"),
+                "baseline_level": representative.get("baseline_level", "unknown"),
                 "results_path": f"status/results/{repo_dir.name}/",
                 "latest_result": {
-                    "status": latest.get("overall_status", "unknown"),
-                    "pipeline_run_id": latest.get("pipeline", {}).get("pipeline_run_id", "unknown"),
-                    "commit_id": latest.get("repository", {}).get("commit_id", "unknown"),
-                    "generated_at": latest.get("generated_at", ""),
-                    "governance_baseline_ref": latest.get("governance_baseline_ref", "unknown"),
-                    "source_file": str(results[-1].relative_to(ROOT)),
-                    "control_evaluation_summary": latest.get("control_evaluation_summary", {}),
+                    "status": representative.get("overall_status", "unknown"),
+                    "pipeline_run_id": representative.get("pipeline", {}).get("pipeline_run_id", "unknown"),
+                    "commit_id": representative.get("repository", {}).get("commit_id", "unknown"),
+                    "generated_at": representative.get("generated_at", ""),
+                    "governance_baseline_ref": representative.get("governance_baseline_ref", "unknown"),
+                    "source_file": next(
+                        str(path.relative_to(ROOT))
+                        for path, item in zip(results, parsed)
+                        if item == representative
+                    ),
+                    "control_evaluation_summary": representative.get("control_evaluation_summary", {}),
                 },
                 "history": history,
             }
