@@ -1,13 +1,13 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-06-27T21:40:15Z",
+  "generated_at": "2026-06-27T21:48:23Z",
   "summary": {
     "repository_count": 1,
-    "result_count": 6,
-    "passing_results": 5,
+    "result_count": 7,
+    "passing_results": 6,
     "failing_results": 1,
     "mainline_results": 4,
-    "branch_results": 1,
+    "branch_results": 2,
     "manual_results": 1
   },
   "repositories": [
@@ -136,6 +136,26 @@
             "tested_controls": 16
           },
           "source_file": "status/results/joku-dev__ha-CPsWMS/2026-06-27T21-38-40Z-run-28302556581.json"
+        },
+        {
+          "generated_at": "2026-06-27T21:47:39Z",
+          "status": "pass",
+          "pipeline_run_id": "28302764711",
+          "pipeline_event": "pull_request",
+          "pipeline_url": "https://github.com/joku-dev/ha-CPsWMS/actions/runs/28302764711",
+          "branch": "devsecops/add-run-context-governance-input",
+          "commit_id": "df8d65c4f0d286470c5552bd3511a633e82c8539",
+          "governance_baseline_ref": "governance-main-run-context",
+          "control_evaluation_summary": {
+            "total_controls": 46,
+            "pass": 14,
+            "fail": 0,
+            "not_tested": 0,
+            "not_applicable": 32,
+            "applicable_controls": 14,
+            "tested_controls": 14
+          },
+          "source_file": "status/results/joku-dev__ha-CPsWMS/2026-06-27T21-47-39Z-run-28302764711.json"
         }
       ]
     }
