@@ -4,9 +4,9 @@
 
 This document explains why the current green control evaluation report shows:
 
-- `20` tested controls
+- `25` tested controls
 - `0` failed controls
-- `10` `not_tested`
+- `5` `not_tested`
 - `16` `not_applicable`
 
 It is intended to help readers understand that the control report is not a simple yes/no checklist.  
@@ -86,10 +86,10 @@ The current report summary is:
 
 - Total controls: `46`
 - Applicable controls: `30`
-- Tested controls: `20`
-- Passed: `20`
+- Tested controls: `25`
+- Passed: `25`
 - Failed: `0`
-- Not tested: `10`
+- Not tested: `5`
 - Not applicable: `16`
 
 The key formula is:
@@ -98,12 +98,12 @@ The key formula is:
 
 So in the current green report:
 
-- `20 tested = 20 pass + 0 fail`
+- `25 tested = 25 pass + 0 fail`
 
 That means:
 
-- `20` controls were really evaluated
-- `10` controls were in scope but did not have enough machine-readable proof
+- `25` controls were really evaluated
+- `5` controls were in scope but did not have enough machine-readable proof
 - `16` controls were outside the direct run scope
 
 ## Why `16` Controls Are `not_applicable`
@@ -162,17 +162,12 @@ So:
 
 - `5 GOV + 11 L3 = 16 not_applicable`
 
-## Why `10` Controls Are `not_tested`
+## Why `5` Controls Are `not_tested`
 
 These controls are applicable, but the current machine-readable run input does not fully prove them.
 
 ### Current `not_tested` controls
 
-- `DSCB-L1-REQ-001`
-- `DSCB-L1-REQ-002`
-- `DSCB-L1-REQ-004`
-- `DSCB-L1-REQ-013`
-- `DSCB-L1-REQ-014`
 - `DSCB-L1-REQ-016`
 - `DSCB-L2-REQ-001`
 - `DSCB-L2-REQ-002`
@@ -180,40 +175,6 @@ These controls are applicable, but the current machine-readable run input does n
 - `DSCB-L2-REQ-014`
 
 ### Why these land in `not_tested`
-
-#### Traceability and review-style controls
-
-Examples:
-
-- `DSCB-L1-REQ-001`
-- `DSCB-L1-REQ-004`
-
-Reason:
-
-- they expect traceability records, review records, or hybrid proof
-- the current input file does not contain a rich traceability evidence structure for those checks
-
-#### Source code governance detail not explicitly present
-
-Example:
-
-- `DSCB-L1-REQ-002`
-
-Reason:
-
-- the current input does not explicitly prove approved version control usage and author traceability
-
-#### Release approval controls
-
-Examples:
-
-- `DSCB-L1-REQ-013`
-- `DSCB-L1-REQ-014`
-
-Reason:
-
-- these require stronger approval and approved-artifact evidence
-- the current green input does not carry a dedicated approval record structure that the evaluator can verify
 
 #### Operational and monitoring controls
 
@@ -241,8 +202,24 @@ Reason:
 - this evidence is not represented in the current input JSON
 
 ## Why `20` Controls Are `pass`
+## Why `25` Controls Are `pass`
 
 These controls are currently machine-evaluable with the present rule set and input structure.
+
+Compared with the earlier version of the report, the following controls were improved from `not_tested` to `pass` by adding explicit machine-readable evidence fields:
+
+- `DSCB-L1-REQ-001`
+- `DSCB-L1-REQ-002`
+- `DSCB-L1-REQ-004`
+- `DSCB-L1-REQ-013`
+- `DSCB-L1-REQ-014`
+
+These are now evaluated through:
+
+- `traceability.*`
+- `source_control.*`
+- `static_analysis.*`
+- `release_approval.*`
 
 ### Typical `pass` patterns
 
@@ -259,6 +236,14 @@ Examples:
 - `DSCB-L2-REQ-007` via artifact signing
 - `DSCB-L2-REQ-009` via IaC
 - `DSCB-L2-REQ-011` and `DSCB-L2-REQ-012` via pipeline security gates
+
+Newly machine-proven examples:
+
+- `DSCB-L1-REQ-001` via explicit traceability linkage fields
+- `DSCB-L1-REQ-002` via explicit source-control governance fields
+- `DSCB-L1-REQ-004` via explicit static-analysis evidence fields
+- `DSCB-L1-REQ-013` via explicit structured release approval
+- `DSCB-L1-REQ-014` via approved-artifact-only deployment metadata
 
 These are strong machine-evaluable controls because:
 

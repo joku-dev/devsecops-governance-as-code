@@ -161,11 +161,11 @@
     "summary": {
       "total_controls": 46,
       "pass": 2,
-      "fail": 18,
-      "not_tested": 10,
+      "fail": 23,
+      "not_tested": 5,
       "not_applicable": 16,
       "applicable_controls": 30,
-      "tested_controls": 20
+      "tested_controls": 25
     },
     "controls": [
       {
@@ -278,7 +278,7 @@
         "title": "Traceability",
         "required_platform_level": "PRA-Level 1",
         "verification_method": "hybrid",
-        "status": "not_tested",
+        "status": "fail",
         "policy_rule": null,
         "policy_id": null,
         "source_file": "model/controls/dscb-l1.yaml",
@@ -290,8 +290,12 @@
           "requirements_traceability_records",
           "configuration_management_records"
         ],
-        "decision_basis": [],
-        "message": "This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input."
+        "decision_basis": [
+          "traceability.requirements_linked",
+          "traceability.testcases_linked",
+          "traceability.reports_linked"
+        ],
+        "message": "Traceability is evaluated from explicit structured linkage fields for requirements, testcases, and reports."
       },
       {
         "control_id": "DSCB-L1-REQ-002",
@@ -300,7 +304,7 @@
         "title": "Source Code Integrity",
         "required_platform_level": "PRA-Level 1",
         "verification_method": "automated",
-        "status": "not_tested",
+        "status": "fail",
         "policy_rule": null,
         "policy_id": null,
         "source_file": "model/controls/dscb-l1.yaml",
@@ -314,8 +318,12 @@
           "code_review_records",
           "branch_protection_configuration"
         ],
-        "decision_basis": [],
-        "message": "The input does not explicitly prove approved version control usage and author traceability."
+        "decision_basis": [
+          "source_control.approved_vcs",
+          "source_control.identifiable_authors",
+          "source_control.review_records_present"
+        ],
+        "message": "Source control governance is evaluated from explicit version-control, author-traceability, and review-record fields."
       },
       {
         "control_id": "DSCB-L1-REQ-003",
@@ -350,7 +358,7 @@
         "title": "Secure Coding Practices",
         "required_platform_level": "PRA-Level 1",
         "verification_method": "hybrid",
-        "status": "not_tested",
+        "status": "fail",
         "policy_rule": null,
         "policy_id": null,
         "source_file": "model/controls/dscb-l1.yaml",
@@ -362,8 +370,11 @@
           "static_code_analysis_reports",
           "code_review_documentation"
         ],
-        "decision_basis": [],
-        "message": "This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input."
+        "decision_basis": [
+          "static_analysis.performed",
+          "static_analysis.findings_reviewed"
+        ],
+        "message": "Secure coding evidence is evaluated from structured static-analysis execution and review fields."
       },
       {
         "control_id": "DSCB-L1-REQ-005",
@@ -568,7 +579,7 @@
         "title": "Release Authorization",
         "required_platform_level": "PRA-Level 1",
         "verification_method": "hybrid",
-        "status": "not_tested",
+        "status": "fail",
         "policy_rule": null,
         "policy_id": null,
         "source_file": "model/controls/dscb-l1.yaml",
@@ -577,11 +588,13 @@
           "deployment_logs"
         ],
         "evidence_sources": [
-          "release_approval_records",
-          "deployment_logs"
+          "release_approval_records"
         ],
-        "decision_basis": [],
-        "message": "This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input."
+        "decision_basis": [
+          "release_approval.approved",
+          "release_approval.approver"
+        ],
+        "message": "Release authorization is evaluated from explicit structured approval metadata."
       },
       {
         "control_id": "DSCB-L1-REQ-014",
@@ -590,7 +603,7 @@
         "title": "Release Authorization",
         "required_platform_level": "PRA-Level 1",
         "verification_method": "hybrid",
-        "status": "not_tested",
+        "status": "fail",
         "policy_rule": null,
         "policy_id": null,
         "source_file": "model/controls/dscb-l1.yaml",
@@ -600,10 +613,14 @@
         ],
         "evidence_sources": [
           "release_approval_records",
-          "deployment_logs"
+          "deployment_logs",
+          "artifact_checksum_or_digest_records"
         ],
-        "decision_basis": [],
-        "message": "This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input."
+        "decision_basis": [
+          "release_approval.approved_artifact_only",
+          "artifact.digest.exists"
+        ],
+        "message": "Approved-artifact deployment is evaluated from explicit release approval metadata plus artifact identity evidence."
       },
       {
         "control_id": "DSCB-L1-REQ-015",

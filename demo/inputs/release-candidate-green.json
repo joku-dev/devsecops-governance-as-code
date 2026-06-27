@@ -11,6 +11,20 @@
     "mfa_enforced": true,
     "central_identity_management": true
   },
+  "traceability": {
+    "requirements_linked": true,
+    "testcases_linked": true,
+    "reports_linked": true
+  },
+  "source_control": {
+    "approved_vcs": true,
+    "identifiable_authors": true,
+    "review_records_present": true
+  },
+  "static_analysis": {
+    "performed": true,
+    "findings_reviewed": true
+  },
   "evidence": {
     "sbom": {
       "exists": true,
@@ -43,6 +57,11 @@
     "approved_waiver": {
       "exists": false
     }
+  },
+  "release_approval": {
+    "approved": true,
+    "approver": "release-manager",
+    "approved_artifact_only": true
   },
   "dependencies": [
     {

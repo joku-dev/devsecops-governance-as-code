@@ -197,17 +197,54 @@ def evaluate_single_control(control: dict, payload: dict, policy_results: dict[s
 
     control_id = control["id"]
 
-    if control_id in {"DSCB-L1-REQ-001", "DSCB-L1-REQ-004", "DSCB-L1-REQ-013", "DSCB-L1-REQ-014", "DSCB-L1-REQ-016",
+    if control_id in {"DSCB-L1-REQ-016",
                       "DSCB-L2-REQ-001", "DSCB-L2-REQ-002", "DSCB-L2-REQ-013", "DSCB-L2-REQ-014"}:
         return manual_or_hybrid_decision(
             control,
             "This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input.",
         )
 
-    if control_id == "DSCB-L1-REQ-002":
-        return manual_or_hybrid_decision(
+    if control_id == "DSCB-L1-REQ-001":
+        requirements_linked = bool(nested_get(payload, "traceability.requirements_linked"))
+        testcases_linked = bool(nested_get(payload, "traceability.testcases_linked"))
+        reports_linked = bool(nested_get(payload, "traceability.reports_linked"))
+        return build_decision(
             control,
-            "The input does not explicitly prove approved version control usage and author traceability.",
+            "pass" if requirements_linked and testcases_linked and reports_linked else "fail",
+            "Traceability is evaluated from explicit structured linkage fields for requirements, testcases, and reports.",
+            decision_basis=[
+                "traceability.requirements_linked",
+                "traceability.testcases_linked",
+                "traceability.reports_linked",
+            ],
+            evidence_sources=["requirements_traceability_records", "configuration_management_records"],
+        )
+
+    if control_id == "DSCB-L1-REQ-002":
+        approved_vcs = bool(nested_get(payload, "source_control.approved_vcs"))
+        identifiable_authors = bool(nested_get(payload, "source_control.identifiable_authors"))
+        review_records_present = bool(nested_get(payload, "source_control.review_records_present"))
+        return build_decision(
+            control,
+            "pass" if approved_vcs and identifiable_authors and review_records_present else "fail",
+            "Source control governance is evaluated from explicit version-control, author-traceability, and review-record fields.",
+            decision_basis=[
+                "source_control.approved_vcs",
+                "source_control.identifiable_authors",
+                "source_control.review_records_present",
+            ],
+            evidence_sources=["commit_history", "code_review_records", "branch_protection_configuration"],
+        )
+
+    if control_id == "DSCB-L1-REQ-004":
+        performed = bool(nested_get(payload, "static_analysis.performed"))
+        findings_reviewed = bool(nested_get(payload, "static_analysis.findings_reviewed"))
+        return build_decision(
+            control,
+            "pass" if performed and findings_reviewed else "fail",
+            "Secure coding evidence is evaluated from structured static-analysis execution and review fields.",
+            decision_basis=["static_analysis.performed", "static_analysis.findings_reviewed"],
+            evidence_sources=["static_code_analysis_reports", "code_review_documentation"],
         )
 
     if control_id == "DSCB-L1-REQ-005":
@@ -249,6 +286,28 @@ def evaluate_single_control(control: dict, payload: dict, policy_results: dict[s
             "Artifact identity is inferred from digest linkage to the evaluated artifact.",
             decision_basis=["artifact.digest.linked_to_artifact", "artifact.digest.exists"],
             evidence_sources=["artifact_checksum_or_digest_records"],
+        )
+
+    if control_id == "DSCB-L1-REQ-013":
+        approved = bool(nested_get(payload, "release_approval.approved"))
+        approver = nested_get(payload, "release_approval.approver")
+        return build_decision(
+            control,
+            "pass" if approved and bool(approver) else "fail",
+            "Release authorization is evaluated from explicit structured approval metadata.",
+            decision_basis=["release_approval.approved", "release_approval.approver"],
+            evidence_sources=["release_approval_records"],
+        )
+
+    if control_id == "DSCB-L1-REQ-014":
+        approved_artifact_only = bool(nested_get(payload, "release_approval.approved_artifact_only"))
+        digest_exists = bool(nested_get(payload, "artifact.digest.exists"))
+        return build_decision(
+            control,
+            "pass" if approved_artifact_only and digest_exists else "fail",
+            "Approved-artifact deployment is evaluated from explicit release approval metadata plus artifact identity evidence.",
+            decision_basis=["release_approval.approved_artifact_only", "artifact.digest.exists"],
+            evidence_sources=["release_approval_records", "deployment_logs", "artifact_checksum_or_digest_records"],
         )
 
     if control_id == "DSCB-L1-REQ-015":

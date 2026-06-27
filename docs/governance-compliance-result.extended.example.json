@@ -65,14 +65,28 @@
   "control_evaluations": {
     "summary": {
       "total_controls": 46,
-      "pass": 15,
+      "pass": 25,
       "fail": 0,
-      "not_tested": 19,
-      "not_applicable": 12,
-      "applicable_controls": 34,
-      "tested_controls": 15
+      "not_tested": 5,
+      "not_applicable": 16,
+      "applicable_controls": 30,
+      "tested_controls": 25
     },
     "controls": [
+      {
+        "control_id": "DSCB-L1-REQ-001",
+        "level": "L1",
+        "verification_method": "hybrid",
+        "status": "pass",
+        "message": "Traceability is evaluated from explicit structured linkage fields for requirements, testcases, and reports."
+      },
+      {
+        "control_id": "DSCB-L1-REQ-002",
+        "level": "L1",
+        "verification_method": "automated",
+        "status": "pass",
+        "message": "Source control governance is evaluated from explicit version-control, author-traceability, and review-record fields."
+      },
       {
         "control_id": "DSCB-L1-REQ-003",
         "level": "L1",
@@ -81,14 +95,14 @@
         "message": "Mapped policy `branch_protection` returned 0 deny messages."
       },
       {
-        "control_id": "DSCB-L1-REQ-006",
+        "control_id": "DSCB-L1-REQ-013",
         "level": "L1",
-        "verification_method": "automated",
+        "verification_method": "hybrid",
         "status": "pass",
-        "message": "Mapped policy `sbom` returned 0 deny messages."
+        "message": "Release authorization is evaluated from explicit structured approval metadata."
       },
       {
-        "control_id": "DSCB-L1-REQ-013",
+        "control_id": "DSCB-L1-REQ-016",
         "level": "L1",
         "verification_method": "hybrid",
         "status": "not_tested",
