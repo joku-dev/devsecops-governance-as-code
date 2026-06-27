@@ -8,6 +8,7 @@ on:
       - "docs/**"
       - "mkdocs.yml"
       - "requirements-docs.txt"
+      - ".github/workflows/publish-docs.yml"
   workflow_dispatch:
 
 permissions:
