@@ -18,6 +18,7 @@ This documentation space separates governance content into a few clear areas so 
 - If you want the downstream evidence contract, read `operations/governance-evidence-contract.md`.
 - If you want to change upstream governance documents safely, read `operations/how-to-update-baseline-input-documents.md`.
 - If you want the evidence contract evolution rules, read `operations/governance-evidence-schema-versioning.md`.
+- If you want the formal waiver standard, read `operations/waiver-management-standard.md`.
 - If you want to record downstream runs and understand the viewer, read `operations/governance-result-intake-and-viewer-usage.md`.
 - If you want the current overall situation, read `operations/current-governance-platform-state.md`.
 - If you want a concrete rollout retrospective, read `operations/ha-cpswms-governance-lessons-learned.md`.

@@ -234,6 +234,34 @@ Typical controls supported:
 - `DSCB-L1-REQ-013`
 - `DSCB-L1-REQ-014`
 
+### `waivers`
+
+Purpose:
+
+- document approved, rejected, expired, or revoked exceptions in a machine-readable and auditable way
+
+Required fields for approved waivers:
+
+- `id`
+- `scope`
+- `object_id`
+- `affected_requirements`
+- `risk_classification`
+- `justification`
+- `compensating_controls`
+- `approval_authority`
+- `approved_by`
+- `approved_on`
+- `expiry`
+- `expired`
+- `status`
+
+Typical controls supported:
+
+- `DSCB-L1-REQ-010`
+- `DSCB-L2-REQ-012`
+- `DSCB-GOV-REQ-005`
+
 ### `environment`
 
 Purpose:
@@ -387,8 +415,10 @@ In other words:
 ## Related Files
 
 - `schemas/governance-run-input.schema.json`
+- `schemas/waiver.schema.json`
 - `docs/governance-run-input.example.json`
 - `scripts/generate_control_evaluation_report.py`
 - `scripts/control_evaluation.py`
 - `docs/operations/how-to-read-control-evaluation-status.md`
 - `docs/operations/governance-evidence-schema-versioning.md`
+- `docs/operations/waiver-management-standard.md`

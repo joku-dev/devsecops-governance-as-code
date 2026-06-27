@@ -58,10 +58,27 @@ That means:
 - no merge to `main` without a successful governance check
 - no silent bypass of the governance stage
 
+### 5. Standardized Waiver Evidence
+
+If a repository needs an exception, it should not pass ad hoc waiver text through comments or ticket links alone.
+
+Instead, it should provide a structured waiver record using the standard format described in:
+
+- `schemas/waiver.schema.json`
+- `docs/operations/waiver-management-standard.md`
+
+This makes it possible to check:
+
+- whether an expiry date exists
+- whether an approver is named
+- whether a justification exists
+- whether compensating controls are documented
+
 ## Practical Rollout Sequence
 
 1. publish the central pipeline template
 2. make target repositories consume the template
 3. make target repositories produce a standardized compliance result
-4. make the governance check a required merge gate
-5. later build central compliance monitoring across repositories
+4. make target repositories use standardized waiver evidence where exceptions are needed
+5. make the governance check a required merge gate
+6. later build central compliance monitoring across repositories

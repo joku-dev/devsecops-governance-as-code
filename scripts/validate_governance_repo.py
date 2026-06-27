@@ -72,6 +72,17 @@ def run_opa_check(errors):
         errors.append(f"OPA policy validation failed: {details}")
 
 
+def validate_waiver_authority(errors, waiver, waiver_authorities, source_label: str):
+    risk = waiver.get("risk_classification")
+    expected_authority = waiver_authorities.get(risk, {}).get("approval_authority")
+    actual_authority = waiver.get("approval_authority")
+    if expected_authority and actual_authority and expected_authority != actual_authority:
+        errors.append(
+            f"Waiver authority mismatch in {source_label} for risk {risk}: "
+            f"expected '{expected_authority}', got '{actual_authority}'"
+        )
+
+
 def main() -> int:
     errors = []
     controls = []
@@ -79,6 +90,9 @@ def main() -> int:
     evidence_catalog = load_yaml(MODEL / "evidence" / "evidence-types.yaml")
     governance_documents = load_yaml(MODEL / "documents" / "governance-documents.yaml")
     document_traceability = load_yaml(MODEL / "traceability" / "document-to-control.yaml")
+    waiver_authorities = load_yaml(MODEL / "waivers" / "waiver-authorities.yaml").get("authorities", {})
+    governance_run_input_example = load_json(ROOT / "docs" / "governance-run-input.example.json")
+    waiver_example = load_yaml(MODEL / "waivers" / "waiver-example.yaml")
 
     validate_schema(errors, ROOT / "schemas" / "control.schema.json", MODEL / "controls" / "dscb-l1.yaml")
     validate_schema(errors, ROOT / "schemas" / "control.schema.json", MODEL / "controls" / "dscb-l2.yaml")
@@ -89,6 +103,7 @@ def main() -> int:
     validate_schema(errors, ROOT / "schemas" / "governance-document-rendering.schema.json", MODEL / "documents" / "governance-document-rendering.yaml")
     validate_schema(errors, ROOT / "schemas" / "governance-compliance-result.schema.json", ROOT / "docs" / "governance-compliance-result.example.json")
     validate_schema(errors, ROOT / "schemas" / "governance-run-input.schema.json", ROOT / "docs" / "governance-run-input.example.json")
+    validate_schema(errors, ROOT / "schemas" / "waiver.schema.json", MODEL / "waivers" / "waiver-example.yaml")
 
     for path in sorted((MODEL / "controls").glob("dscb-*.yaml")):
         data = load_yaml(path)
@@ -156,6 +171,10 @@ def main() -> int:
         for control_id in mapping.get("control_ids", []):
             if control_id not in known:
                 errors.append(f"Document traceability references unknown control: {control_id}")
+
+    validate_waiver_authority(errors, waiver_example, waiver_authorities, "model/waivers/waiver-example.yaml")
+    for index, waiver in enumerate(governance_run_input_example.get("waivers", [])):
+        validate_waiver_authority(errors, waiver, waiver_authorities, f"docs/governance-run-input.example.json waiver[{index}]")
 
     run_opa_check(errors)
 

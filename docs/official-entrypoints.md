@@ -46,6 +46,7 @@ It is intended for:
 - Governance evidence contract: `docs/operations/governance-evidence-contract.md`
 - How to update baseline input documents: `docs/operations/how-to-update-baseline-input-documents.md`
 - Governance evidence schema versioning: `docs/operations/governance-evidence-schema-versioning.md`
+- Waiver management standard: `docs/operations/waiver-management-standard.md`
 - Current governance platform state: `docs/operations/current-governance-platform-state.md`
 - How to read control evaluation status: `docs/operations/how-to-read-control-evaluation-status.md`
 - Governance result intake and viewer usage: `docs/operations/governance-result-intake-and-viewer-usage.md`

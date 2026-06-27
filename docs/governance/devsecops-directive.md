@@ -167,9 +167,24 @@ Deviations from mandatory requirements are permitted only when:
 - technical or regulatory justification exists,
 - risk classification is documented,
 - compensating controls are defined,
+- the approving authority and named approver are documented,
+- an approval date is documented,
 - expiry dates are defined.
 
 All waivers must be documented in a centralized waiver registry.
+
+Each approved waiver record shall at minimum contain:
+
+- a unique waiver identifier,
+- the affected scope or object,
+- the affected requirements,
+- the written justification,
+- compensating controls or compensating measures,
+- approval authority,
+- named approver,
+- approval date,
+- expiry date,
+- current status.
 
 ### Waiver Authority
 
