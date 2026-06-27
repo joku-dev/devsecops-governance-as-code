@@ -19,9 +19,11 @@ The most important current files are:
 - `.github/workflows/devsecops-baseline-l1-v1.0.0.yml`
 - `.github/workflows/devsecops-baseline-l1-v1.1.0.yml`
 - `.github/workflows/devsecops-baseline-l1-v1.1.1.yml`
+- `.github/workflows/devsecops-baseline-l1-v1.1.2.yml`
 - `releases/l1/v1.0.0/examples/github-actions/devsecops-baseline-l1-v1.0.0.yml`
 - `releases/l1/v1.1.0/examples/github-actions/devsecops-baseline-l1-v1.1.0.yml`
 - `releases/l1/v1.1.1/examples/github-actions/devsecops-baseline-l1-v1.1.1.yml`
+- `releases/l1/v1.1.2/examples/github-actions/devsecops-baseline-l1-v1.1.2.yml`
 - `docs/onboarding/application-repo-onboarding.md`
 - `docs/onboarding/how-other-repositories-use-the-central-governance-baseline.md`
 - `docs/operations/governance-evidence-contract.md`
@@ -89,6 +91,10 @@ That package adds the optional `governance_run_input_path` consumer input.
 Because `v1.1.0` contained a wrapper packaging defect, the corrected patch package is:
 
 - `joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-l1-v1.1.1.yml@l1-baseline-v1.1.1`
+
+The corrected final patch package is:
+
+- `joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-l1-v1.1.2.yml@l1-baseline-v1.1.2`
 
 ## What The Pipeline Must Produce
 

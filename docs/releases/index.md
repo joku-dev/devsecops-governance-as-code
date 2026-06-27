@@ -18,6 +18,7 @@ The next prepared package in the repository is:
 
 - `L1 baseline v1.1.0`
 - `L1 baseline v1.1.1`
+- `L1 baseline v1.1.2`
 
 The working source still remains in `model/`, while approved frozen release packages are published under `releases/`.
 
@@ -29,3 +30,5 @@ The working source still remains in `model/`, while approved frozen release pack
 - `L1 baseline v1.1.0 release statement`: `l1-baseline-v1.1.0-release-statement.md`
 - `L1 baseline v1.1.1`: `l1-baseline-v1.1.1.md`
 - `L1 baseline v1.1.1 release statement`: `l1-baseline-v1.1.1-release-statement.md`
+- `L1 baseline v1.1.2`: `l1-baseline-v1.1.2.md`
+- `L1 baseline v1.1.2 release statement`: `l1-baseline-v1.1.2-release-statement.md`
