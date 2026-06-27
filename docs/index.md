@@ -16,6 +16,7 @@ This documentation space separates governance content into a few clear areas so 
 - If you want the documentation publishing flow, read `operations/mkdocs-and-github-pages-step-by-step.md`.
 - If you want the governance logic, read `governance/policy-directive-baseline-verification-and-governance-as-code-explained.md`.
 - If you want the platform relationship, read `platform/control-baseline-and-platform-architecture-relationship-explained.md`.
+- If you want the release gate checklist, read `releases/release-publication-checklist.md`.
 
 ## Documentation Areas
 
@@ -26,6 +27,7 @@ This documentation space separates governance content into a few clear areas so 
 - `platform/` explains how platform architecture implements baseline controls.
 - `pipeline-baseline/` contains reusable CI/CD baseline guidance and related release-facing workflow documentation.
 - `releases/` contains published baseline package documentation.
+- `.github/` contains collaboration guardrails such as workflow automation, PR structure, and ownership rules.
 
 ## Repository Model
 

@@ -29,6 +29,7 @@ To understand how releases should evolve and how downstream repositories should 
 
 ## Available Release Packages
 
+- `Release publication checklist`: `release-publication-checklist.md`
 - `L1 baseline v1.0.0`: `l1-baseline-v1.0.0.md`
 - `L1 baseline v1.0.0 release statement`: `l1-baseline-v1.0.0-release-statement.md`
 - `L1 baseline v1.1.0`: `l1-baseline-v1.1.0.md`

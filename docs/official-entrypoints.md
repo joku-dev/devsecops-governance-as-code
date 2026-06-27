@@ -59,6 +59,7 @@ It is intended for:
 
 - Release overview: `docs/releases/index.md`
 - Release and migration model: `docs/releases/release-and-migration-model.md`
+- Release publication checklist: `docs/releases/release-publication-checklist.md`
 - L1 baseline v1.0.0: `docs/releases/l1-baseline-v1.0.0.md`
 - L1 baseline v1.0.0 release statement: `docs/releases/l1-baseline-v1.0.0-release-statement.md`
 - L1 baseline v1.1.0: `docs/releases/l1-baseline-v1.1.0.md`
@@ -81,6 +82,11 @@ It is intended for:
 - Consumer example workflow with governance input: `releases/l1/v1.1.2/examples/github-actions/devsecops-baseline-l1-v1.1.2.yml`
 - Governance run input schema: `schemas/governance-run-input.schema.json`
 - Governance run input example: `docs/governance-run-input.example.json`
+
+## Governance Collaboration Entrypoints
+
+- Pull request template: `.github/pull_request_template.md`
+- CODEOWNERS: `.github/CODEOWNERS`
 
 ## Recommended Reading Order For New Users
 
