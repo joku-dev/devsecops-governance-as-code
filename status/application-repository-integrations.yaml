@@ -3,16 +3,16 @@ integrations:
     baseline_level: L1
     status: operational
     branch: main
-    governance_workflow_ref: l1-baseline-v1.0.0
-    last_evaluated_commit: d2f0dba3f88de91838213060e4a014fe78026dd1
-    pipeline_run_id: "28292518364"
+    governance_workflow_ref: l1-baseline-v1.1.2
+    last_evaluated_commit: 9059d15d225c0f548289dc942423df74b8b9b1fd
+    pipeline_run_id: "28293253390"
     pipeline_result: success
     evidence_status: available
-    notes: Successful end-to-end baseline execution through the released central L1 reusable governance workflow on a protected main branch, including the new governance control evaluation report flow.
+    notes: Successful end-to-end baseline execution through the corrected released central L1 reusable governance workflow v1.1.2 on a protected main branch, including uploaded governance run input and control evaluation artifacts.
 
 summary:
   operational_state: L1 operational
   central_baseline_repository: joku-dev/devsecops-governance-as-code
   rollout_phase: pilot validated and released
   integrated_repositories: 1
-  successful_baseline_runs: 2
+  successful_baseline_runs: 3

@@ -36,6 +36,22 @@ def main() -> int:
                 passing_results += 1
             else:
                 failing_results += 1
+        history = []
+        for item, path in zip(parsed, results):
+            control_summary = item.get("control_evaluation_summary", {})
+            history.append(
+                {
+                    "generated_at": item.get("generated_at", ""),
+                    "status": item.get("overall_status", "unknown"),
+                    "pipeline_run_id": item.get("pipeline", {}).get("pipeline_run_id", "unknown"),
+                    "pipeline_url": item.get("pipeline", {}).get("pipeline_url", ""),
+                    "branch": item.get("repository", {}).get("branch", "unknown"),
+                    "commit_id": item.get("repository", {}).get("commit_id", "unknown"),
+                    "governance_baseline_ref": item.get("governance_baseline_ref", "unknown"),
+                    "control_evaluation_summary": control_summary,
+                    "source_file": str(path.relative_to(ROOT)),
+                }
+            )
         repositories.append(
             {
                 "repository_id": latest["repository_id"],
@@ -48,7 +64,9 @@ def main() -> int:
                     "generated_at": latest.get("generated_at", ""),
                     "governance_baseline_ref": latest.get("governance_baseline_ref", "unknown"),
                     "source_file": str(results[-1].relative_to(ROOT)),
+                    "control_evaluation_summary": latest.get("control_evaluation_summary", {}),
                 },
+                "history": history,
             }
         )
 

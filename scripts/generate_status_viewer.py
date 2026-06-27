@@ -64,6 +64,29 @@ def badge(text: str, tone: str) -> str:
     return f'<span class="badge {tone}">{escape(text)}</span>'
 
 
+def first_non_empty(*values: str) -> str:
+    for value in values:
+        if value:
+            return value
+    return ""
+
+
+def summarize_control_delta(current_summary: dict, previous_summary: dict | None) -> str:
+    if not current_summary:
+        return "No structured control summary"
+    if not previous_summary:
+        return "First structured control summary"
+
+    pass_delta = current_summary.get("pass", 0) - previous_summary.get("pass", 0)
+    fail_delta = current_summary.get("fail", 0) - previous_summary.get("fail", 0)
+    not_tested_delta = current_summary.get("not_tested", 0) - previous_summary.get("not_tested", 0)
+    return (
+        f"Δ pass {pass_delta:+d}, "
+        f"Δ fail {fail_delta:+d}, "
+        f"Δ not_tested {not_tested_delta:+d}"
+    )
+
+
 def build_summary_cards(documents, gaps, controls):
     automated = sum(1 for control in controls if control.get("verification", {}).get("method") == "automated")
     policy_candidates = sum(1 for control in controls if control.get("policy_as_code", {}).get("candidate"))
@@ -149,6 +172,45 @@ def build_control_report_cards(control_report: dict | None) -> str:
     return "".join(html)
 
 
+def build_repository_history_rows(results_index: dict) -> list[list[str]]:
+    rows = []
+    for repository in results_index.get("repositories", []):
+        history = repository.get("history", [])
+        for index in range(len(history) - 1, -1, -1):
+            entry = history[index]
+            current_summary = entry.get("control_evaluation_summary", {})
+            previous_summary = None
+            for older_index in range(index - 1, -1, -1):
+                candidate = history[older_index].get("control_evaluation_summary", {})
+                if candidate:
+                    previous_summary = candidate
+                    break
+
+            status_tone = "ok" if entry.get("status") == "pass" else "danger"
+            tested_controls = current_summary.get("tested_controls")
+            pass_controls = current_summary.get("pass")
+            fail_controls = current_summary.get("fail")
+            not_tested_controls = current_summary.get("not_tested")
+            coverage_text = (
+                f"{pass_controls}/{tested_controls} pass, {fail_controls} fail, {not_tested_controls} not_tested"
+                if current_summary
+                else "No structured control summary"
+            )
+            rows.append(
+                [
+                    f"<code>{escape(repository.get('repository_id', 'unknown'))}</code>",
+                    escape(entry.get("generated_at", "")),
+                    badge(entry.get("status", "unknown"), status_tone),
+                    f"<code>{escape(entry.get('governance_baseline_ref', 'unknown'))}</code>",
+                    escape(entry.get("branch", "unknown")),
+                    f"<code>{escape(entry.get('pipeline_run_id', 'unknown'))}</code>",
+                    coverage_text,
+                    summarize_control_delta(current_summary, previous_summary),
+                ]
+            )
+    return rows
+
+
 def main() -> int:
     controls = []
     for path in sorted((MODEL / "controls").glob("dscb-*.yaml")):
@@ -165,6 +227,14 @@ def main() -> int:
     results_index = load_json(ROOT / "status" / "repository-results-index.json")
     control_report_path = ROOT / "generated" / "control-evaluation-report.json"
     control_report = load_json(control_report_path) if control_report_path.exists() else None
+    latest_result_with_summary = None
+    for repository in results_index.get("repositories", []):
+        latest_summary = repository.get("latest_result", {}).get("control_evaluation_summary", {})
+        if latest_summary:
+            latest_result_with_summary = repository.get("latest_result", {})
+            break
+    control_summary_source = latest_result_with_summary.get("control_evaluation_summary") if latest_result_with_summary else None
+    control_cards_source = {"summary": control_summary_source} if control_summary_source else control_report
 
     document_table_rows = []
     for document in documents:
@@ -270,9 +340,10 @@ def main() -> int:
             for repository in results_index.get("repositories", [])
             if repository.get("latest_result", {}).get("governance_baseline_ref")
         ],
+        "repository_result_history_entries": sum(len(repository.get("history", [])) for repository in results_index.get("repositories", [])),
     }
-    if control_report:
-        payload["control_evaluation_summary"] = control_report.get("summary", {})
+    if control_cards_source:
+        payload["control_evaluation_summary"] = control_cards_source.get("summary", {})
 
     control_rows = []
     if control_report:
@@ -299,7 +370,7 @@ def main() -> int:
                     ],
                 }
             )
-    control_cards_html = f"<section class=\"cards\">{build_control_report_cards(control_report)}</section>" if control_report else ""
+    control_cards_html = f"<section class=\"cards\">{build_control_report_cards(control_cards_source)}</section>" if control_cards_source else ""
     control_snapshot_html = (
         "<section class=\"panel\"><h2>Latest Control Evaluation Snapshot</h2>"
         "<div class=\"filters\">"
@@ -318,6 +389,19 @@ def main() -> int:
         + "<p id=\"control-filter-summary\" class=\"filter-summary\"></p>"
         + "</section>"
         if control_rows
+        else ""
+    )
+    repository_history_rows = build_repository_history_rows(results_index)
+    history_panel_html = (
+        "<section class=\"panel\">"
+        "<h2>Repository Result History</h2>"
+        "<p class=\"filter-summary\">Shows baseline evolution, run history, and structured control coverage where available.</p>"
+        + html_table(
+            ["Repository", "Generated At", "Status", "Baseline Ref", "Branch", "Run ID", "Coverage", "Trend"],
+            repository_history_rows,
+        )
+        + "</section>"
+        if repository_history_rows
         else ""
     )
 
@@ -389,8 +473,8 @@ def main() -> int:
         <li><a href="../control-evaluation-report.md">Control Evaluation Report Markdown</a></li>
         <li><a href="../../operations/current-governance-platform-state/">Current Governance Platform State</a></li>
         <li><a href="../../operations/ha-cpswms-governance-validation-status/">ha-CPsWMS Validation Status</a></li>
-        <li><a href="../../releases/l1-baseline-v1.0.0/">L1 Baseline v1.0.0</a></li>
-        <li><a href="../../releases/l1-baseline-v1.0.0-release-statement/">L1 Release Statement</a></li>
+        <li><a href="../../releases/l1-baseline-v1.1.2/">L1 Baseline v1.1.2</a></li>
+        <li><a href="../../releases/l1-baseline-v1.1.2-release-statement/">L1 Release Statement</a></li>
         <li><a href="../../onboarding/how-other-repos-use-this-governance-repo/">Integration Guide</a></li>
         <li><a href="../../governance/policy-directive-baseline-verification-and-governance-as-code-explained/">Governance Relationship Explanation</a></li>
       </ul>
@@ -400,6 +484,7 @@ def main() -> int:
         <h2>Operational Integration Status</h2>
         {html_table(["Repository", "Level", "Status", "Pipeline Result", "Workflow Ref", "Run ID", "Notes"], integration_rows)}
       </section>
+      {history_panel_html}
       {control_snapshot_html}
       <section class="panel">
         <h2>Governance Documents</h2>
