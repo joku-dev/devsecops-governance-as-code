@@ -44,7 +44,7 @@
   </header>
   <main>
     <section class="cards">
-      <section class="card"><h3>Operational State</h3><div class="value">L1 operational</div><p>Rollout: pilot validated</p></section><section class="card"><h3>Integrated Repositories</h3><div class="value">1</div><p>Successful runs: 1</p></section><section class="card"><h3>Central Baseline</h3><div class="value">Active</div><p>joku-dev/devsecops-governance-as-code</p></section>
+      <section class="card"><h3>Operational State</h3><div class="value">L1 operational</div><p>Rollout: pilot validated and released</p></section><section class="card"><h3>Integrated Repositories</h3><div class="value">1</div><p>Passing results: 1</p></section><section class="card"><h3>Central Baseline</h3><div class="value">Active</div><p>l1-baseline-v1.0.0</p></section>
     </section>
     <section class="cards">
       <section class="card"><h3>Documents</h3><div class="value">4</div><p>Draft: 2</p></section><section class="card"><h3>Controls</h3><div class="value">46</div><p>Automated: 27</p></section><section class="card"><h3>Policy Candidates</h3><div class="value">31</div><p>Coverage: 31/27 automated</p></section><section class="card"><h3>Open Gaps</h3><div class="value">2</div><p>Medium: 2</p></section>
@@ -56,15 +56,18 @@
         <li><a href="../reports/document-control-matrix.md">Document To Control Matrix</a></li>
         <li><a href="../documents/devsecops-pol-001.html">Rendered Policy</a></li>
         <li><a href="../documents/devsecops-dir-001.html">Rendered Directive</a></li>
-        <li><a href="../../docs/governance/MANAGEMENT_READOUT.md">Management Readout</a></li>
-        <li><a href="../../docs/onboarding/how-other-repositories-use-the-central-governance-baseline.md">Integration Guide</a></li>
+        <li><a href="../../docs/operations/current-governance-platform-state.md">Current Governance Platform State</a></li>
+        <li><a href="../../docs/operations/ha-cpswms-governance-validation-status.md">ha-CPsWMS Validation Status</a></li>
+        <li><a href="../../docs/releases/l1-baseline-v1.0.0.md">L1 Baseline v1.0.0</a></li>
+        <li><a href="../../docs/releases/l1-baseline-v1.0.0-release-statement.md">L1 Release Statement</a></li>
+        <li><a href="../../docs/onboarding/how-other-repos-use-this-governance-repo.md">Integration Guide</a></li>
         <li><a href="../../docs/governance/policy-directive-baseline-verification-and-governance-as-code-explained.md">Governance Relationship Explanation</a></li>
       </ul>
     </section>
     <section class="panels">
       <section class="panel">
         <h2>Operational Integration Status</h2>
-        <table><thead><tr><th>Repository</th><th>Level</th><th>Status</th><th>Pipeline Result</th><th>Workflow Ref</th><th>Run ID</th><th>Notes</th></tr></thead><tbody><tr><td><code>joku-dev/ha-CPsWMS</code></td><td><span class="badge plain">L1</span></td><td><span class="badge ok">operational</span></td><td>success</td><td><code>654286b</code></td><td><code>28263295148</code></td><td>Successful end-to-end baseline execution through the central reusable governance workflow.</td></tr></tbody></table>
+        <table><thead><tr><th>Repository</th><th>Level</th><th>Status</th><th>Pipeline Result</th><th>Workflow Ref</th><th>Run ID</th><th>Notes</th></tr></thead><tbody><tr><td><code>joku-dev/ha-CPsWMS</code></td><td><span class="badge plain">L1</span></td><td><span class="badge ok">operational</span></td><td>success</td><td><code>l1-baseline-v1.0.0</code></td><td><code>28284063513</code></td><td>Successful end-to-end baseline execution through the released central L1 reusable governance workflow on a protected main branch.</td></tr></tbody></table>
       </section>
       <section class="panel">
         <h2>Governance Documents</h2>
@@ -90,7 +93,10 @@
   &quot;gaps&quot;: 2,
   &quot;policy_candidates&quot;: 31,
   &quot;integrated_repositories&quot;: 1,
-  &quot;successful_baseline_runs&quot;: 1
+  &quot;successful_baseline_runs&quot;: 1,
+  &quot;latest_governance_baselines&quot;: [
+    &quot;l1-baseline-v1.0.0&quot;
+  ]
 }</pre>
       </section>
     </section>

@@ -44,6 +44,11 @@ It is intended for:
 
 - Control baseline and platform architecture relationship: `docs/platform/control-baseline-and-platform-architecture-relationship-explained.md`
 
+## Control And Pipeline Guides
+
+- Control baseline guide: `docs/controls/index.md`
+- Pipeline baseline guide: `docs/pipeline-baseline/index.md`
+
 ## Release Documents
 
 - Release overview: `docs/releases/index.md`

@@ -26,6 +26,11 @@ def load_csv(path: Path):
         return list(csv.DictReader(handle))
 
 
+def load_json(path: Path):
+    with path.open("r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
 def html_table(headers: list[str], rows: list[list[str]]) -> str:
     thead = "".join(f"<th>{escape(header)}</th>" for header in headers)
     body_rows = []
@@ -71,19 +76,28 @@ def build_summary_cards(documents, gaps, controls):
     return "".join(html)
 
 
-def build_operational_cards(integration_status: dict) -> str:
+def build_operational_cards(integration_status: dict, results_index: dict) -> str:
     summary = integration_status.get("summary", {})
+    results_summary = results_index.get("summary", {})
+    baseline_refs = sorted(
+        {
+            repository.get("latest_result", {}).get("governance_baseline_ref")
+            for repository in results_index.get("repositories", [])
+            if repository.get("latest_result", {}).get("governance_baseline_ref")
+        }
+    )
+    central_baseline = ", ".join(baseline_refs) if baseline_refs else summary.get("central_baseline_repository", "unknown")
     cards = [
         ("Operational State", str(summary.get("operational_state", "unknown")), f"Rollout: {summary.get('rollout_phase', 'unknown')}"),
         (
             "Integrated Repositories",
-            str(summary.get("integrated_repositories", 0)),
-            f"Successful runs: {summary.get('successful_baseline_runs', 0)}",
+            str(results_summary.get("repository_count", summary.get("integrated_repositories", 0))),
+            f"Passing results: {results_summary.get('passing_results', summary.get('successful_baseline_runs', 0))}",
         ),
         (
             "Central Baseline",
             "Active",
-            str(summary.get("central_baseline_repository", "unknown")),
+            str(central_baseline),
         ),
     ]
     html = []
@@ -111,6 +125,7 @@ def main() -> int:
     traceability_rows = load_csv(ROOT / "generated" / "xlsx" / "traceability_matrix.csv")
     document_rows = load_csv(ROOT / "generated" / "xlsx" / "document_control_matrix.csv")
     integration_status = load_yaml(ROOT / "status" / "application-repository-integrations.yaml")
+    results_index = load_json(ROOT / "status" / "repository-results-index.json")
 
     document_table_rows = []
     for document in documents:
@@ -163,8 +178,30 @@ def main() -> int:
             ]
         )
 
+    integration_lookup = {row["repository"]: row for row in integration_status.get("integrations", [])}
     integration_rows = []
+    for repository in results_index.get("repositories", []):
+        repo_id = repository.get("repository_id", "unknown")
+        integration = integration_lookup.get(repo_id, {})
+        latest_result = repository.get("latest_result", {})
+        tone = "ok" if latest_result.get("status") == "pass" and integration.get("status") == "operational" else "warn"
+        integration_rows.append(
+            [
+                f"<code>{escape(repo_id)}</code>",
+                badge(integration.get("baseline_level", repository.get("baseline_level", "unknown")), "plain"),
+                badge(integration.get("status", latest_result.get("status", "unknown")), tone),
+                escape(integration.get("pipeline_result", latest_result.get("status", "unknown"))),
+                f"<code>{escape(latest_result.get('governance_baseline_ref', integration.get('governance_workflow_ref', 'unknown')))}</code>",
+                f"<code>{escape(latest_result.get('pipeline_run_id', integration.get('pipeline_run_id', 'unknown')))}</code>",
+                escape(
+                    integration.get("notes")
+                    or f"Latest commit {latest_result.get('commit_id', 'unknown')} evaluated at {latest_result.get('generated_at', 'unknown')}."
+                ),
+            ]
+        )
     for row in integration_status.get("integrations", []):
+        if row["repository"] in {repository.get("repository_id") for repository in results_index.get("repositories", [])}:
+            continue
         tone = "ok" if row.get("pipeline_result") == "success" and row.get("status") == "operational" else "warn"
         integration_rows.append(
             [
@@ -183,8 +220,17 @@ def main() -> int:
         "controls": len(controls),
         "gaps": len(gaps),
         "policy_candidates": sum(1 for control in controls if control.get("policy_as_code", {}).get("candidate")),
-        "integrated_repositories": integration_status.get("summary", {}).get("integrated_repositories", 0),
-        "successful_baseline_runs": integration_status.get("summary", {}).get("successful_baseline_runs", 0),
+        "integrated_repositories": results_index.get("summary", {}).get(
+            "repository_count", integration_status.get("summary", {}).get("integrated_repositories", 0)
+        ),
+        "successful_baseline_runs": results_index.get("summary", {}).get(
+            "passing_results", integration_status.get("summary", {}).get("successful_baseline_runs", 0)
+        ),
+        "latest_governance_baselines": [
+            repository.get("latest_result", {}).get("governance_baseline_ref")
+            for repository in results_index.get("repositories", [])
+            if repository.get("latest_result", {}).get("governance_baseline_ref")
+        ],
     }
 
     html = f"""<!doctype html>
@@ -233,7 +279,7 @@ def main() -> int:
   </header>
   <main>
     <section class="cards">
-      {build_operational_cards(integration_status)}
+      {build_operational_cards(integration_status, results_index)}
     </section>
     <section class="cards">
       {build_summary_cards(documents, gaps, controls)}
@@ -245,8 +291,11 @@ def main() -> int:
         <li><a href="../reports/document-control-matrix.md">Document To Control Matrix</a></li>
         <li><a href="../documents/devsecops-pol-001.html">Rendered Policy</a></li>
         <li><a href="../documents/devsecops-dir-001.html">Rendered Directive</a></li>
-        <li><a href="../../docs/governance/MANAGEMENT_READOUT.md">Management Readout</a></li>
-        <li><a href="../../docs/onboarding/how-other-repositories-use-the-central-governance-baseline.md">Integration Guide</a></li>
+        <li><a href="../../docs/operations/current-governance-platform-state.md">Current Governance Platform State</a></li>
+        <li><a href="../../docs/operations/ha-cpswms-governance-validation-status.md">ha-CPsWMS Validation Status</a></li>
+        <li><a href="../../docs/releases/l1-baseline-v1.0.0.md">L1 Baseline v1.0.0</a></li>
+        <li><a href="../../docs/releases/l1-baseline-v1.0.0-release-statement.md">L1 Release Statement</a></li>
+        <li><a href="../../docs/onboarding/how-other-repos-use-this-governance-repo.md">Integration Guide</a></li>
         <li><a href="../../docs/governance/policy-directive-baseline-verification-and-governance-as-code-explained.md">Governance Relationship Explanation</a></li>
       </ul>
     </section>
