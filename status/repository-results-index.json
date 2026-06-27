@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-06-27T09:25:00Z",
+  "generated_at": "2026-06-27T14:50:57Z",
   "summary": {
     "repository_count": 1,
-    "result_count": 1,
-    "passing_results": 1,
+    "result_count": 2,
+    "passing_results": 2,
     "failing_results": 0
   },
   "repositories": [
@@ -14,11 +14,11 @@
       "results_path": "status/results/joku-dev__ha-CPsWMS/",
       "latest_result": {
         "status": "pass",
-        "pipeline_run_id": "28284063513",
-        "commit_id": "8e7b742f41f902b4b85d1f6d4f3e556a96d937a3",
-        "generated_at": "2026-06-27T08:36:38Z",
+        "pipeline_run_id": "28292518364",
+        "commit_id": "d2f0dba3f88de91838213060e4a014fe78026dd1",
+        "generated_at": "2026-06-27T14:49:08Z",
         "governance_baseline_ref": "l1-baseline-v1.0.0",
-        "source_file": "status/results/joku-dev__ha-CPsWMS/2026-06-27T08-36-38Z-run-28284063513.json"
+        "source_file": "status/results/joku-dev__ha-CPsWMS/2026-06-27T14-49-08Z-run-28292518364.json"
       }
     }
   ]
