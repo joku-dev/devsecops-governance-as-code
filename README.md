@@ -113,6 +113,12 @@ Read the explanation of policy, directive, baseline, verification, and governanc
 sed -n '1,360p' docs/policy-directive-baseline-verification-and-governance-as-code-explained.md
 ```
 
+Read the explanation of the relationship between the control baseline and the platform architecture:
+
+```bash
+sed -n '1,320p' docs/control-baseline-and-platform-architecture-relationship-explained.md
+```
+
 Use the generic GitHub Actions onboarding template:
 
 ```bash
