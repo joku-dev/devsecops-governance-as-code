@@ -23,6 +23,7 @@ nav:
   - Operations:
       - How To Use This Repo: operations/how-to-use-this-repo.md
       - Beginner Guide: operations/beginner-step-by-step-operations-guide.md
+      - Governance Results Storage Model: operations/governance-results-storage-model.md
       - MkDocs And GitHub Pages Step By Step: operations/mkdocs-and-github-pages-step-by-step.md
       - Enforcement Options: operations/operational-governance-enforcement-options.md
       - Target Structure Plan: operations/repository-target-structure-and-migration-plan.md

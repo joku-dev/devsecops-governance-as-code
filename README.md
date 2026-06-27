@@ -205,6 +205,13 @@ sed -n '1,240p' releases/l1/v1.0.0/baseline-package.md
 sed -n '1,200p' docs/releases/l1-baseline-v1.0.0.md
 ```
 
+Generate the central repository results index:
+
+```bash
+python3 scripts/generate_repository_results_index.py
+sed -n '1,220p' status/repository-results-index.json
+```
+
 Run the local demonstration environment:
 
 ```bash
