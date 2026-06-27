@@ -26,6 +26,7 @@ except ModuleNotFoundError:
 
 
 ROOT = Path(__file__).resolve().parents[1]
+MODEL = ROOT / "model"
 EXPECTED_COUNTS = {"L1": 16, "L2": 14, "L3": 11, "GOV": 5}
 
 
@@ -74,21 +75,21 @@ def run_opa_check(errors):
 def main() -> int:
     errors = []
     controls = []
-    capabilities = load_yaml(ROOT / "platform" / "platform-capabilities.yaml")
-    evidence_catalog = load_yaml(ROOT / "evidence" / "evidence-types.yaml")
-    governance_documents = load_yaml(ROOT / "documents" / "governance-documents.yaml")
-    document_traceability = load_yaml(ROOT / "traceability" / "document-to-control.yaml")
+    capabilities = load_yaml(MODEL / "platform" / "platform-capabilities.yaml")
+    evidence_catalog = load_yaml(MODEL / "evidence" / "evidence-types.yaml")
+    governance_documents = load_yaml(MODEL / "documents" / "governance-documents.yaml")
+    document_traceability = load_yaml(MODEL / "traceability" / "document-to-control.yaml")
 
-    validate_schema(errors, ROOT / "schemas" / "control.schema.json", ROOT / "controls" / "dscb-l1.yaml")
-    validate_schema(errors, ROOT / "schemas" / "control.schema.json", ROOT / "controls" / "dscb-l2.yaml")
-    validate_schema(errors, ROOT / "schemas" / "control.schema.json", ROOT / "controls" / "dscb-l3.yaml")
-    validate_schema(errors, ROOT / "schemas" / "control.schema.json", ROOT / "controls" / "dscb-gov.yaml")
-    validate_schema(errors, ROOT / "schemas" / "governance-document-catalog.schema.json", ROOT / "documents" / "governance-documents.yaml")
-    validate_schema(errors, ROOT / "schemas" / "document-control-traceability.schema.json", ROOT / "traceability" / "document-to-control.yaml")
-    validate_schema(errors, ROOT / "schemas" / "governance-document-rendering.schema.json", ROOT / "documents" / "governance-document-rendering.yaml")
+    validate_schema(errors, ROOT / "schemas" / "control.schema.json", MODEL / "controls" / "dscb-l1.yaml")
+    validate_schema(errors, ROOT / "schemas" / "control.schema.json", MODEL / "controls" / "dscb-l2.yaml")
+    validate_schema(errors, ROOT / "schemas" / "control.schema.json", MODEL / "controls" / "dscb-l3.yaml")
+    validate_schema(errors, ROOT / "schemas" / "control.schema.json", MODEL / "controls" / "dscb-gov.yaml")
+    validate_schema(errors, ROOT / "schemas" / "governance-document-catalog.schema.json", MODEL / "documents" / "governance-documents.yaml")
+    validate_schema(errors, ROOT / "schemas" / "document-control-traceability.schema.json", MODEL / "traceability" / "document-to-control.yaml")
+    validate_schema(errors, ROOT / "schemas" / "governance-document-rendering.schema.json", MODEL / "documents" / "governance-document-rendering.yaml")
     validate_schema(errors, ROOT / "schemas" / "governance-compliance-result.schema.json", ROOT / "docs" / "governance-compliance-result.example.json")
 
-    for path in sorted((ROOT / "controls").glob("dscb-*.yaml")):
+    for path in sorted((MODEL / "controls").glob("dscb-*.yaml")):
         data = load_yaml(path)
         level = data.get("level")
         for requirement in data.get("requirements", []):
@@ -106,7 +107,7 @@ def main() -> int:
         if actual != expected:
             errors.append(f"Unexpected {level} count: expected {expected}, got {actual}")
 
-    traceability = load_yaml(ROOT / "traceability" / "control-to-platform.yaml")
+    traceability = load_yaml(MODEL / "traceability" / "control-to-platform.yaml")
     traced = {item["control"] for item in traceability.get("mappings", [])}
     known = set(ids)
     known_capabilities = {item["id"] for item in capabilities.get("capabilities", [])}

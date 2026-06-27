@@ -12,6 +12,7 @@ import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
+MODEL = ROOT / "model"
 OUT = ROOT / "generated" / "viewer" / "status-viewer.html"
 
 
@@ -99,13 +100,13 @@ def build_operational_cards(integration_status: dict) -> str:
 
 def main() -> int:
     controls = []
-    for path in sorted((ROOT / "controls").glob("dscb-*.yaml")):
+    for path in sorted((MODEL / "controls").glob("dscb-*.yaml")):
         data = load_yaml(path)
         level = data.get("level")
         for requirement in data.get("requirements", []):
             controls.append({**requirement, "level": level})
 
-    documents = load_yaml(ROOT / "documents" / "governance-documents.yaml").get("documents", [])
+    documents = load_yaml(MODEL / "documents" / "governance-documents.yaml").get("documents", [])
     gaps = load_csv(ROOT / "generated" / "xlsx" / "open_gap_report.csv")
     traceability_rows = load_csv(ROOT / "generated" / "xlsx" / "traceability_matrix.csv")
     document_rows = load_csv(ROOT / "generated" / "xlsx" / "document_control_matrix.csv")
@@ -244,9 +245,9 @@ def main() -> int:
         <li><a href="../reports/document-control-matrix.md">Document To Control Matrix</a></li>
         <li><a href="../documents/devsecops-pol-001.html">Rendered Policy</a></li>
         <li><a href="../documents/devsecops-dir-001.html">Rendered Directive</a></li>
-        <li><a href="../../docs/MANAGEMENT_READOUT.md">Management Readout</a></li>
-        <li><a href="../../docs/how-other-repositories-use-the-central-governance-baseline.md">Integration Guide</a></li>
-        <li><a href="../../docs/policy-directive-baseline-verification-and-governance-as-code-explained.md">Governance Relationship Explanation</a></li>
+        <li><a href="../../docs/governance/MANAGEMENT_READOUT.md">Management Readout</a></li>
+        <li><a href="../../docs/onboarding/how-other-repositories-use-the-central-governance-baseline.md">Integration Guide</a></li>
+        <li><a href="../../docs/governance/policy-directive-baseline-verification-and-governance-as-code-explained.md">Governance Relationship Explanation</a></li>
       </ul>
     </section>
     <section class="panels">

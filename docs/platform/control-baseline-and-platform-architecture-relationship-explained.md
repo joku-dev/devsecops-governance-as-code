@@ -35,10 +35,10 @@ Sie beschreibt:
 
 Im Repository ist das vor allem modelliert unter:
 
-- `controls/dscb-l1.yaml`
-- `controls/dscb-l2.yaml`
-- `controls/dscb-l3.yaml`
-- `controls/dscb-gov.yaml`
+- `model/controls/dscb-l1.yaml`
+- `model/controls/dscb-l2.yaml`
+- `model/controls/dscb-l3.yaml`
+- `model/controls/dscb-gov.yaml`
 
 ### Platform Architecture
 
@@ -52,7 +52,7 @@ Sie beschreibt:
 
 Im Repository ist das vor allem modelliert unter:
 
-- `platform/platform-capabilities.yaml`
+- `model/platform/platform-capabilities.yaml`
 
 ## Das Kernprinzip
 
@@ -274,7 +274,7 @@ Der Zusammenhang wird im Repository über mehrere Datenstrukturen modelliert:
 
 Beispiel:
 
-- `controls/dscb-l1.yaml`
+- `model/controls/dscb-l1.yaml`
 
 Ein Control enthält:
 
@@ -290,7 +290,7 @@ Ein Control enthält:
 
 Beispiel:
 
-- `platform/platform-capabilities.yaml`
+- `model/platform/platform-capabilities.yaml`
 
 Eine Capability enthält:
 
@@ -421,13 +421,13 @@ Beispiel:
 
 Für diesen Zusammenhang sind insbesondere diese Dateien zentral:
 
-- `controls/dscb-l1.yaml`
-- `controls/dscb-l2.yaml`
-- `controls/dscb-l3.yaml`
-- `platform/platform-capabilities.yaml`
-- `traceability/document-to-control.yaml`
-- `evidence/evidence-types.yaml`
-- `docs/policy-directive-baseline-verification-and-governance-as-code-explained.md`
+- `model/controls/dscb-l1.yaml`
+- `model/controls/dscb-l2.yaml`
+- `model/controls/dscb-l3.yaml`
+- `model/platform/platform-capabilities.yaml`
+- `model/traceability/document-to-control.yaml`
+- `model/evidence/evidence-types.yaml`
+- `docs/governance/policy-directive-baseline-verification-and-governance-as-code-explained.md`
 
 ## Kernaussage
 

@@ -183,7 +183,7 @@ class RepoValidationTests(unittest.TestCase):
         self.assertNotIn('ARTIFACT_SIGNATURE_EXISTS: "false"', workflow)
 
     def test_onboarding_examples_pin_governance_workflow(self):
-        onboarding = (ROOT / "docs" / "application-repo-onboarding.md").read_text(encoding="utf-8")
+        onboarding = (ROOT / "docs" / "onboarding" / "application-repo-onboarding.md").read_text(encoding="utf-8")
         template = (
             ROOT
             / "examples"

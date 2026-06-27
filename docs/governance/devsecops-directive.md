@@ -206,4 +206,4 @@ This Directive enters into force upon approval and remains valid until supersede
 
 ## Structured Mapping
 
-This directive is represented in `documents/governance-documents.yaml` and traced to controls in `traceability/document-to-control.yaml`.
+This directive is represented in `model/documents/governance-documents.yaml` and traced to controls in `model/traceability/document-to-control.yaml`.

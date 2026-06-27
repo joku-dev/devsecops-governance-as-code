@@ -7,6 +7,7 @@ import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
+MODEL = ROOT / "model"
 CSV_OUT = ROOT / "generated" / "xlsx" / "open_gap_report.csv"
 MD_OUT = ROOT / "generated" / "reports" / "open-gap-report.md"
 
@@ -18,7 +19,7 @@ def load_yaml(path: Path):
 
 def collect_controls():
     controls = {}
-    for path in sorted((ROOT / "controls").glob("dscb-*.yaml")):
+    for path in sorted((MODEL / "controls").glob("dscb-*.yaml")):
         data = load_yaml(path)
         level = data.get("level")
         for requirement in data.get("requirements", []):
@@ -32,9 +33,9 @@ def collect_controls():
 
 def main() -> int:
     controls = collect_controls()
-    documents = load_yaml(ROOT / "documents" / "governance-documents.yaml").get("documents", [])
-    capabilities = load_yaml(ROOT / "platform" / "platform-capabilities.yaml").get("capabilities", [])
-    waiver_authorities = load_yaml(ROOT / "waivers" / "waiver-authorities.yaml").get("authorities", {})
+    documents = load_yaml(MODEL / "documents" / "governance-documents.yaml").get("documents", [])
+    capabilities = load_yaml(MODEL / "platform" / "platform-capabilities.yaml").get("capabilities", [])
+    waiver_authorities = load_yaml(MODEL / "waivers" / "waiver-authorities.yaml").get("authorities", {})
     waiver_schema = load_yaml(ROOT / "schemas" / "waiver.schema.json")
 
     rows = []
@@ -61,7 +62,7 @@ def main() -> int:
                     "category": "platform_capability_model",
                     "severity": "medium",
                     "subject": capability["id"],
-                    "location": "platform/platform-capabilities.yaml",
+                    "location": "model/platform/platform-capabilities.yaml",
                     "summary": f"Platform capability {capability['id']} still uses placeholder area 'TBD'.",
                     "recommended_action": "Assign the capability to a concrete architectural area for governance and ownership reporting.",
                 }
@@ -93,7 +94,7 @@ def main() -> int:
                 "category": "waiver_governance",
                 "severity": "high",
                 "subject": risk_level,
-                "location": "waivers/waiver-authorities.yaml",
+                "location": "model/waivers/waiver-authorities.yaml",
                 "summary": f"Waiver schema allows risk classification {risk_level} but no approval authority is defined.",
                 "recommended_action": "Add an explicit approval authority for the missing risk classification.",
             }

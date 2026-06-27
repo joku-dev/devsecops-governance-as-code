@@ -56,37 +56,37 @@ Before changing anything, know where each type of information lives.
 
 ### Controls
 
-Files in `controls/` contain the structured governance requirements.
+Files in `model/controls/` contain the structured governance requirements.
 
 Examples:
 
-- `controls/dscb-l1.yaml`
-- `controls/dscb-l2.yaml`
-- `controls/dscb-l3.yaml`
-- `controls/dscb-gov.yaml`
+- `model/controls/dscb-l1.yaml`
+- `model/controls/dscb-l2.yaml`
+- `model/controls/dscb-l3.yaml`
+- `model/controls/dscb-gov.yaml`
 
 ### Governance Documents
 
 These define the higher-level governance structure:
 
-- `docs/policy/devsecops-policy.md`
-- `docs/directive/devsecops-directive.md`
-- `documents/governance-documents.yaml`
-- `documents/governance-document-rendering.yaml`
+- `docs/governance/devsecops-policy.md`
+- `docs/governance/devsecops-directive.md`
+- `model/documents/governance-documents.yaml`
+- `model/documents/governance-document-rendering.yaml`
 
 ### Platform Capabilities
 
 These describe which platform functions support the controls:
 
-- `platform/platform-capabilities.yaml`
-- `platform/pra-levels.yaml`
+- `model/platform/platform-capabilities.yaml`
+- `model/platform/pra-levels.yaml`
 
 ### Traceability
 
 These files explain how things relate:
 
-- `traceability/control-to-platform.yaml`
-- `traceability/document-to-control.yaml`
+- `model/traceability/control-to-platform.yaml`
+- `model/traceability/document-to-control.yaml`
 
 ### Rules
 
@@ -110,11 +110,11 @@ Now edit the source files you actually want to change.
 
 Typical examples:
 
-- change a control requirement in `controls/`
+- change a control requirement in `model/controls/`
 - update `Policy` or `Directive` text in `docs/`
-- add or adjust a platform capability in `platform/`
-- change traceability in `traceability/`
-- update approval or waiver logic in `waivers/`
+- add or adjust a platform capability in `model/platform/`
+- change traceability in `model/traceability/`
+- update approval or waiver logic in `model/waivers/`
 - update OPA rules in `policies/opa/`
 
 ### What this step does

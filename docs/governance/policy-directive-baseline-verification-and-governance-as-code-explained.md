@@ -47,7 +47,7 @@ Die Policy ist also **nicht** das operative Arbeitsdokument für die tägliche P
 
 Im Repository liegt die aktuelle Arbeitsfassung hier:
 
-- `docs/policy/devsecops-policy.md`
+- `docs/governance/devsecops-policy.md`
 
 ### 2. Directive
 
@@ -64,7 +64,7 @@ Die Directive übersetzt also den normativen Willen der Policy in bindende organ
 
 Im Repository liegt die aktuelle Arbeitsfassung hier:
 
-- `docs/directive/devsecops-directive.md`
+- `docs/governance/devsecops-directive.md`
 
 ### 3. Baseline / Standards
 
@@ -78,15 +78,15 @@ Sie beantworten vor allem die Fragen:
 
 In diesem Repository sind die importierten Ursprungsdokumente derzeit:
 
-- `docs/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx`
-- `docs/source-documents/DevSecOps-Platform-Reference-Architecture-Standard_aligned_with_Control_Baseline.docx`
+- `docs/governance/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx`
+- `docs/governance/source-documents/DevSecOps-Platform-Reference-Architecture-Standard_aligned_with_Control_Baseline.docx`
 
 Zusätzlich liegt die strukturierte Repräsentation der Anforderungen in YAML-Dateien, insbesondere unter:
 
-- `controls/`
-- `platform/`
-- `traceability/`
-- `evidence/`
+- `model/controls/`
+- `model/platform/`
+- `model/traceability/`
+- `model/evidence/`
 
 ## Der fachliche Zusammenhang zwischen Policy, Directive und Baseline
 
@@ -115,8 +115,8 @@ Die typische Struktur ist:
 
 Die Zuordnung der Governance-Dokumente zu Controls wird im Repository explizit modelliert, insbesondere in:
 
-- `documents/governance-documents.yaml`
-- `traceability/document-to-control.yaml`
+- `model/documents/governance-documents.yaml`
+- `model/traceability/document-to-control.yaml`
 
 Dadurch ist nachvollziehbar:
 
@@ -128,7 +128,7 @@ Dadurch ist nachvollziehbar:
 
 Eine zentrale Datenstruktur ist der Governance-Dokumentenkatalog in:
 
-- `documents/governance-documents.yaml`
+- `model/documents/governance-documents.yaml`
 
 Ein stark vereinfachtes Beispiel sieht so aus:
 
@@ -138,19 +138,19 @@ documents:
     type: policy
     title: DevSecOps Policy - Software Defined Defence (SDD)
     status: draft
-    repository_path: docs/policy/devsecops-policy.md
+    repository_path: docs/governance/devsecops-policy.md
 
   - id: DEVSECOPS-DIR-001
     type: directive
     title: DevSecOps Directive
     status: draft
-    repository_path: docs/directive/devsecops-directive.md
+    repository_path: docs/governance/devsecops-directive.md
 
   - id: DSCB-STD-001
     type: standard
     title: DevSecOps Control Baseline Standard
     status: imported
-    repository_path: docs/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx
+    repository_path: docs/governance/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx
 ```
 
 Diese Struktur macht maschinenlesbar sichtbar:
@@ -164,7 +164,7 @@ Diese Struktur macht maschinenlesbar sichtbar:
 
 Die normative Beziehung zwischen Dokumenten und Controls wird in:
 
-- `traceability/document-to-control.yaml`
+- `model/traceability/document-to-control.yaml`
 
 modelliert.
 
@@ -219,15 +219,15 @@ Im Governance-as-Code-Modell bedeutet das:
 
 Diese Verknüpfung wird im Repository über Evidence-Definitionen und Traceability modelliert, insbesondere in:
 
-- `evidence/evidence-types.yaml`
-- `traceability/`
-- `controls/`
+- `model/evidence/evidence-types.yaml`
+- `model/traceability/`
+- `model/controls/`
 
 ## Konkrete Datenstruktur: Ein einzelnes Control
 
 Der Kern der Governance-as-Code-Modellierung liegt in den strukturierten Controls, zum Beispiel in:
 
-- `controls/dscb-l1.yaml`
+- `model/controls/dscb-l1.yaml`
 
 Ein echtes Beispiel aus dem Repository:
 
@@ -271,7 +271,7 @@ Dieses eine Objekt zeigt bereits den ganzen Mechanismus:
 
 Die Evidence wird nicht nur im Control genannt, sondern auch zentral beschrieben, zum Beispiel in:
 
-- `evidence/evidence-types.yaml`
+- `model/evidence/evidence-types.yaml`
 
 Beispiel:
 
@@ -492,12 +492,12 @@ In diesem Repository wird Governance as Code durch mehrere Bausteine umgesetzt:
 
 Zum Beispiel:
 
-- `controls/`
-- `documents/`
-- `platform/`
-- `traceability/`
-- `evidence/`
-- `waivers/`
+- `model/controls/`
+- `model/documents/`
+- `model/platform/`
+- `model/traceability/`
+- `model/evidence/`
+- `model/waivers/`
 
 ### 2. Validierung der Governance-Struktur
 
@@ -602,11 +602,11 @@ Das zeigt sehr konkret:
 
 Wenn man dieses Repository verstehen will, kann man die wichtigsten Dateien in dieser Reihenfolge lesen:
 
-1. `docs/policy/devsecops-policy.md`
-2. `docs/directive/devsecops-directive.md`
-3. `controls/dscb-l1.yaml`
-4. `evidence/evidence-types.yaml`
-5. `traceability/document-to-control.yaml`
+1. `docs/governance/devsecops-policy.md`
+2. `docs/governance/devsecops-directive.md`
+3. `model/controls/dscb-l1.yaml`
+4. `model/evidence/evidence-types.yaml`
+5. `model/traceability/document-to-control.yaml`
 6. `policies/opa/`
 7. `.github/workflows/devsecops-baseline-reusable.yml`
 8. `generated/governance-compliance-result.json`
@@ -709,15 +709,15 @@ Governance as Code ist die operative Ausführung ausgewählter Anforderungen geg
 
 Für diesen Zusammenhang sind insbesondere diese Dateien wichtig:
 
-- `docs/policy/devsecops-policy.md`
-- `docs/directive/devsecops-directive.md`
-- `docs/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx`
-- `docs/source-documents/DevSecOps-Platform-Reference-Architecture-Standard_aligned_with_Control_Baseline.docx`
-- `documents/governance-documents.yaml`
-- `traceability/document-to-control.yaml`
-- `evidence/evidence-types.yaml`
-- `docs/source-of-truth.md`
-- `docs/governance-document-hierarchy.md`
+- `docs/governance/devsecops-policy.md`
+- `docs/governance/devsecops-directive.md`
+- `docs/governance/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx`
+- `docs/governance/source-documents/DevSecOps-Platform-Reference-Architecture-Standard_aligned_with_Control_Baseline.docx`
+- `model/documents/governance-documents.yaml`
+- `model/traceability/document-to-control.yaml`
+- `model/evidence/evidence-types.yaml`
+- `docs/governance/source-of-truth.md`
+- `docs/governance/governance-document-hierarchy.md`
 - `.github/workflows/devsecops-baseline-reusable.yml`
 
 ## Kernaussage

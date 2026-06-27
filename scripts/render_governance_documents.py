@@ -13,8 +13,9 @@ import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
-CATALOG_PATH = ROOT / "documents" / "governance-documents.yaml"
-RENDERING_PATH = ROOT / "documents" / "governance-document-rendering.yaml"
+MODEL = ROOT / "model"
+CATALOG_PATH = MODEL / "documents" / "governance-documents.yaml"
+RENDERING_PATH = MODEL / "documents" / "governance-document-rendering.yaml"
 OUT_DIR = ROOT / "generated" / "documents"
 
 

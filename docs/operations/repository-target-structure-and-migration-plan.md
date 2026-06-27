@@ -159,12 +159,12 @@ This is especially important if the repository becomes an official enterprise go
 
 The following mapping is the recommended evolution path.
 
-### Current `controls/`
+### Current `model/controls/`
 
 Current:
 
 ```text
-controls/
+model/controls/
 ```
 
 Target:
@@ -177,12 +177,12 @@ Reason:
 
 - these files are structured governance source data, not end-user documentation
 
-### Current `platform/`
+### Current `model/platform/`
 
 Current:
 
 ```text
-platform/
+model/platform/
 ```
 
 Target:
@@ -197,12 +197,12 @@ Split logic:
 - `model/platform/` contains the machine-readable platform capability data
 - `docs/platform/` contains the human explanation of the platform model
 
-### Current `documents/`
+### Current `model/documents/`
 
 Current:
 
 ```text
-documents/
+model/documents/
 ```
 
 Target:
@@ -215,12 +215,12 @@ Reason:
 
 - `governance-documents.yaml` and related rendering config are structured governance metadata
 
-### Current `traceability/`
+### Current `model/traceability/`
 
 Current:
 
 ```text
-traceability/
+model/traceability/
 ```
 
 Target:
@@ -233,12 +233,12 @@ Reason:
 
 - traceability is part of the core governance model
 
-### Current `evidence/`
+### Current `model/evidence/`
 
 Current:
 
 ```text
-evidence/
+model/evidence/
 ```
 
 Target:
@@ -251,12 +251,12 @@ Reason:
 
 - evidence types are core model definitions
 
-### Current `waivers/`
+### Current `model/waivers/`
 
 Current:
 
 ```text
-waivers/
+model/waivers/
 ```
 
 Target:
@@ -296,12 +296,12 @@ Reason:
 - Policy and Directive are human-facing governance documents
 - grouping them under `governance/` makes navigation clearer
 
-### Current `docs/source-documents/`
+### Current `docs/governance/source-documents/`
 
 Current:
 
 ```text
-docs/source-documents/
+docs/governance/source-documents/
 ```
 
 Recommended target:
@@ -318,10 +318,10 @@ Reason:
 
 Current examples:
 
-- `docs/application-repo-onboarding.md`
-- `docs/how-other-repositories-use-the-central-governance-baseline.md`
-- `docs/policy-directive-baseline-verification-and-governance-as-code-explained.md`
-- `docs/control-baseline-and-platform-architecture-relationship-explained.md`
+- `docs/onboarding/application-repo-onboarding.md`
+- `docs/onboarding/how-other-repositories-use-the-central-governance-baseline.md`
+- `docs/governance/policy-directive-baseline-verification-and-governance-as-code-explained.md`
+- `docs/platform/control-baseline-and-platform-architecture-relationship-explained.md`
 
 Recommended target:
 
@@ -421,9 +421,9 @@ docs/
     source-of-truth.md
     policy-directive-baseline-verification-and-governance-as-code-explained.md
     MANAGEMENT_READOUT.md
-  controls/
+  model/controls/
     control-baseline-and-platform-architecture-relationship-explained.md
-  platform/
+  model/platform/
     platform-capability-model.md
   pipeline-baseline/
     reusable-workflow.md
@@ -559,7 +559,7 @@ This gives immediate usability benefits with relatively low risk.
 Then:
 
 - introduce `model/`
-- move `controls/`, `platform/`, `documents/`, `traceability/`, `evidence/`, `waivers/` into it
+- move `model/controls/`, `model/platform/`, `model/documents/`, `model/traceability/`, `model/evidence/`, `model/waivers/` into it
 - update scripts, tests, and references
 
 This is the most structurally important step.

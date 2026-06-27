@@ -121,4 +121,4 @@ The detailed execution of these outcomes is specified in the Directive and imple
 
 ## Structured Mapping
 
-This policy is represented in `documents/governance-documents.yaml` and traced to controls in `traceability/document-to-control.yaml`.
+This policy is represented in `model/documents/governance-documents.yaml` and traced to controls in `model/traceability/document-to-control.yaml`.

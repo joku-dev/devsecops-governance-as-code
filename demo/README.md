@@ -13,7 +13,7 @@ It shows how:
 - `sample-service/`: minimal example service
 - `inputs/release-candidate-green.json`: compliant release candidate
 - `inputs/release-candidate-red.json`: intentionally non-compliant release candidate
-- `evidence/`: example evidence artifacts
+- `model/evidence/`: example evidence artifacts
 
 ## Run
 

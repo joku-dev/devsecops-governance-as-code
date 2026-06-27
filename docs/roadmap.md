@@ -6,7 +6,7 @@ Migrate all 46 Control Baseline requirements into structured YAML. The current r
 
 ## Step 2: Complete Platform Capability Mapping
 
-Extend `platform/platform-capabilities.yaml` until every relevant control requirement has at least one mapped platform capability.
+Extend `model/platform/platform-capabilities.yaml` until every relevant control requirement has at least one mapped platform capability.
 
 ## Step 3: Generate Traceability Outputs
 

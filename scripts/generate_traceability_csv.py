@@ -7,6 +7,7 @@ import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
+MODEL = ROOT / "model"
 OUT = ROOT / "generated" / "xlsx" / "traceability_matrix.csv"
 
 
@@ -17,7 +18,7 @@ def load_yaml(path: Path):
 
 def main() -> int:
     controls = {}
-    for path in sorted((ROOT / "controls").glob("dscb-*.yaml")):
+    for path in sorted((MODEL / "controls").glob("dscb-*.yaml")):
         data = load_yaml(path)
         level = data.get("level")
         for requirement in data.get("requirements", []):
@@ -26,9 +27,9 @@ def main() -> int:
                 "level": level,
             }
 
-    traceability = load_yaml(ROOT / "traceability" / "control-to-platform.yaml")
-    document_catalog = load_yaml(ROOT / "documents" / "governance-documents.yaml")
-    document_traceability = load_yaml(ROOT / "traceability" / "document-to-control.yaml")
+    traceability = load_yaml(MODEL / "traceability" / "control-to-platform.yaml")
+    document_catalog = load_yaml(MODEL / "documents" / "governance-documents.yaml")
+    document_traceability = load_yaml(MODEL / "traceability" / "document-to-control.yaml")
     document_titles = {item["id"]: item["title"] for item in document_catalog.get("documents", [])}
     control_documents = {control_id: [] for control_id in controls}
 

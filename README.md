@@ -10,16 +10,18 @@ The repository separates four concerns:
 
 | Area | Purpose |
 |---|---|
-| `docs/source-documents` | Approved or working DOCX source documents brought into the repository for traceable migration. |
-| `documents` | Structured catalog of policy, directive, and standard source documents. |
-| `controls` | Structured DevSecOps control baseline requirements. |
-| `platform` | Platform Reference Architecture levels and platform capabilities. |
-| `traceability` | Mapping between controls, platform capabilities, evidence, and policy candidates. |
+| `docs/` | Human-readable governance documentation, onboarding guides, and operational explanations. |
+| `docs/governance/source-documents` | Approved or working DOCX source documents brought into the repository for traceable migration. |
+| `model/documents` | Structured catalog of policy, directive, and standard source documents. |
+| `model/controls` | Structured DevSecOps control baseline requirements. |
+| `model/platform` | Platform Reference Architecture levels and platform capabilities. |
+| `model/traceability` | Mapping between controls, platform capabilities, evidence, and policy candidates. |
 | `policies/opa` | Executable policy-as-code rules for automated checks. |
-| `evidence` | Evidence type definitions expected from pipelines and platforms. |
-| `waivers` | Waiver model and approval authority structure. |
+| `model/evidence` | Evidence type definitions expected from pipelines and platforms. |
+| `model/waivers` | Waiver model and approval authority structure. |
 | `schemas` | JSON Schemas for validating structured governance data. |
 | `generated` | Generated DOCX, PDF, HTML, and XLSX outputs. |
+| `releases` | Versioned baseline packages for controlled publication. |
 
 ## Target Model
 
@@ -57,6 +59,14 @@ The first implementation should focus on:
 5. Store generated evidence from pipelines and platform checks.
 6. Use waivers only as controlled, time-limited exceptions.
 
+## Repository Layout
+
+- `docs/` explains the governance model for people.
+- `model/` contains the machine-readable governance source of truth.
+- `generated/` contains rendered documents, reports, and viewer output.
+- `releases/` is reserved for versioned baseline packages.
+- `.github/workflows/` contains repository automation and reusable CI integration.
+
 ## Local Commands
 
 Validate repository consistency:
@@ -68,7 +78,7 @@ python scripts/validate_governance_repo.py
 Review the governance document hierarchy:
 
 ```bash
-sed -n '1,200p' docs/governance-document-hierarchy.md
+sed -n '1,200p' docs/governance/governance-document-hierarchy.md
 ```
 
 Run the lightweight regression checks:
@@ -80,43 +90,43 @@ python -m unittest discover -s tests
 Read the practical usage guide:
 
 ```bash
-sed -n '1,240p' docs/how-to-use-this-repo.md
+sed -n '1,240p' docs/operations/how-to-use-this-repo.md
 ```
 
 Read the beginner step-by-step operations guide:
 
 ```bash
-sed -n '1,320p' docs/beginner-step-by-step-operations-guide.md
+sed -n '1,320p' docs/operations/beginner-step-by-step-operations-guide.md
 ```
 
 Read how other repositories integrate this governance repository:
 
 ```bash
-sed -n '1,320p' docs/how-other-repos-use-this-governance-repo.md
+sed -n '1,320p' docs/onboarding/how-other-repos-use-this-governance-repo.md
 ```
 
 Read the step-by-step central governance baseline integration guide:
 
 ```bash
-sed -n '1,320p' docs/how-other-repositories-use-the-central-governance-baseline.md
+sed -n '1,320p' docs/onboarding/how-other-repositories-use-the-central-governance-baseline.md
 ```
 
 Read the application repository onboarding guide:
 
 ```bash
-sed -n '1,260p' docs/application-repo-onboarding.md
+sed -n '1,260p' docs/onboarding/application-repo-onboarding.md
 ```
 
 Read the explanation of policy, directive, baseline, verification, and governance as code:
 
 ```bash
-sed -n '1,360p' docs/policy-directive-baseline-verification-and-governance-as-code-explained.md
+sed -n '1,360p' docs/governance/policy-directive-baseline-verification-and-governance-as-code-explained.md
 ```
 
 Read the explanation of the relationship between the control baseline and the platform architecture:
 
 ```bash
-sed -n '1,320p' docs/control-baseline-and-platform-architecture-relationship-explained.md
+sed -n '1,320p' docs/platform/control-baseline-and-platform-architecture-relationship-explained.md
 ```
 
 Use the generic GitHub Actions onboarding template:
@@ -128,7 +138,7 @@ sed -n '1,180p' examples/github-actions/workflows/application-devsecops-baseline
 Read the operational governance enforcement options:
 
 ```bash
-sed -n '1,240p' docs/operational-governance-enforcement-options.md
+sed -n '1,240p' docs/operations/operational-governance-enforcement-options.md
 ```
 
 Generate an extended machine-readable governance compliance result:

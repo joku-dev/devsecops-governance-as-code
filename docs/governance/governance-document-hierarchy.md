@@ -13,9 +13,9 @@ The repository now models not only controls and platform capabilities, but also 
 
 ## Repository Representation
 
-- `documents/governance-documents.yaml` contains the structured document catalog.
-- `traceability/document-to-control.yaml` maps governance documents to control levels and selected controls.
-- `docs/policy/devsecops-policy.md` and `docs/directive/devsecops-directive.md` capture the current working drafts.
+- `model/documents/governance-documents.yaml` contains the structured document catalog.
+- `model/traceability/document-to-control.yaml` maps governance documents to control levels and selected controls.
+- `docs/governance/devsecops-policy.md` and `docs/governance/devsecops-directive.md` capture the current working drafts.
 
 ## Why This Matters
 

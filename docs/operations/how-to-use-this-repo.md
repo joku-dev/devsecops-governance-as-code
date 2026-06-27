@@ -12,10 +12,10 @@ It is not a long-running service. Instead, teams use it to maintain structured g
 
 The Governance Owner maintains:
 
-- `controls/`
-- `documents/`
-- `traceability/`
-- `waivers/`
+- `model/controls/`
+- `model/documents/`
+- `model/traceability/`
+- `model/waivers/`
 
 Typical tasks:
 
@@ -28,7 +28,7 @@ Typical tasks:
 
 The Platform Owner maintains:
 
-- `platform/platform-capabilities.yaml`
+- `model/platform/platform-capabilities.yaml`
 - related traceability mappings
 
 Typical tasks:
@@ -42,7 +42,7 @@ Typical tasks:
 The Security or Policy Engineer maintains:
 
 - `policies/opa/`
-- policy candidate definitions in `controls/`
+- policy candidate definitions in `model/controls/`
 
 Typical tasks:
 
@@ -67,11 +67,11 @@ Typical tasks:
 
 Edit the relevant YAML or Markdown files in:
 
-- `controls/`
-- `platform/`
-- `documents/`
-- `traceability/`
-- `waivers/`
+- `model/controls/`
+- `model/platform/`
+- `model/documents/`
+- `model/traceability/`
+- `model/waivers/`
 - `docs/`
 
 ### 2. Validate Repository Consistency

@@ -299,5 +299,5 @@ After a successful run, an application repository can state:
 ## References
 
 - Central governance repository: `joku-dev/devsecops-governance-as-code`
-- Onboarding guide in this repository: `docs/application-repo-onboarding.md`
+- Onboarding guide in this repository: `docs/onboarding/application-repo-onboarding.md`
 - Example application repository workflow: `examples/github-actions/workflows/application-devsecops-baseline-template.yml`
