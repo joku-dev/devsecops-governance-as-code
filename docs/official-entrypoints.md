@@ -41,6 +41,7 @@ It is intended for:
 - MkDocs and GitHub Pages step by step: `docs/operations/mkdocs-and-github-pages-step-by-step.md`
 - Operational governance enforcement options: `docs/operations/operational-governance-enforcement-options.md`
 - ha-CPsWMS governance validation status: `docs/operations/ha-cpswms-governance-validation-status.md`
+- ha-CPsWMS governance lessons learned: `docs/operations/ha-cpswms-governance-lessons-learned.md`
 
 ## Platform Explanation
 
