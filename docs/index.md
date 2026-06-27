@@ -18,8 +18,8 @@ This documentation space separates governance content into a few clear areas so 
 - `onboarding/` explains how application repositories consume this baseline.
 - `operations/` explains validation, generation, and day-to-day usage.
 - `platform/` explains how platform architecture implements baseline controls.
-- `pipeline-baseline/` is the intended home for reusable CI/CD baseline guidance.
-- `releases/` is the intended home for published baseline package documentation.
+- `pipeline-baseline/` contains reusable CI/CD baseline guidance and related release-facing workflow documentation.
+- `releases/` contains published baseline package documentation.
 
 ## Repository Model
 

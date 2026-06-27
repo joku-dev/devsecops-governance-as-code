@@ -67,6 +67,13 @@ The first implementation should focus on:
 - `releases/` is reserved for versioned baseline packages.
 - `.github/workflows/` contains repository automation and reusable CI integration.
 
+## Current Operational State
+
+- `L1` is now available as a released and revision-protected baseline package via `l1-baseline-v1.0.0`.
+- GitHub Pages documentation publishing is active.
+- A normalized central results index exists in `status/repository-results-index.json`.
+- `ha-CPsWMS` has already been validated successfully against the central governance baseline on a protected `main` branch.
+
 ## Local Commands
 
 Validate repository consistency:

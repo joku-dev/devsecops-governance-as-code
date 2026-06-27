@@ -1,6 +1,6 @@
 # Releases
 
-This section is reserved for published baseline package documentation.
+This section contains the published baseline package documentation.
 
 The intended release model is:
 
@@ -8,7 +8,13 @@ The intended release model is:
 - the package contains the approved model snapshot, generated artifacts, schemas, and policy rules
 - consuming teams can pin a known governance version in their CI/CD integration
 
-Until release packaging is formalized, use the content in `model/`, `docs/`, and `generated/` as the active working baseline.
+The repository now contains a formal released baseline package for `L1`.
+
+The active released package is:
+
+- `L1 baseline v1.0.0`
+
+The working source still remains in `model/`, while approved frozen release packages are published under `releases/`.
 
 ## Available Release Packages
 
