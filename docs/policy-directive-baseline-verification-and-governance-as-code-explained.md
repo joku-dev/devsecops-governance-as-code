@@ -124,6 +124,78 @@ Dadurch ist nachvollziehbar:
 - welche Controls auf welche Dokumente zurückgehen,
 - welche Baseline-Level durch welche Governance-Artefakte gestützt werden.
 
+## Konkrete Datenstruktur: Dokumentenkatalog
+
+Eine zentrale Datenstruktur ist der Governance-Dokumentenkatalog in:
+
+- `documents/governance-documents.yaml`
+
+Ein stark vereinfachtes Beispiel sieht so aus:
+
+```yaml
+documents:
+  - id: DEVSECOPS-POL-001
+    type: policy
+    title: DevSecOps Policy - Software Defined Defence (SDD)
+    status: draft
+    repository_path: docs/policy/devsecops-policy.md
+
+  - id: DEVSECOPS-DIR-001
+    type: directive
+    title: DevSecOps Directive
+    status: draft
+    repository_path: docs/directive/devsecops-directive.md
+
+  - id: DSCB-STD-001
+    type: standard
+    title: DevSecOps Control Baseline Standard
+    status: imported
+    repository_path: docs/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx
+```
+
+Diese Struktur macht maschinenlesbar sichtbar:
+
+- welche Dokumente es gibt,
+- welchen Typ sie haben,
+- welchen Freigabestatus sie haben,
+- wo ihre Repräsentation im Repository liegt.
+
+## Konkrete Datenstruktur: Document-to-Control-Traceability
+
+Die normative Beziehung zwischen Dokumenten und Controls wird in:
+
+- `traceability/document-to-control.yaml`
+
+modelliert.
+
+Beispiel:
+
+```yaml
+mappings:
+  - document_id: DEVSECOPS-POL-001
+    control_levels:
+      - L1
+      - L2
+      - L3
+      - GOV
+    rationale: Establishes that the DevSecOps governance baseline is mandatory.
+
+  - document_id: DEVSECOPS-DIR-001
+    control_ids:
+      - DSCB-GOV-REQ-002
+      - DSCB-GOV-REQ-003
+    control_levels:
+      - L2
+      - L3
+    rationale: Defines operational compliance workflow and waiver handling.
+```
+
+Damit kann man später auswerten:
+
+- warum ein Control überhaupt verbindlich ist,
+- ob es eher durch Policy oder Directive gestützt ist,
+- auf welcher Governance-Ebene eine Anforderung verankert ist.
+
 ## Der Zusammenhang zwischen Anforderungen und Verifikationsmethoden
 
 Eine Anforderung allein reicht operativ nicht aus. Sie muss auch verifizierbar sein.
@@ -150,6 +222,88 @@ Diese Verknüpfung wird im Repository über Evidence-Definitionen und Traceabili
 - `evidence/evidence-types.yaml`
 - `traceability/`
 - `controls/`
+
+## Konkrete Datenstruktur: Ein einzelnes Control
+
+Der Kern der Governance-as-Code-Modellierung liegt in den strukturierten Controls, zum Beispiel in:
+
+- `controls/dscb-l1.yaml`
+
+Ein echtes Beispiel aus dem Repository:
+
+```yaml
+- id: DSCB-L1-REQ-003
+  domain: source_code_integrity
+  title: Source Code Integrity
+  requirement: Direct modification of protected branches SHALL be prohibited.
+  required_platform_level: PRA-Level 1
+  platform_capabilities:
+    - approved_version_control
+    - code_review
+    - branch_protection
+    - repository_audit_log
+  evidence:
+    - commit_history
+    - code_review_records
+    - branch_protection_configuration
+  verification:
+    method: automated
+    frequency: release_candidate
+  policy_as_code:
+    candidate: true
+    enforcement: automated_gate
+    rule: policies/opa/branch_protection.rego
+  waiver:
+    allowed: true
+    authority: DevSecOps Governance Board
+```
+
+Dieses eine Objekt zeigt bereits den ganzen Mechanismus:
+
+- **fachliche Anforderung**: direkte Änderungen auf geschützten Branches sind verboten
+- **technische Voraussetzungen**: Branch Protection, Code Review, Audit Log
+- **erwartete Evidence**: Commit-Historie, Review-Daten, Branch-Protection-Konfiguration
+- **Verifikationsmethode**: automatisiert
+- **Governance-Ausführung**: als ausführbare Policy-Regel
+- **Abweichungslogik**: Waiver grundsätzlich erlaubt, zuständig ist das Governance Board
+
+## Konkrete Datenstruktur: Evidence-Typen
+
+Die Evidence wird nicht nur im Control genannt, sondern auch zentral beschrieben, zum Beispiel in:
+
+- `evidence/evidence-types.yaml`
+
+Beispiel:
+
+```yaml
+- id: branch_protection_configuration
+  name: Branch Protection Configuration
+  category: repository
+  producer: devsecops_platform
+  format:
+    - json
+  retention: project_lifecycle
+  supports_requirements:
+    - DSCB-L1-REQ-002
+    - DSCB-L1-REQ-003
+
+- id: sbom
+  name: Sbom
+  category: artifact
+  producer: devsecops_platform
+  format:
+    - json
+  retention: project_lifecycle
+  supports_requirements:
+    - DSCB-L1-REQ-005
+    - DSCB-L1-REQ-006
+```
+
+Diese Datenstruktur ist wichtig, weil sie nicht nur sagt _dass_ Evidence existiert, sondern:
+
+- wer sie erzeugen soll,
+- in welchem Format sie vorliegen soll,
+- welche Anforderungen durch sie gestützt werden.
 
 ## Der Zusammenhang zwischen Anforderungen und Evidence
 
@@ -178,6 +332,33 @@ Im Repository wird modelliert:
 
 Das ist wichtig, weil Governance as Code nicht nur Regeln ausführt, sondern auch festlegt, **welcher Nachweis für welche Anforderung gilt**.
 
+## Beispielhafte Beziehung als Kette
+
+Ein Leser kann sich die Beziehung idealerweise so merken:
+
+```text
+Policy
+  -> macht DevSecOps verbindlich
+
+Directive
+  -> regelt Rollen, Waiver, Reporting, Governance-Abläufe
+
+Control / Baseline Requirement
+  -> beschreibt die konkrete Anforderung
+
+Evidence Type
+  -> beschreibt den erwarteten Nachweis
+
+Verification Method
+  -> beschreibt, wie dieser Nachweis geprüft wird
+
+Policy-as-Code / Gate
+  -> führt die Prüfung technisch aus
+
+Compliance Result
+  -> speichert das Ergebnis maschinenlesbar
+```
+
 ## Der Zusammenhang zwischen Verifikationsmethode und Governance-Ausführung als Code
 
 Governance-Ausführung als Code bedeutet nicht einfach nur „ein paar Regeln in einer Pipeline“.
@@ -201,6 +382,107 @@ Vielmehr umfasst sie mehrere Ebenen:
 
 6. **Compliance-Ergebnis**
    - das Ergebnis wird als maschinenlesbare Governance-Evidence gespeichert.
+
+## Konkrete Datenstruktur: Compliance-Eingabedaten
+
+Damit Governance as Code funktioniert, braucht die Policy-Auswertung Eingabedaten.
+
+Ein Beispiel dafür ist:
+
+- `demo/inputs/release-candidate-green.json`
+
+Ein gekürzter Ausschnitt:
+
+```json
+{
+  "release_candidate": true,
+  "repository": {
+    "protected_branch": true,
+    "direct_push_allowed": false,
+    "review_required": true
+  },
+  "evidence": {
+    "sbom": {
+      "exists": true,
+      "linked_to_artifact": true
+    },
+    "vulnerability_scan": {
+      "exists": true
+    }
+  },
+  "artifact": {
+    "digest": {
+      "exists": true,
+      "linked_to_artifact": true
+    },
+    "signature": {
+      "exists": true
+    }
+  },
+  "pipeline": {
+    "security_gates": {
+      "enforced": true
+    },
+    "security_thresholds_exceeded": false
+  }
+}
+```
+
+Das ist praktisch die maschinenlesbare Beschreibung eines zu bewertenden Zustands.
+
+Die Policy-Regeln fragen dann zum Beispiel:
+
+- ist der Branch geschützt?
+- ist ein SBOM vorhanden?
+- ist ein Vulnerability-Scan vorhanden?
+- ist ein Digest oder eine Signatur vorhanden?
+- wurden Security Gates tatsächlich ausgeführt?
+
+## Konkrete Datenstruktur: Compliance-Ergebnis
+
+Nach der Auswertung entsteht ein Ergebnisobjekt, zum Beispiel in:
+
+- `generated/governance-compliance-result.json`
+
+Ein gekürzter Ausschnitt:
+
+```json
+{
+  "status": "pass",
+  "checks": [
+    {
+      "check_id": "governance_ci_file_present",
+      "status": "pass"
+    }
+  ],
+  "execution": {
+    "validator": {
+      "status": "pass"
+    },
+    "opa_check": {
+      "status": "pass"
+    }
+  },
+  "policy_evaluations": [
+    {
+      "policy_id": "branch_protection",
+      "status": "pass",
+      "deny_count": 0
+    },
+    {
+      "policy_id": "sbom",
+      "status": "pass",
+      "deny_count": 0
+    }
+  ]
+}
+```
+
+Wichtig daran ist:
+
+- das Ergebnis ist **nicht nur ein grünes oder rotes Signal**,
+- sondern ein strukturierter Nachweis,
+- der später für Audits, Management-Auswertungen oder weitere Automatisierung genutzt werden kann.
 
 ## Was Governance as Code in diesem Repository konkret bedeutet
 
@@ -249,6 +531,96 @@ Zum Beispiel:
 - `.github/workflows/devsecops-baseline-reusable.yml`
 
 Dieser wiederverwendbare Workflow ermöglicht es, dass andere Repositories zentral definierte Governance-Logik auf ihre eigene Pipeline-Evidence anwenden.
+
+## Echte End-to-End-Beispielkette mit einem Application-Repository
+
+Die Theorie wird besonders verständlich, wenn man den tatsächlichen Ablauf in einem angebundenen Repository betrachtet.
+
+Mit `ha-CPsWMS` wurde dieser Ablauf bereits praktisch demonstriert:
+
+1. Das Application-Repository erzeugt:
+   - ein Build- oder Source-Artefakt,
+   - ein SBOM,
+   - ein Vulnerability-Scan-Evidence-File.
+
+2. Diese Dateien werden über GitHub Actions als Artifact hochgeladen.
+
+3. Das Application-Repository ruft den zentralen Workflow aus diesem Repository auf:
+   - `.github/workflows/devsecops-baseline-reusable.yml`
+
+4. Der zentrale Workflow prüft:
+   - Artefakt vorhanden?
+   - Digest vorhanden?
+   - SBOM vorhanden?
+   - Vulnerability-Scan vorhanden?
+   - Security Gate aktiv?
+   - für höhere Level zusätzlich weitere Bedingungen
+
+5. Das Ergebnis wird als maschinenlesbare Pipeline-Evidence erzeugt.
+
+Ein Beispiel für ein solches operatives Ergebnis ist die Pipeline-Evidence aus dem erfolgreichen `ha-CPsWMS`-Lauf:
+
+```json
+{
+  "pipeline": {
+    "pipeline_id": "DevSecOps Baseline",
+    "status": "success",
+    "security_gates": {
+      "enforced": true
+    }
+  },
+  "repository": {
+    "repository_id": "joku-dev/ha-CPsWMS",
+    "branch": "main"
+  },
+  "artifact": {
+    "artifact_id": "ha-cpswms-source.tar.gz",
+    "digest": {
+      "exists": true,
+      "algorithm": "sha256"
+    }
+  },
+  "evidence": {
+    "sbom": {
+      "exists": true
+    },
+    "vulnerability_scan": {
+      "exists": true,
+      "max_severity": "none"
+    }
+  }
+}
+```
+
+Das zeigt sehr konkret:
+
+- die Governance-Regel ist nicht nur modelliert,
+- die Evidence ist nicht nur theoretisch beschrieben,
+- sondern die Ausführung ist tatsächlich in einer realen Pipeline erfolgt.
+
+## Beispielhafte Leselogik für den Leser
+
+Wenn man dieses Repository verstehen will, kann man die wichtigsten Dateien in dieser Reihenfolge lesen:
+
+1. `docs/policy/devsecops-policy.md`
+2. `docs/directive/devsecops-directive.md`
+3. `controls/dscb-l1.yaml`
+4. `evidence/evidence-types.yaml`
+5. `traceability/document-to-control.yaml`
+6. `policies/opa/`
+7. `.github/workflows/devsecops-baseline-reusable.yml`
+8. `generated/governance-compliance-result.json`
+
+Dann sieht man nacheinander:
+
+- die normative Absicht,
+- die operative Governance-Logik,
+- die konkrete Anforderung,
+- den erwarteten Nachweis,
+- die Dokumentenautorität,
+- die technische Regel,
+- die technische Ausführung,
+- und das strukturierte Ergebnis.
 
 ## Wie der operative Fluss aussieht
 
