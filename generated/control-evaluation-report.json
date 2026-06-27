@@ -57,12 +57,12 @@
   },
   "summary": {
     "total_controls": 46,
-    "pass": 25,
+    "pass": 30,
     "fail": 0,
-    "not_tested": 5,
+    "not_tested": 0,
     "not_applicable": 16,
     "applicable_controls": 30,
-    "tested_controls": 25
+    "tested_controls": 30
   },
   "controls": [
     {
@@ -554,7 +554,7 @@
       "title": "Operational Traceability",
       "required_platform_level": "PRA-Level 1",
       "verification_method": "hybrid",
-      "status": "not_tested",
+      "status": "pass",
       "policy_rule": null,
       "policy_id": null,
       "source_file": "model/controls/dscb-l1.yaml",
@@ -564,12 +564,15 @@
         "incident_records"
       ],
       "evidence_sources": [
-        "system_logs",
         "deployment_records",
+        "system_logs",
         "incident_records"
       ],
-      "decision_basis": [],
-      "message": "This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input."
+      "decision_basis": [
+        "operations.deployed_versions_recorded",
+        "operations.security_events_recorded"
+      ],
+      "message": "Operational traceability is evaluated from explicit deployed-version and security-event recording fields."
     },
     {
       "control_id": "DSCB-L2-REQ-001",
@@ -578,7 +581,7 @@
       "title": "Secure Development Environments",
       "required_platform_level": "PRA-Level 2",
       "verification_method": "hybrid",
-      "status": "not_tested",
+      "status": "pass",
       "policy_rule": null,
       "policy_id": null,
       "source_file": "model/controls/dscb-l2.yaml",
@@ -587,11 +590,13 @@
         "system_configuration_baselines"
       ],
       "evidence_sources": [
-        "environment_configuration_records",
-        "system_configuration_baselines"
+        "environment_configuration_records"
       ],
-      "decision_basis": [],
-      "message": "This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input."
+      "decision_basis": [
+        "environment.centrally_managed",
+        "environment.secure_workspace"
+      ],
+      "message": "Development environment central management is evaluated from explicit environment management fields."
     },
     {
       "control_id": "DSCB-L2-REQ-002",
@@ -600,7 +605,7 @@
       "title": "Secure Development Environments",
       "required_platform_level": "PRA-Level 2",
       "verification_method": "hybrid",
-      "status": "not_tested",
+      "status": "pass",
       "policy_rule": null,
       "policy_id": null,
       "source_file": "model/controls/dscb-l2.yaml",
@@ -612,8 +617,11 @@
         "environment_configuration_records",
         "system_configuration_baselines"
       ],
-      "decision_basis": [],
-      "message": "This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input."
+      "decision_basis": [
+        "environment.config_compliant",
+        "environment.configuration_baselines_defined"
+      ],
+      "message": "Environment configuration compliance is evaluated from explicit baseline and compliance fields."
     },
     {
       "control_id": "DSCB-L2-REQ-003",
@@ -858,7 +866,7 @@
       "title": "Security Monitoring",
       "required_platform_level": "PRA-Level 2",
       "verification_method": "automated",
-      "status": "not_tested",
+      "status": "pass",
       "policy_rule": null,
       "policy_id": null,
       "source_file": "model/controls/dscb-l2.yaml",
@@ -870,8 +878,11 @@
         "security_monitoring_logs",
         "security_event_records"
       ],
-      "decision_basis": [],
-      "message": "This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input."
+      "decision_basis": [
+        "monitoring.security_events_generated",
+        "monitoring.integration_enabled"
+      ],
+      "message": "Security monitoring generation is evaluated from explicit monitoring event generation and integration fields."
     },
     {
       "control_id": "DSCB-L2-REQ-014",
@@ -880,7 +891,7 @@
       "title": "Security Monitoring",
       "required_platform_level": "PRA-Level 2",
       "verification_method": "automated",
-      "status": "not_tested",
+      "status": "pass",
       "policy_rule": null,
       "policy_id": null,
       "source_file": "model/controls/dscb-l2.yaml",
@@ -892,8 +903,11 @@
         "security_monitoring_logs",
         "security_event_records"
       ],
-      "decision_basis": [],
-      "message": "This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input."
+      "decision_basis": [
+        "monitoring.forwarded_to_monitoring",
+        "monitoring.security_events_generated"
+      ],
+      "message": "Security event forwarding is evaluated from explicit forwarding metadata."
     },
     {
       "control_id": "DSCB-L3-REQ-001",

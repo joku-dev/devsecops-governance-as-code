@@ -25,6 +25,12 @@
     "performed": false,
     "findings_reviewed": false
   },
+  "environment": {
+    "centrally_managed": false,
+    "secure_workspace": false,
+    "config_compliant": false,
+    "configuration_baselines_defined": false
+  },
   "evidence": {
     "sbom": {
       "exists": false,
@@ -74,6 +80,15 @@
       "exists": false,
       "version_controlled": false
     }
+  },
+  "operations": {
+    "deployed_versions_recorded": false,
+    "security_events_recorded": false
+  },
+  "monitoring": {
+    "security_events_generated": false,
+    "integration_enabled": false,
+    "forwarded_to_monitoring": false
   },
   "deployment": {
     "required": true

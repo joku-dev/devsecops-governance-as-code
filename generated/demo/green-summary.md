@@ -18,8 +18,8 @@ Input File: `demo/inputs/release-candidate-green.json`
 
 ## Control Evaluation Summary
 
-- Tested controls: `25`
-- Passed controls: `25`
+- Tested controls: `30`
+- Passed controls: `30`
 - Failed controls: `0`
-- Not tested: `5`
+- Not tested: `0`
 - Not applicable: `16`

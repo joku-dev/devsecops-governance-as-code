@@ -65,12 +65,12 @@
   "control_evaluations": {
     "summary": {
       "total_controls": 46,
-      "pass": 25,
+      "pass": 30,
       "fail": 0,
-      "not_tested": 5,
+      "not_tested": 0,
       "not_applicable": 16,
       "applicable_controls": 30,
-      "tested_controls": 25
+      "tested_controls": 30
     },
     "controls": [
       {
@@ -102,11 +102,18 @@
         "message": "Release authorization is evaluated from explicit structured approval metadata."
       },
       {
-        "control_id": "DSCB-L1-REQ-016",
-        "level": "L1",
+        "control_id": "DSCB-L2-REQ-013",
+        "level": "L2",
+        "verification_method": "automated",
+        "status": "pass",
+        "message": "Security monitoring generation is evaluated from explicit monitoring event generation and integration fields."
+      },
+      {
+        "control_id": "DSCB-L3-REQ-001",
+        "level": "L3",
         "verification_method": "hybrid",
-        "status": "not_tested",
-        "message": "This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input."
+        "status": "not_applicable",
+        "message": "Control requires PRA-Level 3, but the evaluated run declares PRA-Level 2."
       }
     ]
   }

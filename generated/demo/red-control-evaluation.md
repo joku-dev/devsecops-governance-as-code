@@ -8,10 +8,10 @@ Release Candidate: `true`
 
 - Total controls: `46`
 - Applicable controls: `30`
-- Tested controls: `25`
+- Tested controls: `30`
 - Passed: `2`
-- Failed: `23`
-- Not tested: `5`
+- Failed: `28`
+- Not tested: `0`
 - Not applicable: `16`
 
 ## Control Decisions
@@ -38,9 +38,9 @@ Release Candidate: `true`
 | `DSCB-L1-REQ-013` | `L1` | `hybrid` | `fail` | Release authorization is evaluated from explicit structured approval metadata. |
 | `DSCB-L1-REQ-014` | `L1` | `hybrid` | `fail` | Approved-artifact deployment is evaluated from explicit release approval metadata plus artifact identity evidence. |
 | `DSCB-L1-REQ-015` | `L1` | `automated` | `pass` | Machine-readable evidence generation is inferred from structured pipeline execution data. |
-| `DSCB-L1-REQ-016` | `L1` | `hybrid` | `not_tested` | This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input. |
-| `DSCB-L2-REQ-001` | `L2` | `hybrid` | `not_tested` | This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input. |
-| `DSCB-L2-REQ-002` | `L2` | `hybrid` | `not_tested` | This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input. |
+| `DSCB-L1-REQ-016` | `L1` | `hybrid` | `fail` | Operational traceability is evaluated from explicit deployed-version and security-event recording fields. |
+| `DSCB-L2-REQ-001` | `L2` | `hybrid` | `fail` | Development environment central management is evaluated from explicit environment management fields. |
+| `DSCB-L2-REQ-002` | `L2` | `hybrid` | `fail` | Environment configuration compliance is evaluated from explicit baseline and compliance fields. |
 | `DSCB-L2-REQ-003` | `L2` | `automated` | `fail` | Central identity management is taken directly from the evaluated platform metadata. |
 | `DSCB-L2-REQ-004` | `L2` | `automated` | `fail` | Mapped policy `access_control` returned 2 deny messages. |
 | `DSCB-L2-REQ-005` | `L2` | `automated` | `fail` | Dependency repository approval is inferred from the source_approved flag on all declared dependencies. |
@@ -51,8 +51,8 @@ Release Candidate: `true`
 | `DSCB-L2-REQ-010` | `L2` | `hybrid` | `fail` | Infrastructure version control is inferred from the IaC repository metadata. |
 | `DSCB-L2-REQ-011` | `L2` | `automated` | `fail` | Mapped policy `pipeline_security_gates` returned 2 deny messages. |
 | `DSCB-L2-REQ-012` | `L2` | `automated` | `fail` | Mapped policy `pipeline_security_gates` returned 2 deny messages. |
-| `DSCB-L2-REQ-013` | `L2` | `automated` | `not_tested` | This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input. |
-| `DSCB-L2-REQ-014` | `L2` | `automated` | `not_tested` | This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input. |
+| `DSCB-L2-REQ-013` | `L2` | `automated` | `fail` | Security monitoring generation is evaluated from explicit monitoring event generation and integration fields. |
+| `DSCB-L2-REQ-014` | `L2` | `automated` | `fail` | Security event forwarding is evaluated from explicit forwarding metadata. |
 | `DSCB-L3-REQ-001` | `L3` | `hybrid` | `not_applicable` | Control requires PRA-Level 3, but the evaluated run declares PRA-Level 2. |
 | `DSCB-L3-REQ-002` | `L3` | `hybrid` | `not_applicable` | Control requires PRA-Level 3, but the evaluated run declares PRA-Level 2. |
 | `DSCB-L3-REQ-003` | `L3` | `automated` | `not_applicable` | Control requires PRA-Level 3, but the evaluated run declares PRA-Level 2. |

@@ -4,9 +4,9 @@
 
 This document explains why the current green control evaluation report shows:
 
-- `25` tested controls
+- `30` tested controls
 - `0` failed controls
-- `5` `not_tested`
+- `0` `not_tested`
 - `16` `not_applicable`
 
 It is intended to help readers understand that the control report is not a simple yes/no checklist.  
@@ -86,10 +86,10 @@ The current report summary is:
 
 - Total controls: `46`
 - Applicable controls: `30`
-- Tested controls: `25`
-- Passed: `25`
+- Tested controls: `30`
+- Passed: `30`
 - Failed: `0`
-- Not tested: `5`
+- Not tested: `0`
 - Not applicable: `16`
 
 The key formula is:
@@ -98,12 +98,12 @@ The key formula is:
 
 So in the current green report:
 
-- `25 tested = 25 pass + 0 fail`
+- `30 tested = 30 pass + 0 fail`
 
 That means:
 
-- `25` controls were really evaluated
-- `5` controls were in scope but did not have enough machine-readable proof
+- `30` controls were really evaluated
+- `0` controls were in scope but lacked enough machine-readable proof
 - `16` controls were outside the direct run scope
 
 ## Why `16` Controls Are `not_applicable`
@@ -162,47 +162,17 @@ So:
 
 - `5 GOV + 11 L3 = 16 not_applicable`
 
-## Why `5` Controls Are `not_tested`
+## Why `0` Controls Are `not_tested`
 
-These controls are applicable, but the current machine-readable run input does not fully prove them.
+In the current green demo profile, there are now no remaining applicable controls in `not_tested`.
 
-### Current `not_tested` controls
+That means:
 
-- `DSCB-L1-REQ-016`
-- `DSCB-L2-REQ-001`
-- `DSCB-L2-REQ-002`
-- `DSCB-L2-REQ-013`
-- `DSCB-L2-REQ-014`
-
-### Why these land in `not_tested`
-
-#### Operational and monitoring controls
-
-Examples:
-
-- `DSCB-L1-REQ-016`
-- `DSCB-L2-REQ-013`
-- `DSCB-L2-REQ-014`
-
-Reason:
-
-- they expect operational logs, monitoring records, or forwarded event evidence
-- those are not yet present in the current machine-readable demo input
-
-#### Environment baseline controls
-
-Examples:
-
-- `DSCB-L2-REQ-001`
-- `DSCB-L2-REQ-002`
-
-Reason:
-
-- they expect richer environment configuration and configuration baseline evidence
-- this evidence is not represented in the current input JSON
+- all `30` applicable controls are now machine-evaluable in the current demo input model
+- the remaining `16` controls are `not_applicable`, not unresolved
 
 ## Why `20` Controls Are `pass`
-## Why `25` Controls Are `pass`
+## Why `30` Controls Are `pass`
 
 These controls are currently machine-evaluable with the present rule set and input structure.
 
@@ -213,6 +183,11 @@ Compared with the earlier version of the report, the following controls were imp
 - `DSCB-L1-REQ-004`
 - `DSCB-L1-REQ-013`
 - `DSCB-L1-REQ-014`
+- `DSCB-L1-REQ-016`
+- `DSCB-L2-REQ-001`
+- `DSCB-L2-REQ-002`
+- `DSCB-L2-REQ-013`
+- `DSCB-L2-REQ-014`
 
 These are now evaluated through:
 
@@ -220,6 +195,9 @@ These are now evaluated through:
 - `source_control.*`
 - `static_analysis.*`
 - `release_approval.*`
+- `environment.*`
+- `operations.*`
+- `monitoring.*`
 
 ### Typical `pass` patterns
 
@@ -244,6 +222,11 @@ Newly machine-proven examples:
 - `DSCB-L1-REQ-004` via explicit static-analysis evidence fields
 - `DSCB-L1-REQ-013` via explicit structured release approval
 - `DSCB-L1-REQ-014` via approved-artifact-only deployment metadata
+- `DSCB-L1-REQ-016` via deployed-version and security-event recording fields
+- `DSCB-L2-REQ-001` via centrally managed environment metadata
+- `DSCB-L2-REQ-002` via environment baseline compliance fields
+- `DSCB-L2-REQ-013` via structured monitoring event generation
+- `DSCB-L2-REQ-014` via explicit event forwarding metadata
 
 These are strong machine-evaluable controls because:
 
@@ -292,7 +275,7 @@ The current four-state model is therefore more honest and more useful operationa
 
 ## How To Improve The Report Over Time
 
-If you want fewer `not_tested` results in the future, the next step is not to weaken the logic.
+If you want fewer `not_tested` results in future real-world integrations, the next step is not to weaken the logic.
 
 The better step is to increase the machine-readable evidence available to the evaluator.
 
@@ -303,16 +286,7 @@ Examples:
 - add environment baseline evidence
 - add operational monitoring evidence
 
-Then more controls can move from:
-
-- `not_tested`
-
-to:
-
-- `pass`
-- or `fail`
-
-based on real proof.
+The current demo profile already shows that these additional evidence structures can move controls from `not_tested` to real `pass/fail` outcomes based on proof.
 
 ## Practical Reading Rule
 

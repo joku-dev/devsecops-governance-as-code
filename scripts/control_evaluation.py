@@ -197,13 +197,6 @@ def evaluate_single_control(control: dict, payload: dict, policy_results: dict[s
 
     control_id = control["id"]
 
-    if control_id in {"DSCB-L1-REQ-016",
-                      "DSCB-L2-REQ-001", "DSCB-L2-REQ-002", "DSCB-L2-REQ-013", "DSCB-L2-REQ-014"}:
-        return manual_or_hybrid_decision(
-            control,
-            "This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input.",
-        )
-
     if control_id == "DSCB-L1-REQ-001":
         requirements_linked = bool(nested_get(payload, "traceability.requirements_linked"))
         testcases_linked = bool(nested_get(payload, "traceability.testcases_linked"))
@@ -320,6 +313,39 @@ def evaluate_single_control(control: dict, payload: dict, policy_results: dict[s
             evidence_sources=["pipeline_execution_logs", "security_scan_reports", "artifact_metadata"],
         )
 
+    if control_id == "DSCB-L1-REQ-016":
+        deployed_versions_recorded = bool(nested_get(payload, "operations.deployed_versions_recorded"))
+        security_events_recorded = bool(nested_get(payload, "operations.security_events_recorded"))
+        return build_decision(
+            control,
+            "pass" if deployed_versions_recorded and security_events_recorded else "fail",
+            "Operational traceability is evaluated from explicit deployed-version and security-event recording fields.",
+            decision_basis=["operations.deployed_versions_recorded", "operations.security_events_recorded"],
+            evidence_sources=["deployment_records", "system_logs", "incident_records"],
+        )
+
+    if control_id == "DSCB-L2-REQ-001":
+        centrally_managed = bool(nested_get(payload, "environment.centrally_managed"))
+        secure_workspace = bool(nested_get(payload, "environment.secure_workspace"))
+        return build_decision(
+            control,
+            "pass" if centrally_managed and secure_workspace else "fail",
+            "Development environment central management is evaluated from explicit environment management fields.",
+            decision_basis=["environment.centrally_managed", "environment.secure_workspace"],
+            evidence_sources=["environment_configuration_records"],
+        )
+
+    if control_id == "DSCB-L2-REQ-002":
+        config_compliant = bool(nested_get(payload, "environment.config_compliant"))
+        baselines_defined = bool(nested_get(payload, "environment.configuration_baselines_defined"))
+        return build_decision(
+            control,
+            "pass" if config_compliant and baselines_defined else "fail",
+            "Environment configuration compliance is evaluated from explicit baseline and compliance fields.",
+            decision_basis=["environment.config_compliant", "environment.configuration_baselines_defined"],
+            evidence_sources=["environment_configuration_records", "system_configuration_baselines"],
+        )
+
     if control_id == "DSCB-L2-REQ-003":
         central_identity = bool(nested_get(payload, "platform.central_identity_management"))
         return build_decision(
@@ -359,6 +385,28 @@ def evaluate_single_control(control: dict, payload: dict, policy_results: dict[s
             "Infrastructure version control is inferred from the IaC repository metadata.",
             decision_basis=["infrastructure.iac_repository.version_controlled"],
             evidence_sources=["infrastructure_change_history"],
+        )
+
+    if control_id == "DSCB-L2-REQ-013":
+        security_events_generated = bool(nested_get(payload, "monitoring.security_events_generated"))
+        monitoring_integrated = bool(nested_get(payload, "monitoring.integration_enabled"))
+        return build_decision(
+            control,
+            "pass" if security_events_generated and monitoring_integrated else "fail",
+            "Security monitoring generation is evaluated from explicit monitoring event generation and integration fields.",
+            decision_basis=["monitoring.security_events_generated", "monitoring.integration_enabled"],
+            evidence_sources=["security_monitoring_logs", "security_event_records"],
+        )
+
+    if control_id == "DSCB-L2-REQ-014":
+        forwarded = bool(nested_get(payload, "monitoring.forwarded_to_monitoring"))
+        security_events_generated = bool(nested_get(payload, "monitoring.security_events_generated"))
+        return build_decision(
+            control,
+            "pass" if forwarded and security_events_generated else "fail",
+            "Security event forwarding is evaluated from explicit forwarding metadata.",
+            decision_basis=["monitoring.forwarded_to_monitoring", "monitoring.security_events_generated"],
+            evidence_sources=["security_monitoring_logs", "security_event_records"],
         )
 
     return manual_or_hybrid_decision(
