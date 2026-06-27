@@ -33,6 +33,10 @@ Each individual requirement usually contains:
 - policy-as-code information
 - waiver rules
 
+Control automation coverage is tracked separately in:
+
+- `model/controls/control-coverage.yaml`
+
 ## Current Baseline Layers
 
 ### `L1`
@@ -208,6 +212,51 @@ They connect to:
 - `model/traceability/` for mappings
 - `policies/opa/` for executable gate logic
 - `docs/governance/` for the authority and intent documents
+- `model/controls/control-coverage.yaml` for the current automation status per control
+
+## Automation Coverage Status
+
+Each control also has a recorded automation coverage status in:
+
+- `model/controls/control-coverage.yaml`
+
+The allowed values are:
+
+- `automated`
+- `manual`
+- `planned`
+- `not_applicable`
+
+These values mean:
+
+### `automated`
+
+The repository currently has machine-readable evaluator or policy logic for this control.
+
+### `manual`
+
+The control is intentionally handled through governance review, audit, or human evidence interpretation rather than CI/CD-style automation.
+
+### `planned`
+
+The control is a targeted next automation candidate, but the evaluator or evidence contract is not yet fully implemented.
+
+### `not_applicable`
+
+The control is outside the intended automation scope for this repository model.
+
+## Coverage Prioritization
+
+The prioritized current coverage view is generated into:
+
+- `generated/reports/control-coverage-report.md`
+- `generated/reports/control-coverage-report.json`
+
+This report helps answer:
+
+- which controls are already automated
+- which controls still rely on manual review
+- which controls should be automated next
 
 ## Step-By-Step: Inspect The L1 Baseline
 

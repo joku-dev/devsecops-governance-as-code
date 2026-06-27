@@ -179,6 +179,28 @@ def build_control_report_cards(control_report: dict | None) -> str:
     return "".join(html)
 
 
+def build_control_coverage_cards(control_coverage: dict | None) -> str:
+    if not control_coverage:
+        return ""
+    summary = control_coverage.get("summary", {})
+    counts = summary.get("automation_status_counts", {})
+    cards = [
+        ("Automated Controls", str(counts.get("automated", 0)), f"Planned: {counts.get('planned', 0)}"),
+        ("Manual Controls", str(counts.get("manual", 0)), f"Not applicable: {counts.get('not_applicable', 0)}"),
+        ("Planned Controls", str(summary.get("planned_controls", 0)), "Priority backlog"),
+    ]
+    html = []
+    for title, value, detail in cards:
+        html.append(
+            "<section class=\"card\">"
+            f"<h3>{escape(title)}</h3>"
+            f"<div class=\"value\">{escape(value)}</div>"
+            f"<p>{escape(detail)}</p>"
+            "</section>"
+        )
+    return "".join(html)
+
+
 def build_repository_history_rows(results_index: dict) -> list[list[str]]:
     rows = []
     for repository in results_index.get("repositories", []):
@@ -238,6 +260,8 @@ def main() -> int:
     results_index = load_json(ROOT / "status" / "repository-results-index.json")
     control_report_path = ROOT / "generated" / "control-evaluation-report.json"
     control_report = load_json(control_report_path) if control_report_path.exists() else None
+    control_coverage_path = ROOT / "generated" / "reports" / "control-coverage-report.json"
+    control_coverage = load_json(control_coverage_path) if control_coverage_path.exists() else None
     latest_result_with_summary = None
     for repository in results_index.get("repositories", []):
         latest_summary = repository.get("latest_result", {}).get("control_evaluation_summary", {})
@@ -285,6 +309,25 @@ def main() -> int:
                 escape(row["authority_document_titles"]),
             ]
         )
+
+    control_coverage_rows = []
+    if control_coverage:
+        for row in control_coverage.get("controls", []):
+            tone = {
+                "automated": "ok",
+                "manual": "plain",
+                "planned": "warn",
+                "not_applicable": "plain",
+            }.get(row["automation_status"], "plain")
+            control_coverage_rows.append(
+                [
+                    f"<code>{escape(row['control_id'])}</code>",
+                    f"<code>{escape(row['level'])}</code>",
+                    badge(row["automation_status"], tone),
+                    badge(row["priority"], "warn" if row["priority"] != "low" else "plain"),
+                    escape(row["next_action"]),
+                ]
+            )
 
     authority_rows = []
     for row in document_rows[:20]:
@@ -405,6 +448,7 @@ def main() -> int:
                 }
             )
     control_cards_html = f"<section class=\"cards\">{build_control_report_cards(control_cards_source)}</section>" if control_cards_source else ""
+    coverage_cards_html = f"<section class=\"cards\">{build_control_coverage_cards(control_coverage)}</section>" if control_coverage else ""
     control_snapshot_html = (
         "<section class=\"panel\"><h2>Latest Control Evaluation Snapshot</h2>"
         "<div class=\"filters\">"
@@ -496,11 +540,13 @@ def main() -> int:
       {build_summary_cards(documents, gaps, controls)}
     </section>
     {control_cards_html}
+    {coverage_cards_html}
     <section class="panel">
       <h2>Artifacts</h2>
       <ul class="artifact-list">
         <li><a href="../reports/open-gap-report.md">Open Gap Report</a></li>
         <li><a href="../reports/document-control-matrix.md">Document To Control Matrix</a></li>
+        <li><a href="../reports/control-coverage-report.md">Control Coverage Report</a></li>
         <li><a href="../documents/devsecops-pol-001.html">Rendered Policy</a></li>
         <li><a href="../documents/devsecops-dir-001.html">Rendered Directive</a></li>
         <li><a href="../control-evaluation-report.json">Control Evaluation Report JSON</a></li>
@@ -531,6 +577,10 @@ def main() -> int:
       <section class="panel">
         <h2>Policy Coverage Snapshot</h2>
         {html_table(["Control", "Level", "Title", "Policy Candidate", "Authority Documents"], coverage_rows)}
+      </section>
+      <section class="panel">
+        <h2>Control Automation Coverage</h2>
+        {html_table(["Control", "Level", "Automation Status", "Priority", "Next Action"], control_coverage_rows)}
       </section>
       <section class="panel">
         <h2>Authority Mapping Snapshot</h2>

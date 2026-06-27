@@ -98,6 +98,7 @@ def main() -> int:
     validate_schema(errors, ROOT / "schemas" / "control.schema.json", MODEL / "controls" / "dscb-l2.yaml")
     validate_schema(errors, ROOT / "schemas" / "control.schema.json", MODEL / "controls" / "dscb-l3.yaml")
     validate_schema(errors, ROOT / "schemas" / "control.schema.json", MODEL / "controls" / "dscb-gov.yaml")
+    validate_schema(errors, ROOT / "schemas" / "control-coverage.schema.json", MODEL / "controls" / "control-coverage.yaml")
     validate_schema(errors, ROOT / "schemas" / "governance-document-catalog.schema.json", MODEL / "documents" / "governance-documents.yaml")
     validate_schema(errors, ROOT / "schemas" / "document-control-traceability.schema.json", MODEL / "traceability" / "document-to-control.yaml")
     validate_schema(errors, ROOT / "schemas" / "governance-document-rendering.schema.json", MODEL / "documents" / "governance-document-rendering.yaml")
@@ -124,8 +125,10 @@ def main() -> int:
             errors.append(f"Unexpected {level} count: expected {expected}, got {actual}")
 
     traceability = load_yaml(MODEL / "traceability" / "control-to-platform.yaml")
+    control_coverage = load_yaml(MODEL / "controls" / "control-coverage.yaml")
     traced = {item["control"] for item in traceability.get("mappings", [])}
     known = set(ids)
+    coverage_controls = {item["control_id"] for item in control_coverage.get("coverage", [])}
     known_capabilities = {item["id"] for item in capabilities.get("capabilities", [])}
     known_evidence = {item["id"] for item in evidence_catalog.get("evidence_types", [])}
     known_documents = {item["id"] for item in governance_documents.get("documents", [])}
@@ -137,6 +140,19 @@ def main() -> int:
     unknown_traceability = sorted(traced - known)
     if unknown_traceability:
         errors.append(f"Traceability references unknown controls: {unknown_traceability}")
+
+    missing_coverage = sorted(known - coverage_controls)
+    if missing_coverage:
+        errors.append(f"Controls missing coverage status: {missing_coverage}")
+
+    unknown_coverage = sorted(coverage_controls - known)
+    if unknown_coverage:
+        errors.append(f"Coverage status references unknown controls: {unknown_coverage}")
+
+    coverage_ids = [item["control_id"] for item in control_coverage.get("coverage", [])]
+    duplicate_coverage = sorted({item for item in coverage_ids if coverage_ids.count(item) > 1})
+    if duplicate_coverage:
+        errors.append(f"Duplicate coverage status entries: {duplicate_coverage}")
 
     for item in controls:
         policy = item.get("policy_as_code", {})

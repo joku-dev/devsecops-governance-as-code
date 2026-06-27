@@ -62,6 +62,7 @@ It is intended for:
 ## Control And Pipeline Guides
 
 - Control baseline guide: `docs/controls/index.md`
+- Generated control coverage report: `generated/reports/control-coverage-report.md`
 - Pipeline baseline guide: `docs/pipeline-baseline/index.md`
 
 ## Release Documents

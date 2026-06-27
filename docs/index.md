@@ -26,6 +26,7 @@ This documentation space separates governance content into a few clear areas so 
 - If you want the governance logic, read `governance/policy-directive-baseline-verification-and-governance-as-code-explained.md`.
 - If you want the platform relationship, read `platform/control-baseline-and-platform-architecture-relationship-explained.md`.
 - If you want the release gate checklist, read `releases/release-publication-checklist.md`.
+- If you want the control automation status and prioritization, read `controls/index.md`.
 
 ## Documentation Areas
 
