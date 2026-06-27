@@ -86,28 +86,33 @@ The viewer now distinguishes between:
 
 - `mainline`
 - `branch`
+- `manual`
 
 Meaning:
 
-- `mainline` means the recorded run belongs to the repository's `main` branch
+- `mainline` means the recorded run belongs to a `push` event on the repository's `main` branch
 - `branch` means the recorded run belongs to a feature branch or PR flow
+- `manual` means the recorded run was started through `workflow_dispatch`
 
 This matters because:
 
 - `mainline` is the official operational state
 - `branch` shows improvement work in progress
+- `manual` shows diagnostic checks without replacing the official push-based mainline state
 
 ## Latest Result Rule
 
 The repository results index intentionally keeps:
 
-- `latest_result` = latest `main` result if one exists
+- `latest_result` = latest `main` `push` result if one exists
 
 This prevents a feature-branch result from replacing the official mainline state.
 
+It also prevents a manual diagnostic run from replacing the official push-based operational state.
+
 At the same time:
 
-- branch and PR runs still remain visible in `history`
+- branch, PR, and manual runs still remain visible in `history`
 
 ## How To Refresh The Viewer
 

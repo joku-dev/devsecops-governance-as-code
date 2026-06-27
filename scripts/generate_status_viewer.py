@@ -120,6 +120,7 @@ def build_operational_cards(integration_status: dict, results_index: dict) -> st
     results_summary = results_index.get("summary", {})
     mainline_results = results_summary.get("mainline_results", 0)
     branch_results = results_summary.get("branch_results", 0)
+    manual_results = results_summary.get("manual_results", 0)
     baseline_refs = sorted(
         {
             repository.get("latest_result", {}).get("governance_baseline_ref")
@@ -143,7 +144,7 @@ def build_operational_cards(integration_status: dict, results_index: dict) -> st
         (
             "Run Mix",
             str(mainline_results),
-            f"Mainline runs, branch/PR runs: {branch_results}",
+            f"Mainline push runs, branch/PR: {branch_results}, manual: {manual_results}",
         ),
     ]
     html = []
@@ -217,8 +218,13 @@ def build_repository_history_rows(results_index: dict) -> list[list[str]]:
 
             status_tone = "ok" if entry.get("status") == "pass" else "danger"
             branch_name = entry.get("branch", "unknown")
-            scope = "mainline" if branch_name == "main" else "branch"
-            scope_tone = "ok" if scope == "mainline" else "warn"
+            pipeline_event = entry.get("pipeline_event", "unknown")
+            if pipeline_event == "workflow_dispatch":
+                scope = "manual"
+                scope_tone = "plain"
+            else:
+                scope = "mainline" if branch_name == "main" else "branch"
+                scope_tone = "ok" if scope == "mainline" else "warn"
             tested_controls = current_summary.get("tested_controls")
             pass_controls = current_summary.get("pass")
             fail_controls = current_summary.get("fail")
@@ -410,13 +416,19 @@ def main() -> int:
                 1
                 for repository in results_index.get("repositories", [])
                 for entry in repository.get("history", [])
-                if entry.get("branch") == "main"
+                if entry.get("branch") == "main" and entry.get("pipeline_event") == "push"
             ),
             "branch_history_entries": sum(
                 1
                 for repository in results_index.get("repositories", [])
                 for entry in repository.get("history", [])
                 if entry.get("branch") != "main"
+            ),
+            "manual_history_entries": sum(
+                1
+                for repository in results_index.get("repositories", [])
+                for entry in repository.get("history", [])
+                if entry.get("pipeline_event") == "workflow_dispatch"
             ),
     }
     if control_cards_source:

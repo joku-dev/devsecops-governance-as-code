@@ -24,6 +24,7 @@ def main() -> int:
     failing_results = 0
     mainline_results = 0
     branch_results = 0
+    manual_results = 0
 
     for repo_dir in sorted(path for path in STATUS_RESULTS.iterdir() if path.is_dir()):
         results = sorted(repo_dir.glob("*.json"))
@@ -34,7 +35,7 @@ def main() -> int:
         latest = parsed[-1]
         latest_main = None
         for item in reversed(parsed):
-            if item.get("repository", {}).get("branch") == "main":
+            if item.get("repository", {}).get("branch") == "main" and item.get("pipeline", {}).get("event") == "push":
                 latest_main = item
                 break
         representative = latest_main or latest
@@ -44,7 +45,9 @@ def main() -> int:
                 passing_results += 1
             else:
                 failing_results += 1
-            if item.get("repository", {}).get("branch") == "main":
+            if item.get("pipeline", {}).get("event") == "workflow_dispatch":
+                manual_results += 1
+            elif item.get("repository", {}).get("branch") == "main":
                 mainline_results += 1
             else:
                 branch_results += 1
@@ -56,6 +59,7 @@ def main() -> int:
                     "generated_at": item.get("generated_at", ""),
                     "status": item.get("overall_status", "unknown"),
                     "pipeline_run_id": item.get("pipeline", {}).get("pipeline_run_id", "unknown"),
+                    "pipeline_event": item.get("pipeline", {}).get("event", "unknown"),
                     "pipeline_url": item.get("pipeline", {}).get("pipeline_url", ""),
                     "branch": item.get("repository", {}).get("branch", "unknown"),
                     "commit_id": item.get("repository", {}).get("commit_id", "unknown"),
@@ -96,6 +100,7 @@ def main() -> int:
             "failing_results": failing_results,
             "mainline_results": mainline_results,
             "branch_results": branch_results,
+            "manual_results": manual_results,
         },
         "repositories": repositories,
     }

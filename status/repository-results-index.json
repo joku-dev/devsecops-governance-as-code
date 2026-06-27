@@ -1,13 +1,14 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-06-27T21:10:44Z",
+  "generated_at": "2026-06-27T21:40:15Z",
   "summary": {
     "repository_count": 1,
-    "result_count": 5,
+    "result_count": 6,
     "passing_results": 5,
-    "failing_results": 0,
+    "failing_results": 1,
     "mainline_results": 4,
-    "branch_results": 1
+    "branch_results": 1,
+    "manual_results": 1
   },
   "repositories": [
     {
@@ -36,6 +37,7 @@
           "generated_at": "2026-06-27T08:36:38Z",
           "status": "pass",
           "pipeline_run_id": "28284063513",
+          "pipeline_event": "push",
           "pipeline_url": "https://github.com/joku-dev/ha-CPsWMS/actions/runs/28284063513",
           "branch": "main",
           "commit_id": "8e7b742f41f902b4b85d1f6d4f3e556a96d937a3",
@@ -47,6 +49,7 @@
           "generated_at": "2026-06-27T14:49:08Z",
           "status": "pass",
           "pipeline_run_id": "28292518364",
+          "pipeline_event": "push",
           "pipeline_url": "https://github.com/joku-dev/ha-CPsWMS/actions/runs/28292518364",
           "branch": "main",
           "commit_id": "d2f0dba3f88de91838213060e4a014fe78026dd1",
@@ -58,6 +61,7 @@
           "generated_at": "2026-06-27T15:19:14Z",
           "status": "pass",
           "pipeline_run_id": "28293253390",
+          "pipeline_event": "push",
           "pipeline_url": "https://github.com/joku-dev/ha-CPsWMS/actions/runs/28293253390",
           "branch": "main",
           "commit_id": "9059d15d225c0f548289dc942423df74b8b9b1fd",
@@ -77,6 +81,7 @@
           "generated_at": "2026-06-27T15:33:14Z",
           "status": "pass",
           "pipeline_run_id": "28293604694",
+          "pipeline_event": "pull_request",
           "pipeline_url": "https://github.com/joku-dev/ha-CPsWMS/actions/runs/28293604694",
           "branch": "devsecops/update-governance-pin-after-protection-fix",
           "commit_id": "9275a226bff7ac1d30ad0192c8e4b14c5ec437ca",
@@ -96,6 +101,7 @@
           "generated_at": "2026-06-27T15:38:14Z",
           "status": "pass",
           "pipeline_run_id": "28293749755",
+          "pipeline_event": "push",
           "pipeline_url": "https://github.com/joku-dev/ha-CPsWMS/actions/runs/28293749755",
           "branch": "main",
           "commit_id": "a7c0f5beef39405887a0caaac23fa785147151b9",
@@ -110,6 +116,26 @@
             "tested_controls": 16
           },
           "source_file": "status/results/joku-dev__ha-CPsWMS/2026-06-27T15-38-14Z-run-28293749755.json"
+        },
+        {
+          "generated_at": "2026-06-27T21:38:40Z",
+          "status": "fail",
+          "pipeline_run_id": "28302556581",
+          "pipeline_event": "workflow_dispatch",
+          "pipeline_url": "https://github.com/joku-dev/ha-CPsWMS/actions/runs/28302556581",
+          "branch": "main",
+          "commit_id": "a7c0f5beef39405887a0caaac23fa785147151b9",
+          "governance_baseline_ref": "l1-baseline-v1.1.2",
+          "control_evaluation_summary": {
+            "total_controls": 46,
+            "pass": 14,
+            "fail": 2,
+            "not_tested": 0,
+            "not_applicable": 30,
+            "applicable_controls": 16,
+            "tested_controls": 16
+          },
+          "source_file": "status/results/joku-dev__ha-CPsWMS/2026-06-27T21-38-40Z-run-28302556581.json"
         }
       ]
     }
