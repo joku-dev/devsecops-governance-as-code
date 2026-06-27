@@ -395,6 +395,7 @@ Ein gekürzter Ausschnitt:
 
 ```json
 {
+  "contract_version": "1.0",
   "release_candidate": true,
   "repository": {
     "protected_branch": true,

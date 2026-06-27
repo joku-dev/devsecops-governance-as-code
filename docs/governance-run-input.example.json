@@ -1,4 +1,5 @@
 {
+  "contract_version": "1.0",
   "release_candidate": true,
   "required_platform_level": "PRA-Level 2",
   "repository": {

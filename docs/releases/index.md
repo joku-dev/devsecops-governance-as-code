@@ -10,17 +10,22 @@ The intended release model is:
 
 The repository now contains a formal released baseline package for `L1`.
 
-The active released package is:
+The currently documented release set in the repository is:
 
 - `L1 baseline v1.0.0`
-
-The next prepared package in the repository is:
-
 - `L1 baseline v1.1.0`
 - `L1 baseline v1.1.1`
 - `L1 baseline v1.1.2`
 
+The latest prepared L1 package is:
+
+- `L1 baseline v1.1.2`
+
 The working source still remains in `model/`, while approved frozen release packages are published under `releases/`.
+
+To understand how releases should evolve and how downstream repositories should migrate, read:
+
+- `release-and-migration-model.md`
 
 ## Available Release Packages
 

@@ -22,6 +22,14 @@ An example payload is provided in:
 
 - `docs/governance-run-input.example.json`
 
+The contract also supports an explicit schema marker:
+
+- `contract_version`
+
+Current value:
+
+- `1.0`
+
 ## Recommended Consumer Path
 
 A downstream repository should normally generate:
@@ -54,6 +62,7 @@ The contract therefore gives downstream repositories one common structure for go
 
 The following sections are currently required by the schema:
 
+- `contract_version`
 - `release_candidate`
 - `required_platform_level`
 - `repository`
@@ -63,11 +72,23 @@ The following sections are currently required by the schema:
 
 These sections represent the minimum context needed for the baseline evaluator to understand:
 
+- which evidence contract version it is interpreting
 - what type of run this is
 - which platform level is claimed
 - whether repository governance protections exist
 - whether artifact and evidence files exist
 - whether the pipeline itself enforced security gates
+
+## Contract Version Semantics
+
+`contract_version` identifies the structure of the governance run input payload.
+
+It does not replace the released baseline version.
+
+Example:
+
+- baseline version: `l1-baseline-v1.1.2`
+- evidence contract version: `1.0`
 
 ## Recommended Extended Sections
 
@@ -370,3 +391,4 @@ In other words:
 - `scripts/generate_control_evaluation_report.py`
 - `scripts/control_evaluation.py`
 - `docs/operations/how-to-read-control-evaluation-status.md`
+- `docs/operations/governance-evidence-schema-versioning.md`

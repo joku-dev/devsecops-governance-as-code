@@ -245,6 +245,7 @@ jobs:
           security_thresholds_exceeded = severity_order.get(max_seen, 99) > severity_order.get(max_allowed_severity, 99)
 
           evidence = {
+              "contract_version": "1.0",
               "release_candidate": as_bool("${{ inputs.release_candidate }}"),
               "pipeline": {
                   "pipeline_id": os.environ.get("GITHUB_WORKFLOW", "github-actions"),

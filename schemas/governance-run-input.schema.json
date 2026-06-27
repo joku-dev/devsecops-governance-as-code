@@ -3,6 +3,7 @@
   "title": "Governance Run Input",
   "type": "object",
   "required": [
+    "contract_version",
     "release_candidate",
     "required_platform_level",
     "repository",
@@ -11,6 +12,10 @@
     "pipeline"
   ],
   "properties": {
+    "contract_version": {
+      "type": "string",
+      "enum": ["1.0"]
+    },
     "release_candidate": { "type": "boolean" },
     "required_platform_level": {
       "type": "string",

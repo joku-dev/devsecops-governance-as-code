@@ -95,8 +95,13 @@ This checks:
 If you want to understand the machine-readable contract that downstream repositories should produce, read:
 
 - `docs/operations/governance-evidence-contract.md`
+- `docs/operations/governance-evidence-schema-versioning.md`
 - `schemas/governance-run-input.schema.json`
 - `docs/governance-run-input.example.json`
+
+If you want to change Policy or Directive inputs safely and propagate them through the baseline, read:
+
+- `docs/operations/how-to-update-baseline-input-documents.md`
 
 If you want to normalize downstream run results back into this repository and refresh the viewer, read:
 

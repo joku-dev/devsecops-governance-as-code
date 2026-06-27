@@ -23,6 +23,10 @@ nav:
   - Operations:
       - How To Use This Repo: operations/how-to-use-this-repo.md
       - Beginner Guide: operations/beginner-step-by-step-operations-guide.md
+      - Updating Baseline Input Documents: operations/how-to-update-baseline-input-documents.md
+      - Governance Evidence Contract: operations/governance-evidence-contract.md
+      - Governance Evidence Schema Versioning: operations/governance-evidence-schema-versioning.md
+      - Governance Result Intake And Viewer Usage: operations/governance-result-intake-and-viewer-usage.md
       - Current Governance Platform State: operations/current-governance-platform-state.md
       - Governance Results Storage Model: operations/governance-results-storage-model.md
       - MkDocs And GitHub Pages Step By Step: operations/mkdocs-and-github-pages-step-by-step.md
@@ -33,5 +37,6 @@ nav:
       - Roadmap: roadmap.md
   - Releases:
       - Overview: releases/index.md
+      - Release And Migration Model: releases/release-and-migration-model.md
       - L1 Baseline v1.0.0: releases/l1-baseline-v1.0.0.md
       - L1 Baseline v1.0.0 Release Statement: releases/l1-baseline-v1.0.0-release-statement.md

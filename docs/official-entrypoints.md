@@ -36,6 +36,8 @@ It is intended for:
 - How to use this repository: `docs/operations/how-to-use-this-repo.md`
 - Beginner step-by-step operations guide: `docs/operations/beginner-step-by-step-operations-guide.md`
 - Governance evidence contract: `docs/operations/governance-evidence-contract.md`
+- How to update baseline input documents: `docs/operations/how-to-update-baseline-input-documents.md`
+- Governance evidence schema versioning: `docs/operations/governance-evidence-schema-versioning.md`
 - Current governance platform state: `docs/operations/current-governance-platform-state.md`
 - How to read control evaluation status: `docs/operations/how-to-read-control-evaluation-status.md`
 - Governance result intake and viewer usage: `docs/operations/governance-result-intake-and-viewer-usage.md`
@@ -56,6 +58,7 @@ It is intended for:
 ## Release Documents
 
 - Release overview: `docs/releases/index.md`
+- Release and migration model: `docs/releases/release-and-migration-model.md`
 - L1 baseline v1.0.0: `docs/releases/l1-baseline-v1.0.0.md`
 - L1 baseline v1.0.0 release statement: `docs/releases/l1-baseline-v1.0.0-release-statement.md`
 - L1 baseline v1.1.0: `docs/releases/l1-baseline-v1.1.0.md`
