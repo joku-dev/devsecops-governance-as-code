@@ -4,6 +4,7 @@ This documentation space separates governance content into a few clear areas so 
 
 ## Start Here
 
+- If you want the official entrypoint overview, read `official-entrypoints.md`.
 - If you are new, begin with `onboarding/application-repo-onboarding.md`.
 - If you want the operational flow, read `operations/beginner-step-by-step-operations-guide.md`.
 - If you want the documentation publishing flow, read `operations/mkdocs-and-github-pages-step-by-step.md`.
