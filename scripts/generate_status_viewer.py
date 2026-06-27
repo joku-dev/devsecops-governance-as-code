@@ -291,12 +291,12 @@ def main() -> int:
         <li><a href="../reports/document-control-matrix.md">Document To Control Matrix</a></li>
         <li><a href="../documents/devsecops-pol-001.html">Rendered Policy</a></li>
         <li><a href="../documents/devsecops-dir-001.html">Rendered Directive</a></li>
-        <li><a href="../../docs/operations/current-governance-platform-state.md">Current Governance Platform State</a></li>
-        <li><a href="../../docs/operations/ha-cpswms-governance-validation-status.md">ha-CPsWMS Validation Status</a></li>
-        <li><a href="../../docs/releases/l1-baseline-v1.0.0.md">L1 Baseline v1.0.0</a></li>
-        <li><a href="../../docs/releases/l1-baseline-v1.0.0-release-statement.md">L1 Release Statement</a></li>
-        <li><a href="../../docs/onboarding/how-other-repos-use-this-governance-repo.md">Integration Guide</a></li>
-        <li><a href="../../docs/governance/policy-directive-baseline-verification-and-governance-as-code-explained.md">Governance Relationship Explanation</a></li>
+        <li><a href="../../operations/current-governance-platform-state/">Current Governance Platform State</a></li>
+        <li><a href="../../operations/ha-cpswms-governance-validation-status/">ha-CPsWMS Validation Status</a></li>
+        <li><a href="../../releases/l1-baseline-v1.0.0/">L1 Baseline v1.0.0</a></li>
+        <li><a href="../../releases/l1-baseline-v1.0.0-release-statement/">L1 Release Statement</a></li>
+        <li><a href="../../onboarding/how-other-repos-use-this-governance-repo/">Integration Guide</a></li>
+        <li><a href="../../governance/policy-directive-baseline-verification-and-governance-as-code-explained/">Governance Relationship Explanation</a></li>
       </ul>
     </section>
     <section class="panels">

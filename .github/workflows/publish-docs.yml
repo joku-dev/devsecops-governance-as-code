@@ -38,8 +38,15 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements-docs.txt
 
+      - name: Generate governance viewer artifacts
+        run: |
+          python3 scripts/generate_status_viewer.py
+
       - name: Build docs site
-        run: mkdocs build --strict
+        run: |
+          mkdocs build --strict
+          mkdir -p site/generated
+          cp -R generated/. site/generated/
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
