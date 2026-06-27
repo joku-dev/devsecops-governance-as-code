@@ -103,6 +103,8 @@ class RepoValidationTests(unittest.TestCase):
         content = viewer.read_text(encoding="utf-8")
         self.assertIn("Governance Status Viewer", content)
         self.assertIn("Open Gap Report", content)
+        self.assertIn("Operational Integration Status", content)
+        self.assertIn("joku-dev/ha-CPsWMS", content)
 
     def test_demo_run_succeeds(self):
         result = self.run_command("python3", str(ROOT / "scripts" / "run_demo.py"))

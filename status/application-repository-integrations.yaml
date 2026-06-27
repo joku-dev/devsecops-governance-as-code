@@ -1,0 +1,18 @@
+integrations:
+  - repository: joku-dev/ha-CPsWMS
+    baseline_level: L1
+    status: operational
+    branch: main
+    governance_workflow_ref: 654286b
+    last_evaluated_commit: 0f0749a24c7f9eae2f99db40b60bc5a7dfad91d9
+    pipeline_run_id: "28263295148"
+    pipeline_result: success
+    evidence_status: available
+    notes: Successful end-to-end baseline execution through the central reusable governance workflow.
+
+summary:
+  operational_state: L1 operational
+  central_baseline_repository: joku-dev/devsecops-governance-as-code
+  rollout_phase: pilot validated
+  integrated_repositories: 1
+  successful_baseline_runs: 1

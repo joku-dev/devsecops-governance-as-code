@@ -70,6 +70,33 @@ def build_summary_cards(documents, gaps, controls):
     return "".join(html)
 
 
+def build_operational_cards(integration_status: dict) -> str:
+    summary = integration_status.get("summary", {})
+    cards = [
+        ("Operational State", str(summary.get("operational_state", "unknown")), f"Rollout: {summary.get('rollout_phase', 'unknown')}"),
+        (
+            "Integrated Repositories",
+            str(summary.get("integrated_repositories", 0)),
+            f"Successful runs: {summary.get('successful_baseline_runs', 0)}",
+        ),
+        (
+            "Central Baseline",
+            "Active",
+            str(summary.get("central_baseline_repository", "unknown")),
+        ),
+    ]
+    html = []
+    for title, value, detail in cards:
+        html.append(
+            "<section class=\"card\">"
+            f"<h3>{escape(title)}</h3>"
+            f"<div class=\"value\">{escape(value)}</div>"
+            f"<p>{escape(detail)}</p>"
+            "</section>"
+        )
+    return "".join(html)
+
+
 def main() -> int:
     controls = []
     for path in sorted((ROOT / "controls").glob("dscb-*.yaml")):
@@ -82,6 +109,7 @@ def main() -> int:
     gaps = load_csv(ROOT / "generated" / "xlsx" / "open_gap_report.csv")
     traceability_rows = load_csv(ROOT / "generated" / "xlsx" / "traceability_matrix.csv")
     document_rows = load_csv(ROOT / "generated" / "xlsx" / "document_control_matrix.csv")
+    integration_status = load_yaml(ROOT / "status" / "application-repository-integrations.yaml")
 
     document_table_rows = []
     for document in documents:
@@ -134,11 +162,28 @@ def main() -> int:
             ]
         )
 
+    integration_rows = []
+    for row in integration_status.get("integrations", []):
+        tone = "ok" if row.get("pipeline_result") == "success" and row.get("status") == "operational" else "warn"
+        integration_rows.append(
+            [
+                f"<code>{escape(row['repository'])}</code>",
+                badge(row.get("baseline_level", "unknown"), "plain"),
+                badge(row.get("status", "unknown"), tone),
+                escape(row.get("pipeline_result", "unknown")),
+                f"<code>{escape(row.get('governance_workflow_ref', 'unknown'))}</code>",
+                f"<code>{escape(row.get('pipeline_run_id', 'unknown'))}</code>",
+                escape(row.get("notes", "")),
+            ]
+        )
+
     payload = {
         "documents": len(documents),
         "controls": len(controls),
         "gaps": len(gaps),
         "policy_candidates": sum(1 for control in controls if control.get("policy_as_code", {}).get("candidate")),
+        "integrated_repositories": integration_status.get("summary", {}).get("integrated_repositories", 0),
+        "successful_baseline_runs": integration_status.get("summary", {}).get("successful_baseline_runs", 0),
     }
 
     html = f"""<!doctype html>
@@ -187,6 +232,9 @@ def main() -> int:
   </header>
   <main>
     <section class="cards">
+      {build_operational_cards(integration_status)}
+    </section>
+    <section class="cards">
       {build_summary_cards(documents, gaps, controls)}
     </section>
     <section class="panel">
@@ -196,9 +244,16 @@ def main() -> int:
         <li><a href="../reports/document-control-matrix.md">Document To Control Matrix</a></li>
         <li><a href="../documents/devsecops-pol-001.html">Rendered Policy</a></li>
         <li><a href="../documents/devsecops-dir-001.html">Rendered Directive</a></li>
+        <li><a href="../../docs/MANAGEMENT_READOUT.md">Management Readout</a></li>
+        <li><a href="../../docs/how-other-repositories-use-the-central-governance-baseline.md">Integration Guide</a></li>
+        <li><a href="../../docs/policy-directive-baseline-verification-and-governance-as-code-explained.md">Governance Relationship Explanation</a></li>
       </ul>
     </section>
     <section class="panels">
+      <section class="panel">
+        <h2>Operational Integration Status</h2>
+        {html_table(["Repository", "Level", "Status", "Pipeline Result", "Workflow Ref", "Run ID", "Notes"], integration_rows)}
+      </section>
       <section class="panel">
         <h2>Governance Documents</h2>
         {html_table(["ID", "Type", "Title", "Status", "Source"], document_table_rows)}
