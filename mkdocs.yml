@@ -2,6 +2,12 @@ site_name: DevSecOps Governance as Code
 nav:
   - Home: index.md
   - Official Entrypoints: official-entrypoints.md
+  - Role-Based Paths:
+      - Overview: paths/index.md
+      - Beginner Path: paths/beginner-path.md
+      - Operator Path: paths/operator-path.md
+      - Auditor Path: paths/auditor-path.md
+      - Maintainer Path: paths/maintainer-path.md
   - Governance:
       - Management Readout: governance/MANAGEMENT_READOUT.md
       - Document Hierarchy: governance/governance-document-hierarchy.md

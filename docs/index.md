@@ -2,6 +2,14 @@
 
 This documentation space separates governance content into a few clear areas so teams can find the right entry point quickly.
 
+## Role-Based Paths
+
+- Start with `paths/index.md` if you want a guided route by role.
+- New readers should use `paths/beginner-path.md`.
+- Operators should use `paths/operator-path.md`.
+- Auditors should use `paths/auditor-path.md`.
+- Maintainers should use `paths/maintainer-path.md`.
+
 ## Start Here
 
 - If you want the official entrypoint overview, read `official-entrypoints.md`.

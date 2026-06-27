@@ -15,6 +15,14 @@ It is intended for:
 
 - Repository overview: `README.md`
 - Documentation landing page: `docs/index.md`
+- Role-based documentation paths: `docs/paths/index.md`
+
+## Role-Based Paths
+
+- Beginner path: `docs/paths/beginner-path.md`
+- Operator path: `docs/paths/operator-path.md`
+- Auditor path: `docs/paths/auditor-path.md`
+- Maintainer path: `docs/paths/maintainer-path.md`
 
 ## Governance Documents
 
@@ -92,7 +100,7 @@ It is intended for:
 
 1. `README.md`
 2. `docs/index.md`
-3. `docs/operations/beginner-step-by-step-operations-guide.md`
-4. `docs/onboarding/application-repo-onboarding.md`
-5. `docs/releases/l1-baseline-v1.0.0.md`
-6. `.github/workflows/devsecops-baseline-l1-v1.0.0.yml`
+3. `docs/paths/beginner-path.md`
+4. `docs/operations/beginner-step-by-step-operations-guide.md`
+5. `docs/onboarding/application-repo-onboarding.md`
+6. `docs/releases/l1-baseline-v1.1.2.md`
