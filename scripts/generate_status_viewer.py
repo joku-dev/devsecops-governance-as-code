@@ -118,6 +118,8 @@ def build_summary_cards(documents, gaps, controls):
 def build_operational_cards(integration_status: dict, results_index: dict) -> str:
     summary = integration_status.get("summary", {})
     results_summary = results_index.get("summary", {})
+    mainline_results = results_summary.get("mainline_results", 0)
+    branch_results = results_summary.get("branch_results", 0)
     baseline_refs = sorted(
         {
             repository.get("latest_result", {}).get("governance_baseline_ref")
@@ -137,6 +139,11 @@ def build_operational_cards(integration_status: dict, results_index: dict) -> st
             "Central Baseline",
             "Active",
             str(central_baseline),
+        ),
+        (
+            "Run Mix",
+            str(mainline_results),
+            f"Mainline runs, branch/PR runs: {branch_results}",
         ),
     ]
     html = []
@@ -187,6 +194,9 @@ def build_repository_history_rows(results_index: dict) -> list[list[str]]:
                     break
 
             status_tone = "ok" if entry.get("status") == "pass" else "danger"
+            branch_name = entry.get("branch", "unknown")
+            scope = "mainline" if branch_name == "main" else "branch"
+            scope_tone = "ok" if scope == "mainline" else "warn"
             tested_controls = current_summary.get("tested_controls")
             pass_controls = current_summary.get("pass")
             fail_controls = current_summary.get("fail")
@@ -200,9 +210,10 @@ def build_repository_history_rows(results_index: dict) -> list[list[str]]:
                 [
                     f"<code>{escape(repository.get('repository_id', 'unknown'))}</code>",
                     escape(entry.get("generated_at", "")),
+                    badge(scope, scope_tone),
                     badge(entry.get("status", "unknown"), status_tone),
                     f"<code>{escape(entry.get('governance_baseline_ref', 'unknown'))}</code>",
-                    escape(entry.get("branch", "unknown")),
+                    escape(branch_name),
                     f"<code>{escape(entry.get('pipeline_run_id', 'unknown'))}</code>",
                     coverage_text,
                     summarize_control_delta(current_summary, previous_summary),
@@ -293,7 +304,21 @@ def main() -> int:
         repo_id = repository.get("repository_id", "unknown")
         integration = integration_lookup.get(repo_id, {})
         latest_result = repository.get("latest_result", {})
+        latest_branch_result = None
+        for history_entry in reversed(repository.get("history", [])):
+            if history_entry.get("branch") != "main":
+                latest_branch_result = history_entry
+                break
         tone = "ok" if latest_result.get("status") == "pass" and integration.get("status") == "operational" else "warn"
+        notes = integration.get("notes") or f"Latest mainline commit {latest_result.get('commit_id', 'unknown')} evaluated at {latest_result.get('generated_at', 'unknown')}."
+        if latest_branch_result:
+            notes += (
+                f" Latest branch/PR run: {latest_branch_result.get('pipeline_run_id', 'unknown')}"
+                f" on {latest_branch_result.get('branch', 'unknown')}"
+                f" with coverage "
+                f"{latest_branch_result.get('control_evaluation_summary', {}).get('pass', 'n/a')}/"
+                f"{latest_branch_result.get('control_evaluation_summary', {}).get('tested_controls', 'n/a')} pass."
+            )
         integration_rows.append(
             [
                 f"<code>{escape(repo_id)}</code>",
@@ -302,10 +327,7 @@ def main() -> int:
                 escape(integration.get("pipeline_result", latest_result.get("status", "unknown"))),
                 f"<code>{escape(latest_result.get('governance_baseline_ref', integration.get('governance_workflow_ref', 'unknown')))}</code>",
                 f"<code>{escape(latest_result.get('pipeline_run_id', integration.get('pipeline_run_id', 'unknown')))}</code>",
-                escape(
-                    integration.get("notes")
-                    or f"Latest commit {latest_result.get('commit_id', 'unknown')} evaluated at {latest_result.get('generated_at', 'unknown')}."
-                ),
+                escape(notes),
             ]
         )
     for row in integration_status.get("integrations", []):
@@ -340,7 +362,19 @@ def main() -> int:
             for repository in results_index.get("repositories", [])
             if repository.get("latest_result", {}).get("governance_baseline_ref")
         ],
-        "repository_result_history_entries": sum(len(repository.get("history", [])) for repository in results_index.get("repositories", [])),
+            "repository_result_history_entries": sum(len(repository.get("history", [])) for repository in results_index.get("repositories", [])),
+            "mainline_history_entries": sum(
+                1
+                for repository in results_index.get("repositories", [])
+                for entry in repository.get("history", [])
+                if entry.get("branch") == "main"
+            ),
+            "branch_history_entries": sum(
+                1
+                for repository in results_index.get("repositories", [])
+                for entry in repository.get("history", [])
+                if entry.get("branch") != "main"
+            ),
     }
     if control_cards_source:
         payload["control_evaluation_summary"] = control_cards_source.get("summary", {})
@@ -397,7 +431,7 @@ def main() -> int:
         "<h2>Repository Result History</h2>"
         "<p class=\"filter-summary\">Shows baseline evolution, run history, and structured control coverage where available.</p>"
         + html_table(
-            ["Repository", "Generated At", "Status", "Baseline Ref", "Branch", "Run ID", "Coverage", "Trend"],
+            ["Repository", "Generated At", "Scope", "Status", "Baseline Ref", "Branch", "Run ID", "Coverage", "Trend"],
             repository_history_rows,
         )
         + "</section>"

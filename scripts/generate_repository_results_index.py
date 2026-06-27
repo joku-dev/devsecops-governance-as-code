@@ -22,6 +22,8 @@ def main() -> int:
     result_count = 0
     passing_results = 0
     failing_results = 0
+    mainline_results = 0
+    branch_results = 0
 
     for repo_dir in sorted(path for path in STATUS_RESULTS.iterdir() if path.is_dir()):
         results = sorted(repo_dir.glob("*.json"))
@@ -42,6 +44,10 @@ def main() -> int:
                 passing_results += 1
             else:
                 failing_results += 1
+            if item.get("repository", {}).get("branch") == "main":
+                mainline_results += 1
+            else:
+                branch_results += 1
         history = []
         for item, path in zip(parsed, results):
             control_summary = item.get("control_evaluation_summary", {})
@@ -88,6 +94,8 @@ def main() -> int:
             "result_count": result_count,
             "passing_results": passing_results,
             "failing_results": failing_results,
+            "mainline_results": mainline_results,
+            "branch_results": branch_results,
         },
         "repositories": repositories,
     }

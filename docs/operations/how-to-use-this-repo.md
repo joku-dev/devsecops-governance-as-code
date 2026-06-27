@@ -98,6 +98,10 @@ If you want to understand the machine-readable contract that downstream reposito
 - `schemas/governance-run-input.schema.json`
 - `docs/governance-run-input.example.json`
 
+If you want to normalize downstream run results back into this repository and refresh the viewer, read:
+
+- `docs/operations/governance-result-intake-and-viewer-usage.md`
+
 ### 3. Generate Review Artifacts
 
 Generate the core outputs:
