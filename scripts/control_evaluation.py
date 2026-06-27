@@ -123,6 +123,24 @@ def nested_get(payload: dict, dotted_path: str):
     return current
 
 
+def is_release_context(payload: dict) -> bool:
+    explicit = nested_get(payload, "run_context.release_context")
+    if isinstance(explicit, bool):
+        return explicit
+
+    purpose = nested_get(payload, "run_context.purpose")
+    if purpose in {"diagnostic", "branch_validation", "pull_request_validation"}:
+        return False
+    if purpose == "release":
+        return True
+
+    event = nested_get(payload, "run_context.event") or nested_get(payload, "pipeline.event")
+    if event in {"workflow_dispatch", "pull_request", "schedule", "local"}:
+        return False
+
+    return bool(payload.get("release_candidate", False))
+
+
 def build_decision(
     control: dict,
     status: str,
@@ -282,6 +300,14 @@ def evaluate_single_control(control: dict, payload: dict, policy_results: dict[s
         )
 
     if control_id == "DSCB-L1-REQ-013":
+        if not is_release_context(payload):
+            return build_decision(
+                control,
+                "not_applicable",
+                "Release authorization is not applicable for this non-release diagnostic or validation run.",
+                decision_basis=["run_context.release_context", "run_context.purpose", "pipeline.event"],
+                evidence_sources=["release_approval_records"],
+            )
         approved = bool(nested_get(payload, "release_approval.approved"))
         approver = nested_get(payload, "release_approval.approver")
         return build_decision(
@@ -293,6 +319,14 @@ def evaluate_single_control(control: dict, payload: dict, policy_results: dict[s
         )
 
     if control_id == "DSCB-L1-REQ-014":
+        if not is_release_context(payload):
+            return build_decision(
+                control,
+                "not_applicable",
+                "Approved-artifact deployment is not applicable for this non-release diagnostic or validation run.",
+                decision_basis=["run_context.release_context", "run_context.purpose", "pipeline.event"],
+                evidence_sources=["release_approval_records", "deployment_logs", "artifact_checksum_or_digest_records"],
+            )
         approved_artifact_only = bool(nested_get(payload, "release_approval.approved_artifact_only"))
         digest_exists = bool(nested_get(payload, "artifact.digest.exists"))
         return build_decision(
@@ -434,6 +468,7 @@ def generate_control_evaluation_report(input_path: Path) -> dict:
         "input_file": str(input_path.relative_to(ROOT)) if input_path.is_relative_to(ROOT) else str(input_path),
         "required_platform_level": payload.get("required_platform_level", "PRA-Level 1"),
         "release_candidate": bool(payload.get("release_candidate", False)),
+        "run_context": payload.get("run_context", {}),
         "policy_results": policy_results,
         "summary": summary,
         "controls": decisions,
@@ -447,6 +482,7 @@ def render_control_evaluation_markdown(report: dict) -> str:
         f"Input File: `{report['input_file']}`",
         f"Required Platform Level: `{report['required_platform_level']}`",
         f"Release Candidate: `{str(report['release_candidate']).lower()}`",
+        f"Run Context: `{report.get('run_context', {}).get('purpose', 'unspecified')}`",
         "",
         "## Summary",
         "",

@@ -100,6 +100,14 @@ This matters because:
 - `branch` shows improvement work in progress
 - `manual` shows diagnostic checks without replacing the official push-based mainline state
 
+Manual diagnostic runs should normally provide:
+
+- `run_context.event: workflow_dispatch`
+- `run_context.purpose: diagnostic`
+- `run_context.release_context: false`
+
+This allows release-specific controls to be shown as `not_applicable` instead of false failures.
+
 ## Latest Result Rule
 
 The repository results index intentionally keeps:

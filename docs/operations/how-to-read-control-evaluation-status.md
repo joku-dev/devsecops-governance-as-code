@@ -74,6 +74,7 @@ Typical reasons:
 
 - the control belongs to `GOV` and is not directly evaluated by a normal pipeline run
 - the control requires a higher platform level than the current run declares
+- the control is release-specific but the evaluated run is a diagnostic, pull-request, or branch-validation run
 
 In the current green example:
 
@@ -119,6 +120,15 @@ That means:
 - `L3` controls are not applicable in this run
 
 Also, the repository currently treats `GOV` controls as not directly pipeline-testable in this report type.
+
+Manual diagnostic runs can have additional release-specific controls marked as `not_applicable`.
+
+For example:
+
+- `DSCB-L1-REQ-013`
+- `DSCB-L1-REQ-014`
+
+These controls are only directly applicable when `run_context.release_context` is `true`.
 
 ### Breakdown
 

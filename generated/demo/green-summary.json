@@ -50,6 +50,12 @@
     "input_file": "demo/inputs/release-candidate-green.json",
     "required_platform_level": "PRA-Level 2",
     "release_candidate": true,
+    "run_context": {
+      "event": "push",
+      "purpose": "release",
+      "release_context": true,
+      "source": "demo"
+    },
     "policy_results": {
       "branch_protection": {
         "status": "pass",

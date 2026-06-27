@@ -17,6 +17,22 @@
       "enum": ["1.0"]
     },
     "release_candidate": { "type": "boolean" },
+    "run_context": {
+      "type": "object",
+      "properties": {
+        "event": {
+          "type": "string",
+          "enum": ["push", "pull_request", "workflow_dispatch", "schedule", "local", "unknown"]
+        },
+        "purpose": {
+          "type": "string",
+          "enum": ["release", "diagnostic", "branch_validation", "pull_request_validation", "unknown"]
+        },
+        "release_context": { "type": "boolean" },
+        "source": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
     "required_platform_level": {
       "type": "string",
       "enum": ["PRA-Level 1", "PRA-Level 2", "PRA-Level 3"]
@@ -155,6 +171,10 @@
         "pipeline_id": { "type": "string" },
         "pipeline_run_id": { "type": "string" },
         "commit_id": { "type": "string" },
+        "event": {
+          "type": "string",
+          "enum": ["push", "pull_request", "workflow_dispatch", "schedule", "local", "unknown"]
+        },
         "status": { "type": "string" },
         "security_gates": {
           "type": "object",

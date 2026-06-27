@@ -3,6 +3,7 @@
 Input File: `demo/inputs/release-candidate-green.json`
 Required Platform Level: `PRA-Level 2`
 Release Candidate: `true`
+Run Context: `release`
 
 ## Summary
 

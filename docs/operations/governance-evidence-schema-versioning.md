@@ -112,6 +112,7 @@ Example:
 | Change | Contract Impact | Release Impact |
 | --- | --- | --- |
 | New optional monitoring field | minor-compatible | usually minor baseline release |
+| New optional `run_context` field | minor-compatible | usually minor baseline release |
 | Rename `review_required` | breaking | new baseline release plus migration |
 | Clarify docs only | none | patch or no release |
 | Make `release_approval.approver` mandatory | breaking | new baseline release plus migration |

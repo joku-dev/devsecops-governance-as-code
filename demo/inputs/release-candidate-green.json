@@ -1,5 +1,11 @@
 {
   "release_candidate": true,
+  "run_context": {
+    "event": "push",
+    "purpose": "release",
+    "release_context": true,
+    "source": "demo"
+  },
   "required_platform_level": "PRA-Level 2",
   "repository": {
     "protected_branch": true,
@@ -53,6 +59,7 @@
     "keys_protected": true
   },
   "pipeline": {
+    "event": "push",
     "external_direct_downloads_detected": false,
     "security_gates": {
       "enforced": true

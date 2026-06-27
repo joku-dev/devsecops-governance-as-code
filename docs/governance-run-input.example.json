@@ -1,6 +1,12 @@
 {
   "contract_version": "1.0",
   "release_candidate": true,
+  "run_context": {
+    "event": "push",
+    "purpose": "release",
+    "release_context": true,
+    "source": "github-actions"
+  },
   "required_platform_level": "PRA-Level 2",
   "repository": {
     "protected_branch": true,
@@ -70,6 +76,7 @@
     "pipeline_id": "DevSecOps Baseline",
     "pipeline_run_id": "28292518364",
     "commit_id": "d2f0dba3f88de91838213060e4a014fe78026dd1",
+    "event": "push",
     "status": "success",
     "security_gates": {
       "enforced": true

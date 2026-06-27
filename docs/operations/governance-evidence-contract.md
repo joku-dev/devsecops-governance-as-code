@@ -95,6 +95,7 @@ Example:
 The following sections are strongly recommended when a repository wants better control-level coverage:
 
 - `traceability`
+- `run_context`
 - `source_control`
 - `static_analysis`
 - `environment`
@@ -133,6 +134,32 @@ Typical controls supported:
 
 - `DSCB-L1-REQ-002`
 - `DSCB-L1-REQ-003`
+
+### `run_context`
+
+Purpose:
+
+- distinguish real release runs from diagnostic, pull-request, and branch-validation runs
+
+Typical fields:
+
+- `event`
+- `purpose`
+- `release_context`
+- `source`
+
+Typical values:
+
+- `event: push`, `purpose: release`, `release_context: true`
+- `event: workflow_dispatch`, `purpose: diagnostic`, `release_context: false`
+- `event: pull_request`, `purpose: pull_request_validation`, `release_context: false`
+
+Typical controls affected:
+
+- `DSCB-L1-REQ-013`
+- `DSCB-L1-REQ-014`
+
+In non-release contexts, release authorization and approved-artifact deployment controls are treated as not applicable.
 
 ### `traceability`
 
