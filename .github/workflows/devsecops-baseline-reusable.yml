@@ -159,6 +159,7 @@ jobs:
                       direct_push_allowed = not review_required
                       branch_protection_lookup = {"status": "protection_checked"}
                   except urllib.error.HTTPError as error:
+                      direct_push_allowed = False
                       branch_protection_lookup = {
                           "status": "protection_unavailable",
                           "http_status": error.code,
