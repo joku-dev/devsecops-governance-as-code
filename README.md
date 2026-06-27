@@ -192,6 +192,13 @@ mkdocs build --strict
 mkdocs serve
 ```
 
+Use the first versioned L1 baseline release package:
+
+```bash
+sed -n '1,240p' releases/l1/v1.0.0/baseline-package.md
+sed -n '1,200p' docs/releases/l1-baseline-v1.0.0.md
+```
+
 Run the local demonstration environment:
 
 ```bash

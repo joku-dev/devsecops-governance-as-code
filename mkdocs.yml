@@ -24,7 +24,9 @@ nav:
       - Beginner Guide: operations/beginner-step-by-step-operations-guide.md
       - Enforcement Options: operations/operational-governance-enforcement-options.md
       - Target Structure Plan: operations/repository-target-structure-and-migration-plan.md
+      - ha-CPsWMS Validation Status: operations/ha-cpswms-governance-validation-status.md
       - Migration Status: migration-status.md
       - Roadmap: roadmap.md
   - Releases:
       - Overview: releases/index.md
+      - L1 Baseline v1.0.0: releases/l1-baseline-v1.0.0.md

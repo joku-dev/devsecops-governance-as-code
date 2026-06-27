@@ -9,3 +9,7 @@ The intended release model is:
 - consuming teams can pin a known governance version in their CI/CD integration
 
 Until release packaging is formalized, use the content in `model/`, `docs/`, and `generated/` as the active working baseline.
+
+## Available Release Packages
+
+- `L1 baseline v1.0.0`: `l1-baseline-v1.0.0.md`
