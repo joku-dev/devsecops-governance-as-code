@@ -107,6 +107,12 @@ Read the application repository onboarding guide:
 sed -n '1,260p' docs/application-repo-onboarding.md
 ```
 
+Read the explanation of policy, directive, baseline, verification, and governance as code:
+
+```bash
+sed -n '1,360p' docs/policy-directive-baseline-verification-and-governance-as-code-explained.md
+```
+
 Use the generic GitHub Actions onboarding template:
 
 ```bash
