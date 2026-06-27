@@ -209,6 +209,7 @@ It should not consume `main` if revision-safe governance consumption is required
 The following areas are already covered in dedicated documents:
 
 - official entrypoints: `docs/official-entrypoints.md`
+- control evaluation status explanation: `docs/operations/how-to-read-control-evaluation-status.md`
 - MkDocs and Pages: `docs/operations/mkdocs-and-github-pages-step-by-step.md`
 - downstream validation proof: `docs/operations/ha-cpswms-governance-validation-status.md`
 - results storage model: `docs/operations/governance-results-storage-model.md`

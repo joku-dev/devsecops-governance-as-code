@@ -44,6 +44,22 @@ def html_table(headers: list[str], rows: list[list[str]]) -> str:
     )
 
 
+def html_table_with_row_attrs(headers: list[str], rows: list[dict]) -> str:
+    thead = "".join(f"<th>{escape(header)}</th>" for header in headers)
+    body_rows = []
+    for row in rows:
+        attrs = " ".join(f'{escape(key)}="{escape(value)}"' for key, value in row.get("attrs", {}).items())
+        attr_text = f" {attrs}" if attrs else ""
+        cells = "".join(f"<td>{cell}</td>" for cell in row["cells"])
+        body_rows.append(f"<tr{attr_text}>{cells}</tr>")
+    return (
+        "<table>"
+        f"<thead><tr>{thead}</tr></thead>"
+        f"<tbody>{''.join(body_rows)}</tbody>"
+        "</table>"
+    )
+
+
 def badge(text: str, tone: str) -> str:
     return f'<span class="badge {tone}">{escape(text)}</span>'
 
@@ -268,18 +284,38 @@ def main() -> int:
         for control in sorted_controls[:20]:
             tone = {"pass": "ok", "fail": "danger", "not_tested": "warn", "not_applicable": "plain"}.get(control["status"], "plain")
             control_rows.append(
-                [
-                    f"<code>{escape(control['control_id'])}</code>",
-                    f"<code>{escape(control['level'])}</code>",
-                    escape(control["verification_method"]),
-                    badge(control["status"], tone),
-                    escape(control["message"]),
-                ]
+                {
+                    "attrs": {
+                        "data-control-row": "true",
+                        "data-status": control["status"],
+                        "data-control-id": control["control_id"],
+                    },
+                    "cells": [
+                        f"<code>{escape(control['control_id'])}</code>",
+                        f"<code>{escape(control['level'])}</code>",
+                        escape(control["verification_method"]),
+                        badge(control["status"], tone),
+                        escape(control["message"]),
+                    ],
+                }
             )
     control_cards_html = f"<section class=\"cards\">{build_control_report_cards(control_report)}</section>" if control_report else ""
     control_snapshot_html = (
         "<section class=\"panel\"><h2>Latest Control Evaluation Snapshot</h2>"
-        + html_table(["Control", "Level", "Method", "Status", "Message"], control_rows)
+        "<div class=\"filters\">"
+        "<label for=\"control-status-filter\">Status</label>"
+        "<select id=\"control-status-filter\">"
+        "<option value=\"all\">All</option>"
+        "<option value=\"fail\">Fail</option>"
+        "<option value=\"pass\">Pass</option>"
+        "<option value=\"not_tested\">Not tested</option>"
+        "<option value=\"not_applicable\">Not applicable</option>"
+        "</select>"
+        "<label for=\"control-search-filter\">Search</label>"
+        "<input id=\"control-search-filter\" type=\"search\" placeholder=\"DSCB-L1-REQ-003 or artifact\" />"
+        "</div>"
+        + html_table_with_row_attrs(["Control", "Level", "Method", "Status", "Message"], control_rows)
+        + "<p id=\"control-filter-summary\" class=\"filter-summary\"></p>"
         + "</section>"
         if control_rows
         else ""
@@ -322,6 +358,11 @@ def main() -> int:
     .meta {{ color: rgba(255,255,255,0.85); }}
     .artifact-list a {{ color: var(--accent); text-decoration: none; }}
     .artifact-list li {{ margin: 0.35rem 0; }}
+    .filters {{ display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }}
+    .filters label {{ font-size: 0.9rem; color: var(--muted); }}
+    .filters select, .filters input {{ padding: 0.45rem 0.6rem; border: 1px solid var(--border); border-radius: 8px; font: inherit; }}
+    .filters input {{ min-width: 240px; }}
+    .filter-summary {{ margin: 10px 0 0; color: var(--muted); font-size: 0.9rem; }}
   </style>
 </head>
 <body>
@@ -382,6 +423,37 @@ def main() -> int:
       </section>
     </section>
   </main>
+  <script>
+    (() => {{
+      const statusFilter = document.getElementById('control-status-filter');
+      const searchFilter = document.getElementById('control-search-filter');
+      const summary = document.getElementById('control-filter-summary');
+      const rows = Array.from(document.querySelectorAll('tr[data-control-row="true"]'));
+      if (!statusFilter || !searchFilter || !summary || rows.length === 0) {{
+        return;
+      }}
+      const applyFilters = () => {{
+        const status = statusFilter.value;
+        const query = searchFilter.value.trim().toLowerCase();
+        let visible = 0;
+        for (const row of rows) {{
+          const rowStatus = row.dataset.status || '';
+          const text = row.textContent.toLowerCase();
+          const statusMatch = status === 'all' || rowStatus === status;
+          const queryMatch = query === '' || text.includes(query);
+          const show = statusMatch && queryMatch;
+          row.style.display = show ? '' : 'none';
+          if (show) {{
+            visible += 1;
+          }}
+        }}
+        summary.textContent = `${{visible}} of ${{rows.length}} controls shown`;
+      }};
+      statusFilter.addEventListener('change', applyFilters);
+      searchFilter.addEventListener('input', applyFilters);
+      applyFilters();
+    }})();
+  </script>
 </body>
 </html>
 """

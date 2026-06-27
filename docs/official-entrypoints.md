@@ -36,6 +36,7 @@ It is intended for:
 - How to use this repository: `docs/operations/how-to-use-this-repo.md`
 - Beginner step-by-step operations guide: `docs/operations/beginner-step-by-step-operations-guide.md`
 - Current governance platform state: `docs/operations/current-governance-platform-state.md`
+- How to read control evaluation status: `docs/operations/how-to-read-control-evaluation-status.md`
 - MkDocs and GitHub Pages step by step: `docs/operations/mkdocs-and-github-pages-step-by-step.md`
 - Operational governance enforcement options: `docs/operations/operational-governance-enforcement-options.md`
 - ha-CPsWMS governance validation status: `docs/operations/ha-cpswms-governance-validation-status.md`
