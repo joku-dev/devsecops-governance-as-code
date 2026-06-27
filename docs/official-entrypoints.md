@@ -35,6 +35,7 @@ It is intended for:
 
 - How to use this repository: `docs/operations/how-to-use-this-repo.md`
 - Beginner step-by-step operations guide: `docs/operations/beginner-step-by-step-operations-guide.md`
+- Governance evidence contract: `docs/operations/governance-evidence-contract.md`
 - Current governance platform state: `docs/operations/current-governance-platform-state.md`
 - How to read control evaluation status: `docs/operations/how-to-read-control-evaluation-status.md`
 - MkDocs and GitHub Pages step by step: `docs/operations/mkdocs-and-github-pages-step-by-step.md`
@@ -61,6 +62,8 @@ It is intended for:
 
 - Versioned reusable workflow: `.github/workflows/devsecops-baseline-l1-v1.0.0.yml`
 - Consumer example workflow: `releases/l1/v1.0.0/examples/github-actions/devsecops-baseline-l1-v1.0.0.yml`
+- Governance run input schema: `schemas/governance-run-input.schema.json`
+- Governance run input example: `docs/governance-run-input.example.json`
 
 ## Recommended Reading Order For New Users
 

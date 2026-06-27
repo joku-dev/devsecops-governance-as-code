@@ -233,6 +233,18 @@ generated/evidence/pipeline-evidence.json
 
 This file is the central machine-readable proof that the governance baseline was executed.
 
+If the application repository wants richer control-level evaluation, it can additionally produce:
+
+```text
+governance/governance-run-input.json
+```
+
+That payload should follow:
+
+- `docs/operations/governance-evidence-contract.md`
+- `schemas/governance-run-input.schema.json`
+- `docs/governance-run-input.example.json`
+
 ## Step 11: Interpret The Result
 
 For a successful L1 integration, you usually want to see:

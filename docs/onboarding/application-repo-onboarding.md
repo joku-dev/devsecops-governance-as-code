@@ -199,6 +199,18 @@ generated/evidence/pipeline-evidence.json
 
 This file is the machine-readable compliance evidence for the pipeline run.
 
+If the repository wants richer control coverage beyond the default pipeline evidence, it should also generate:
+
+```text
+governance/governance-run-input.json
+```
+
+The official contract for that file is defined in:
+
+- `docs/operations/governance-evidence-contract.md`
+- `schemas/governance-run-input.schema.json`
+- `docs/governance-run-input.example.json`
+
 ### Step 6: Replace Placeholders
 
 The placeholder SBOM and vulnerability scan are allowed only for initial technical onboarding.

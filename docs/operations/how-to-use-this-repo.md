@@ -86,10 +86,17 @@ This checks:
 
 - control schemas,
 - governance document schemas,
+- governance run input schema and example payload,
 - traceability consistency,
 - known evidence and platform capabilities,
 - governance document paths,
 - OPA policy syntax.
+
+If you want to understand the machine-readable contract that downstream repositories should produce, read:
+
+- `docs/operations/governance-evidence-contract.md`
+- `schemas/governance-run-input.schema.json`
+- `docs/governance-run-input.example.json`
 
 ### 3. Generate Review Artifacts
 
@@ -196,6 +203,24 @@ This generates:
 - `generated/demo/green-summary.md`
 - `generated/demo/red-summary.json`
 - `generated/demo/red-summary.md`
+
+### Validate A Governance Run Input
+
+If another repository wants to provide richer governance evidence, it should produce a file such as:
+
+- `governance/governance-run-input.json`
+
+The official contract for that payload is documented in:
+
+- `docs/operations/governance-evidence-contract.md`
+
+The governing schema is:
+
+- `schemas/governance-run-input.schema.json`
+
+The example payload is:
+
+- `docs/governance-run-input.example.json`
 
 ### Evaluate A Single Policy
 
