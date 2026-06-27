@@ -565,8 +565,8 @@ def main() -> int:
         <li><a href="../control-evaluation-report.md">Control Evaluation Report Markdown</a></li>
         <li><a href="../../operations/current-governance-platform-state/">Current Governance Platform State</a></li>
         <li><a href="../../operations/ha-cpswms-governance-validation-status/">ha-CPsWMS Validation Status</a></li>
-        <li><a href="../../releases/l1-baseline-v1.1.2/">L1 Baseline v1.1.2</a></li>
-        <li><a href="../../releases/l1-baseline-v1.1.2-release-statement/">L1 Release Statement</a></li>
+        <li><a href="../../releases/l1-baseline-v1.1.3/">L1 Baseline v1.1.3</a></li>
+        <li><a href="../../releases/l1-baseline-v1.1.3-release-statement/">L1 Release Statement</a></li>
         <li><a href="../../onboarding/how-other-repos-use-this-governance-repo/">Integration Guide</a></li>
         <li><a href="../../governance/policy-directive-baseline-verification-and-governance-as-code-explained/">Governance Relationship Explanation</a></li>
       </ul>

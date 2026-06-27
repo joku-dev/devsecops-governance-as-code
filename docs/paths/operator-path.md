@@ -22,8 +22,8 @@ After following this path, you should understand:
 
 ### Step 2: Understand The Reusable Baseline
 
-- `docs/releases/l1-baseline-v1.1.2.md`
-- `releases/l1/v1.1.2/examples/github-actions/devsecops-baseline-l1-v1.1.2.yml`
+- `docs/releases/l1-baseline-v1.1.3.md`
+- `releases/l1/v1.1.3/examples/github-actions/devsecops-baseline-l1-v1.1.3.yml`
 
 ### Step 3: Understand Evidence Requirements
 

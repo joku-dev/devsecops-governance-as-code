@@ -78,6 +78,8 @@ It is intended for:
 - L1 baseline v1.1.1 release statement: `docs/releases/l1-baseline-v1.1.1-release-statement.md`
 - L1 baseline v1.1.2: `docs/releases/l1-baseline-v1.1.2.md`
 - L1 baseline v1.1.2 release statement: `docs/releases/l1-baseline-v1.1.2-release-statement.md`
+- L1 baseline v1.1.3: `docs/releases/l1-baseline-v1.1.3.md`
+- L1 baseline v1.1.3 release statement: `docs/releases/l1-baseline-v1.1.3-release-statement.md`
 - Technical release package: `releases/l1/v1.0.0/baseline-package.md`
 
 ## Consumer Entrypoints
@@ -86,10 +88,12 @@ It is intended for:
 - Prepared versioned reusable workflow: `.github/workflows/devsecops-baseline-l1-v1.1.0.yml`
 - Prepared patch versioned reusable workflow: `.github/workflows/devsecops-baseline-l1-v1.1.1.yml`
 - Prepared patch versioned reusable workflow: `.github/workflows/devsecops-baseline-l1-v1.1.2.yml`
+- Prepared patch versioned reusable workflow: `.github/workflows/devsecops-baseline-l1-v1.1.3.yml`
 - Consumer example workflow: `releases/l1/v1.0.0/examples/github-actions/devsecops-baseline-l1-v1.0.0.yml`
 - Consumer example workflow with governance input: `releases/l1/v1.1.0/examples/github-actions/devsecops-baseline-l1-v1.1.0.yml`
 - Consumer example workflow with governance input: `releases/l1/v1.1.1/examples/github-actions/devsecops-baseline-l1-v1.1.1.yml`
 - Consumer example workflow with governance input: `releases/l1/v1.1.2/examples/github-actions/devsecops-baseline-l1-v1.1.2.yml`
+- Consumer example workflow with run context: `releases/l1/v1.1.3/examples/github-actions/devsecops-baseline-l1-v1.1.3.yml`
 - Governance run input schema: `schemas/governance-run-input.schema.json`
 - Governance run input example: `docs/governance-run-input.example.json`
 
@@ -105,4 +109,4 @@ It is intended for:
 3. `docs/paths/beginner-path.md`
 4. `docs/operations/beginner-step-by-step-operations-guide.md`
 5. `docs/onboarding/application-repo-onboarding.md`
-6. `docs/releases/l1-baseline-v1.1.2.md`
+6. `docs/releases/l1-baseline-v1.1.3.md`

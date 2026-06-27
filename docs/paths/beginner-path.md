@@ -37,8 +37,8 @@ After following this path, you should understand:
 
 ### Step 5: Look At A Release
 
-- `docs/releases/l1-baseline-v1.1.2.md`
-- `docs/releases/l1-baseline-v1.1.2-release-statement.md`
+- `docs/releases/l1-baseline-v1.1.3.md`
+- `docs/releases/l1-baseline-v1.1.3-release-statement.md`
 
 ## What To Read Next
 
