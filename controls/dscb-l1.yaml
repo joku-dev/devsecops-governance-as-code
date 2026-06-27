@@ -44,7 +44,7 @@ requirements:
     method: automated
     frequency: release_candidate
   policy_as_code:
-    candidate: false
+    candidate: true
     enforcement: evidence_review
   waiver:
     allowed: true
@@ -114,7 +114,7 @@ requirements:
     method: automated
     frequency: release_candidate
   policy_as_code:
-    candidate: false
+    candidate: true
     enforcement: evidence_review
   waiver:
     allowed: true
@@ -160,7 +160,7 @@ requirements:
     method: automated
     frequency: release_candidate
   policy_as_code:
-    candidate: false
+    candidate: true
     enforcement: evidence_review
   waiver:
     allowed: true
@@ -182,7 +182,7 @@ requirements:
     method: automated
     frequency: release_candidate
   policy_as_code:
-    candidate: false
+    candidate: true
     enforcement: evidence_review
   waiver:
     allowed: true
@@ -276,7 +276,7 @@ requirements:
     method: automated
     frequency: release_candidate
   policy_as_code:
-    candidate: false
+    candidate: true
     enforcement: evidence_review
   waiver:
     allowed: true
@@ -344,7 +344,7 @@ requirements:
     method: automated
     frequency: release_candidate
   policy_as_code:
-    candidate: false
+    candidate: true
     enforcement: evidence_review
   waiver:
     allowed: true
