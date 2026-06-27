@@ -22,6 +22,7 @@ nav:
   - Operations:
       - How To Use This Repo: operations/how-to-use-this-repo.md
       - Beginner Guide: operations/beginner-step-by-step-operations-guide.md
+      - MkDocs And GitHub Pages Step By Step: operations/mkdocs-and-github-pages-step-by-step.md
       - Enforcement Options: operations/operational-governance-enforcement-options.md
       - Target Structure Plan: operations/repository-target-structure-and-migration-plan.md
       - ha-CPsWMS Validation Status: operations/ha-cpswms-governance-validation-status.md
@@ -30,3 +31,4 @@ nav:
   - Releases:
       - Overview: releases/index.md
       - L1 Baseline v1.0.0: releases/l1-baseline-v1.0.0.md
+      - L1 Baseline v1.0.0 Release Statement: releases/l1-baseline-v1.0.0-release-statement.md

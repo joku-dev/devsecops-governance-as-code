@@ -192,6 +192,12 @@ mkdocs build --strict
 mkdocs serve
 ```
 
+Read the full step-by-step MkDocs and GitHub Pages guide:
+
+```bash
+sed -n '1,360p' docs/operations/mkdocs-and-github-pages-step-by-step.md
+```
+
 Use the first versioned L1 baseline release package:
 
 ```bash

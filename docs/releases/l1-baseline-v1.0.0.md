@@ -7,6 +7,7 @@ This page points to the first versioned and revision-protected `L1` baseline rel
 - `releases/l1/v1.0.0/baseline-package.md`
 - `releases/l1/v1.0.0/release-metadata.json`
 - `releases/l1/v1.0.0/checksums.sha256`
+- `l1-baseline-v1.0.0-release-statement.md`
 
 ## Consumer Workflow
 

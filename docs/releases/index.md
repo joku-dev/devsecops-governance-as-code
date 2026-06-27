@@ -13,3 +13,4 @@ Until release packaging is formalized, use the content in `model/`, `docs/`, and
 ## Available Release Packages
 
 - `L1 baseline v1.0.0`: `l1-baseline-v1.0.0.md`
+- `L1 baseline v1.0.0 release statement`: `l1-baseline-v1.0.0-release-statement.md`
