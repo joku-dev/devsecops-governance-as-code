@@ -121,6 +121,10 @@ jobs:
       generate_demo_evidence: false
 ```
 
+If the repository also wants to provide the official governance run input contract, use the richer template in:
+
+- `examples/github-actions/workflows/application-devsecops-baseline-with-governance-input-template.yml`
+
 ## Step 4: Replace The Placeholder Artifact
 
 The example above uses a simple placeholder file.

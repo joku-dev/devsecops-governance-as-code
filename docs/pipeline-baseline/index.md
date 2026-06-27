@@ -17,9 +17,12 @@ The most important current files are:
 
 - `.github/workflows/devsecops-baseline-reusable.yml`
 - `.github/workflows/devsecops-baseline-l1-v1.0.0.yml`
+- `.github/workflows/devsecops-baseline-l1-v1.1.0.yml`
 - `releases/l1/v1.0.0/examples/github-actions/devsecops-baseline-l1-v1.0.0.yml`
+- `releases/l1/v1.1.0/examples/github-actions/devsecops-baseline-l1-v1.1.0.yml`
 - `docs/onboarding/application-repo-onboarding.md`
 - `docs/onboarding/how-other-repositories-use-the-central-governance-baseline.md`
+- `docs/operations/governance-evidence-contract.md`
 
 ## Two Workflow Layers
 
@@ -75,6 +78,12 @@ Downstream repositories should use:
 
 This is the recommended revision-safe reference for the current released `L1` baseline.
 
+If a downstream repository also wants to pass the official governance run input contract, the prepared next package is:
+
+- `joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-l1-v1.1.0.yml@l1-baseline-v1.1.0`
+
+That package adds the optional `governance_run_input_path` consumer input.
+
 ## What The Pipeline Must Produce
 
 A downstream repository must usually provide:
@@ -93,6 +102,7 @@ Important inputs include:
 - `artifact_path`
 - `sbom_path`
 - `vulnerability_scan_path`
+- `governance_run_input_path`
 - `application_evidence_artifact_name`
 - `max_allowed_severity`
 - `release_candidate`
@@ -223,6 +233,10 @@ Current released entrypoint:
 Current release tag:
 
 - `l1-baseline-v1.0.0`
+
+Prepared next entrypoint:
+
+- `.github/workflows/devsecops-baseline-l1-v1.1.0.yml`
 
 ## How This Connects To Results Storage
 

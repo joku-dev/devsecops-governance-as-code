@@ -56,12 +56,16 @@ It is intended for:
 - Release overview: `docs/releases/index.md`
 - L1 baseline v1.0.0: `docs/releases/l1-baseline-v1.0.0.md`
 - L1 baseline v1.0.0 release statement: `docs/releases/l1-baseline-v1.0.0-release-statement.md`
+- L1 baseline v1.1.0: `docs/releases/l1-baseline-v1.1.0.md`
+- L1 baseline v1.1.0 release statement: `docs/releases/l1-baseline-v1.1.0-release-statement.md`
 - Technical release package: `releases/l1/v1.0.0/baseline-package.md`
 
 ## Consumer Entrypoints
 
 - Versioned reusable workflow: `.github/workflows/devsecops-baseline-l1-v1.0.0.yml`
+- Prepared versioned reusable workflow: `.github/workflows/devsecops-baseline-l1-v1.1.0.yml`
 - Consumer example workflow: `releases/l1/v1.0.0/examples/github-actions/devsecops-baseline-l1-v1.0.0.yml`
+- Consumer example workflow with governance input: `releases/l1/v1.1.0/examples/github-actions/devsecops-baseline-l1-v1.1.0.yml`
 - Governance run input schema: `schemas/governance-run-input.schema.json`
 - Governance run input example: `docs/governance-run-input.example.json`
 

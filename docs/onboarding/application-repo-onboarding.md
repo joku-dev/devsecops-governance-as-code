@@ -149,6 +149,10 @@ Create:
 
 Use the minimal workflow template above.
 
+If the repository also wants to provide richer machine-readable governance evidence, start from:
+
+- `examples/github-actions/workflows/application-devsecops-baseline-with-governance-input-template.yml`
+
 ### Step 3: Adjust Artifact Paths
 
 Decide what the repository should provide as the application artifact.
