@@ -10,6 +10,8 @@ This run validates the repository, regenerates all governance artifacts, and eva
 ## Generated Governance Artifacts
 
 - `generated/viewer/status-viewer.html`
+- `generated/control-evaluation-report.json`
+- `generated/control-evaluation-report.md`
 - `generated/reports/open-gap-report.md`
 - `generated/reports/document-control-matrix.md`
 - `generated/documents/devsecops-pol-001.html`

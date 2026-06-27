@@ -15,3 +15,11 @@ Input File: `demo/inputs/release-candidate-green.json`
 | `artifact_signing` | `pass` | - |
 | `pipeline_security_gates` | `pass` | - |
 | `waiver_validity` | `pass` | - |
+
+## Control Evaluation Summary
+
+- Tested controls: `20`
+- Passed controls: `20`
+- Failed controls: `0`
+- Not tested: `10`
+- Not applicable: `16`

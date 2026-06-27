@@ -61,5 +61,39 @@
       "path": "generated/viewer/status-viewer.html",
       "status": "present"
     }
-  ]
+  ],
+  "control_evaluations": {
+    "summary": {
+      "total_controls": 46,
+      "pass": 15,
+      "fail": 0,
+      "not_tested": 19,
+      "not_applicable": 12,
+      "applicable_controls": 34,
+      "tested_controls": 15
+    },
+    "controls": [
+      {
+        "control_id": "DSCB-L1-REQ-003",
+        "level": "L1",
+        "verification_method": "automated",
+        "status": "pass",
+        "message": "Mapped policy `branch_protection` returned 0 deny messages."
+      },
+      {
+        "control_id": "DSCB-L1-REQ-006",
+        "level": "L1",
+        "verification_method": "automated",
+        "status": "pass",
+        "message": "Mapped policy `sbom` returned 0 deny messages."
+      },
+      {
+        "control_id": "DSCB-L1-REQ-013",
+        "level": "L1",
+        "verification_method": "hybrid",
+        "status": "not_tested",
+        "message": "This control expects manual or hybrid evidence that is not fully represented in the current machine-readable pipeline input."
+      }
+    ]
+  }
 }

@@ -189,6 +189,15 @@ Generate the static governance status viewer:
 python scripts/generate_status_viewer.py
 ```
 
+Generate a control-by-control evaluation report for a specific governance run input:
+
+```bash
+python scripts/generate_control_evaluation_report.py \
+  --input-file demo/inputs/release-candidate-green.json \
+  --output-file generated/control-evaluation-report.json \
+  --markdown-file generated/control-evaluation-report.md
+```
+
 Build the documentation site locally:
 
 ```bash

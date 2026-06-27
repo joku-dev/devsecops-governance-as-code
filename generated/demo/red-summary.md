@@ -15,3 +15,11 @@ Input File: `demo/inputs/release-candidate-red.json`
 | `artifact_signing` | `fail` | DSCB-L2-REQ-007: Software artifacts must be cryptographically signed before release. |
 | `pipeline_security_gates` | `fail` | DSCB-L2-REQ-011: DevSecOps pipelines must enforce security gates.<br>DSCB-L2-REQ-012: Releases must not proceed when defined security thresholds are exceeded unless an approved waiver exists. |
 | `waiver_validity` | `pass` | - |
+
+## Control Evaluation Summary
+
+- Tested controls: `20`
+- Passed controls: `2`
+- Failed controls: `18`
+- Not tested: `10`
+- Not applicable: `16`

@@ -10,21 +10,9 @@ import json
 import subprocess
 import sys
 
+from control_evaluation import POLICY_QUERIES, generate_control_evaluation_report, render_control_evaluation_markdown
 
 ROOT = Path(__file__).resolve().parents[1]
-
-POLICY_QUERIES = {
-    "branch_protection": "data.devsecops.branch_protection.deny",
-    "sbom": "data.devsecops.sbom.deny",
-    "vulnerability_gate": "data.devsecops.vulnerability_gate.deny",
-    "artifact_integrity": "data.devsecops.artifact_integrity.deny",
-    "access_control": "data.devsecops.access_control.deny",
-    "dependency_source_control": "data.devsecops.dependency_source_control.deny",
-    "iac": "data.devsecops.iac.deny",
-    "artifact_signing": "data.devsecops.artifact_signing.deny",
-    "pipeline_security_gates": "data.devsecops.pipeline_security_gates.deny",
-    "waiver_validity": "data.devsecops.waiver_validity.deny",
-}
 
 EXPECTED_ARTIFACTS = {
     "traceability_matrix": "generated/xlsx/traceability_matrix.csv",
@@ -33,6 +21,8 @@ EXPECTED_ARTIFACTS = {
     "status_viewer": "generated/viewer/status-viewer.html",
     "policy_render": "generated/documents/devsecops-pol-001.html",
     "directive_render": "generated/documents/devsecops-dir-001.html",
+    "control_evaluation_report_json": "generated/control-evaluation-report.json",
+    "control_evaluation_report_markdown": "generated/control-evaluation-report.md",
 }
 
 
@@ -81,6 +71,11 @@ def main() -> int:
 
     target_repo = Path(args.target_repo).resolve()
     input_path = Path(args.input_file).resolve()
+    output_path = Path(args.output_file)
+    if not output_path.is_absolute():
+        output_path = Path.cwd() / output_path
+    control_report_json_path = output_path.with_name("control-evaluation-report.json")
+    control_report_markdown_path = output_path.with_name("control-evaluation-report.md")
 
     checks = []
     integration_result = run(
@@ -113,9 +108,19 @@ def main() -> int:
             }
         )
 
+    control_report = generate_control_evaluation_report(input_path)
+    control_report_json_path.write_text(json.dumps(control_report, indent=2) + "\n", encoding="utf-8")
+    control_report_markdown_path.write_text(render_control_evaluation_markdown(control_report), encoding="utf-8")
+
     artifacts = []
     for artifact_id, relpath in EXPECTED_ARTIFACTS.items():
         path = ROOT / relpath
+        if artifact_id == "control_evaluation_report_json":
+            path = control_report_json_path
+            relpath = str(control_report_json_path)
+        elif artifact_id == "control_evaluation_report_markdown":
+            path = control_report_markdown_path
+            relpath = str(control_report_markdown_path)
         artifacts.append(
             {
                 "artifact_id": artifact_id,
@@ -130,6 +135,7 @@ def main() -> int:
         and opa_status == "pass"
         and all(check["status"] == "pass" for check in checks)
         and all(item["status"] == "pass" for item in policy_evaluations)
+        and control_report["summary"]["fail"] == 0
     )
 
     result = {
@@ -154,12 +160,10 @@ def main() -> int:
             },
         },
         "policy_evaluations": policy_evaluations,
+        "control_evaluations": control_report,
         "artifacts": artifacts,
     }
 
-    output_path = Path(args.output_file)
-    if not output_path.is_absolute():
-        output_path = Path.cwd() / output_path
     output_path.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(f"Wrote {output_path}")
     return 0 if overall_pass else 1

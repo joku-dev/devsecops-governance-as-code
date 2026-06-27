@@ -7,6 +7,7 @@ from pathlib import Path
 import json
 import subprocess
 
+from control_evaluation import generate_control_evaluation_report, render_control_evaluation_markdown
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "generated" / "demo"
@@ -65,12 +66,14 @@ def render_scenario(name: str, input_path: Path) -> dict:
         }
 
     failing = [name for name, data in policy_results.items() if not data["pass"]]
+    control_report = generate_control_evaluation_report(input_path)
     return {
         "scenario": name,
         "input_file": str(input_path.relative_to(ROOT)),
         "pass": len(failing) == 0,
         "failing_policies": failing,
         "policy_results": policy_results,
+        "control_evaluations": control_report,
     }
 
 
@@ -89,6 +92,18 @@ def write_markdown(summary: dict, path: Path) -> None:
         lines.append(
             f"| `{policy_name}` | `{'pass' if result['pass'] else 'fail'}` | {deny_messages} |"
         )
+    lines.extend(
+        [
+            "",
+            "## Control Evaluation Summary",
+            "",
+            f"- Tested controls: `{summary['control_evaluations']['summary']['tested_controls']}`",
+            f"- Passed controls: `{summary['control_evaluations']['summary']['pass']}`",
+            f"- Failed controls: `{summary['control_evaluations']['summary']['fail']}`",
+            f"- Not tested: `{summary['control_evaluations']['summary']['not_tested']}`",
+            f"- Not applicable: `{summary['control_evaluations']['summary']['not_applicable']}`",
+        ]
+    )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -111,8 +126,12 @@ def main() -> int:
         summary = render_scenario(scenario_name, input_path)
         json_path = OUTPUT / f"{scenario_name}-summary.json"
         md_path = OUTPUT / f"{scenario_name}-summary.md"
+        control_json_path = OUTPUT / f"{scenario_name}-control-evaluation.json"
+        control_md_path = OUTPUT / f"{scenario_name}-control-evaluation.md"
         json_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
         write_markdown(summary, md_path)
+        control_json_path.write_text(json.dumps(summary["control_evaluations"], indent=2) + "\n", encoding="utf-8")
+        control_md_path.write_text(render_control_evaluation_markdown(summary["control_evaluations"]), encoding="utf-8")
         run_results.append(summary)
 
     overview_lines = [
@@ -135,6 +154,8 @@ def main() -> int:
             "## Generated Governance Artifacts",
             "",
             "- `generated/viewer/status-viewer.html`",
+            "- `generated/control-evaluation-report.json`",
+            "- `generated/control-evaluation-report.md`",
             "- `generated/reports/open-gap-report.md`",
             "- `generated/reports/document-control-matrix.md`",
             "- `generated/documents/devsecops-pol-001.html`",

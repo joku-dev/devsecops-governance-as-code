@@ -26,6 +26,16 @@ class RepoValidationTests(unittest.TestCase):
         cls.run_command("python3", str(ROOT / "scripts" / "generate_document_control_matrix.py"))
         cls.run_command("python3", str(ROOT / "scripts" / "generate_open_gap_report.py"))
         cls.run_command("python3", str(ROOT / "scripts" / "render_governance_documents.py"))
+        cls.run_command(
+            "python3",
+            str(ROOT / "scripts" / "generate_control_evaluation_report.py"),
+            "--input-file",
+            str(ROOT / "demo" / "inputs" / "release-candidate-green.json"),
+            "--output-file",
+            str(ROOT / "generated" / "control-evaluation-report.json"),
+            "--markdown-file",
+            str(ROOT / "generated" / "control-evaluation-report.md"),
+        )
         cls.run_command("python3", str(ROOT / "scripts" / "generate_status_viewer.py"))
 
     def test_validator_passes(self):
@@ -105,6 +115,8 @@ class RepoValidationTests(unittest.TestCase):
         self.assertIn("Open Gap Report", content)
         self.assertIn("Operational Integration Status", content)
         self.assertIn("joku-dev/ha-CPsWMS", content)
+        self.assertIn("Latest Control Evaluation Snapshot", content)
+        self.assertIn("DSCB-L1-REQ-003", content)
 
     def test_demo_run_succeeds(self):
         result = self.run_command("python3", str(ROOT / "scripts" / "run_demo.py"))
@@ -172,6 +184,29 @@ class RepoValidationTests(unittest.TestCase):
             self.assertIn("execution", payload)
             self.assertIn("policy_evaluations", payload)
             self.assertIn("artifacts", payload)
+            self.assertIn("control_evaluations", payload)
+            self.assertIn("controls", payload["control_evaluations"])
+
+    def test_control_evaluation_report_is_generated(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            output = Path(tempdir) / "control-evaluation-report.json"
+            markdown = Path(tempdir) / "control-evaluation-report.md"
+            result = self.run_command(
+                "python3",
+                str(ROOT / "scripts" / "generate_control_evaluation_report.py"),
+                "--input-file",
+                str(ROOT / "demo" / "inputs" / "release-candidate-green.json"),
+                "--output-file",
+                str(output),
+                "--markdown-file",
+                str(markdown),
+            )
+            self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+            payload = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(payload["summary"]["fail"], 0)
+            self.assertGreater(payload["summary"]["tested_controls"], 0)
+            self.assertIn("DSCB-L1-REQ-003", output.read_text(encoding="utf-8"))
+            self.assertIn("Control Evaluation Report", markdown.read_text(encoding="utf-8"))
 
     def test_reusable_workflow_derives_governance_signals(self):
         workflow = (ROOT / ".github" / "workflows" / "devsecops-baseline-reusable.yml").read_text(encoding="utf-8")

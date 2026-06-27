@@ -112,6 +112,27 @@ def build_operational_cards(integration_status: dict, results_index: dict) -> st
     return "".join(html)
 
 
+def build_control_report_cards(control_report: dict | None) -> str:
+    if not control_report:
+        return ""
+    summary = control_report.get("summary", {})
+    cards = [
+        ("Evaluated Controls", str(summary.get("tested_controls", 0)), f"Applicable: {summary.get('applicable_controls', 0)}"),
+        ("Control Failures", str(summary.get("fail", 0)), f"Passed: {summary.get('pass', 0)}"),
+        ("Untested Controls", str(summary.get("not_tested", 0)), f"Not applicable: {summary.get('not_applicable', 0)}"),
+    ]
+    html = []
+    for title, value, detail in cards:
+        html.append(
+            "<section class=\"card\">"
+            f"<h3>{escape(title)}</h3>"
+            f"<div class=\"value\">{escape(value)}</div>"
+            f"<p>{escape(detail)}</p>"
+            "</section>"
+        )
+    return "".join(html)
+
+
 def main() -> int:
     controls = []
     for path in sorted((MODEL / "controls").glob("dscb-*.yaml")):
@@ -126,6 +147,8 @@ def main() -> int:
     document_rows = load_csv(ROOT / "generated" / "xlsx" / "document_control_matrix.csv")
     integration_status = load_yaml(ROOT / "status" / "application-repository-integrations.yaml")
     results_index = load_json(ROOT / "status" / "repository-results-index.json")
+    control_report_path = ROOT / "generated" / "control-evaluation-report.json"
+    control_report = load_json(control_report_path) if control_report_path.exists() else None
 
     document_table_rows = []
     for document in documents:
@@ -232,6 +255,35 @@ def main() -> int:
             if repository.get("latest_result", {}).get("governance_baseline_ref")
         ],
     }
+    if control_report:
+        payload["control_evaluation_summary"] = control_report.get("summary", {})
+
+    control_rows = []
+    if control_report:
+        status_order = {"fail": 0, "pass": 1, "not_tested": 2, "not_applicable": 3}
+        sorted_controls = sorted(
+            control_report.get("controls", []),
+            key=lambda item: (status_order.get(item["status"], 9), item["control_id"]),
+        )
+        for control in sorted_controls[:20]:
+            tone = {"pass": "ok", "fail": "danger", "not_tested": "warn", "not_applicable": "plain"}.get(control["status"], "plain")
+            control_rows.append(
+                [
+                    f"<code>{escape(control['control_id'])}</code>",
+                    f"<code>{escape(control['level'])}</code>",
+                    escape(control["verification_method"]),
+                    badge(control["status"], tone),
+                    escape(control["message"]),
+                ]
+            )
+    control_cards_html = f"<section class=\"cards\">{build_control_report_cards(control_report)}</section>" if control_report else ""
+    control_snapshot_html = (
+        "<section class=\"panel\"><h2>Latest Control Evaluation Snapshot</h2>"
+        + html_table(["Control", "Level", "Method", "Status", "Message"], control_rows)
+        + "</section>"
+        if control_rows
+        else ""
+    )
 
     html = f"""<!doctype html>
 <html lang="en">
@@ -284,6 +336,7 @@ def main() -> int:
     <section class="cards">
       {build_summary_cards(documents, gaps, controls)}
     </section>
+    {control_cards_html}
     <section class="panel">
       <h2>Artifacts</h2>
       <ul class="artifact-list">
@@ -291,6 +344,8 @@ def main() -> int:
         <li><a href="../reports/document-control-matrix.md">Document To Control Matrix</a></li>
         <li><a href="../documents/devsecops-pol-001.html">Rendered Policy</a></li>
         <li><a href="../documents/devsecops-dir-001.html">Rendered Directive</a></li>
+        <li><a href="../control-evaluation-report.json">Control Evaluation Report JSON</a></li>
+        <li><a href="../control-evaluation-report.md">Control Evaluation Report Markdown</a></li>
         <li><a href="../../operations/current-governance-platform-state/">Current Governance Platform State</a></li>
         <li><a href="../../operations/ha-cpswms-governance-validation-status/">ha-CPsWMS Validation Status</a></li>
         <li><a href="../../releases/l1-baseline-v1.0.0/">L1 Baseline v1.0.0</a></li>
@@ -304,6 +359,7 @@ def main() -> int:
         <h2>Operational Integration Status</h2>
         {html_table(["Repository", "Level", "Status", "Pipeline Result", "Workflow Ref", "Run ID", "Notes"], integration_rows)}
       </section>
+      {control_snapshot_html}
       <section class="panel">
         <h2>Governance Documents</h2>
         {html_table(["ID", "Type", "Title", "Status", "Source"], document_table_rows)}
