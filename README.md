@@ -182,6 +182,16 @@ Generate the static governance status viewer:
 python scripts/generate_status_viewer.py
 ```
 
+Build the documentation site locally:
+
+```bash
+python3 -m venv .venv-docs
+. .venv-docs/bin/activate
+pip install -r requirements-docs.txt
+mkdocs build --strict
+mkdocs serve
+```
+
 Run the local demonstration environment:
 
 ```bash

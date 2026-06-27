@@ -73,9 +73,18 @@ def main() -> int:
         "unittest discover -s tests",
         "opa check",
     ]
+    governance_workflow_patterns = [
+        "uses: joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-reusable.yml",
+        "uses: joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-reusable.yml@",
+        "application_evidence_artifact_name:",
+        "artifact_path:",
+        "sbom_path:",
+        "vulnerability_scan_path:",
+    ]
 
     reference_hits = []
     command_hits = []
+    workflow_hits = []
     for path, text in ci_texts:
         for pattern in governance_reference_patterns:
             if pattern in text:
@@ -83,6 +92,9 @@ def main() -> int:
         for pattern in governance_command_patterns:
             if pattern in text:
                 command_hits.append(f"{path.relative_to(target_repo)} -> {pattern}")
+        for pattern in governance_workflow_patterns:
+            if pattern in text:
+                workflow_hits.append(f"{path.relative_to(target_repo)} -> {pattern}")
 
     checks = [
         build_check(
@@ -101,9 +113,11 @@ def main() -> int:
         ),
         build_check(
             "governance_commands_present",
-            "The target repository CI includes expected governance validation commands.",
-            len(command_hits) >= 2,
-            "; ".join(command_hits) if command_hits else "No expected governance command references found in CI files.",
+            "The target repository CI includes expected governance validation commands or a reusable governance workflow integration.",
+            len(command_hits) >= 2 or len(workflow_hits) >= 2,
+            "; ".join(command_hits + workflow_hits)
+            if (command_hits or workflow_hits)
+            else "No expected governance command references or reusable governance workflow markers found in CI files.",
         ),
     ]
 
