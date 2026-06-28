@@ -165,6 +165,64 @@ class RepoValidationTests(unittest.TestCase):
             self.assertEqual(payload["status"], "pass")
             self.assertEqual(len(payload["checks"]), 3)
 
+    def test_repository_onboarding_readiness_report_is_generated(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            repo = Path(tempdir)
+            (repo / "README.md").write_text("# Example App\n", encoding="utf-8")
+            (repo / "pyproject.toml").write_text("[project]\nname = \"example-app\"\n", encoding="utf-8")
+            (repo / "src").mkdir()
+            (repo / "src" / "app.py").write_text("VALUE = 1\n", encoding="utf-8")
+            (repo / "tests").mkdir()
+            (repo / "tests" / "test_app.py").write_text("def test_app():\n    assert True\n", encoding="utf-8")
+            workflows = repo / ".github" / "workflows"
+            workflows.mkdir(parents=True)
+            (workflows / "quality-gates.yml").write_text(
+                "\n".join(
+                    [
+                        "name: quality-gates",
+                        "jobs:",
+                        "  validate:",
+                        "    steps:",
+                        "      - run: python -m pytest",
+                        "      - run: python scripts/regenerate_governance_evidence.py --check",
+                        "      - run: python -m ruff check .",
+                        "      - run: python -m mypy src",
+                        "      - run: python scripts/check_pr_execution_evidence.py --base-ref origin/main",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            (repo / "docs" / "governance").mkdir(parents=True)
+            (repo / "docs" / "governance" / "README.md").write_text("# Governance\n", encoding="utf-8")
+            (repo / "docs" / "security").mkdir(parents=True)
+            (repo / "docs" / "security" / "security.md").write_text("Secrets handling and SBOM plan.\n", encoding="utf-8")
+            (repo / ".agent-executions").mkdir()
+            (repo / ".agent-executions" / "AER-example.yaml").write_text("id: AER-example\n", encoding="utf-8")
+            (repo / "examples" / "governance_runtime").mkdir(parents=True)
+            (repo / "examples" / "governance_runtime" / "demo.json").write_text("{}\n", encoding="utf-8")
+            output_json = repo / "readiness.json"
+            output_md = repo / "readiness.md"
+
+            result = self.run_command(
+                "python3",
+                str(ROOT / "scripts" / "check_repository_onboarding_readiness.py"),
+                "--target-repo",
+                str(repo),
+                "--repository-id",
+                "example/app",
+                "--output-json",
+                str(output_json),
+                "--output-md",
+                str(output_md),
+            )
+
+            self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+            payload = json.loads(output_json.read_text(encoding="utf-8"))
+            self.assertEqual(payload["status"], "ready_with_gaps")
+            self.assertEqual(payload["summary"]["checks"], 5)
+            self.assertTrue(output_md.exists())
+
     def test_extended_governance_compliance_result_is_generated(self):
         with tempfile.TemporaryDirectory() as tempdir:
             output = Path(tempdir) / "governance-compliance-result.json"

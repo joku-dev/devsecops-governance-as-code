@@ -850,6 +850,7 @@ def main() -> int:
             <li><a href="../reports/open-gap-report.md">Open Gap Report</a></li>
             <li><a href="../reports/document-control-matrix.md">Document To Control Matrix</a></li>
             <li><a href="../reports/control-coverage-report.md">Control Coverage Report</a></li>
+            <li><a href="../reports/ai-native-engineering-factory-onboarding-readiness.md">AI-Native Engineering Factory Onboarding Readiness</a></li>
             <li><a href="../documents/devsecops-pol-001.html">Rendered Policy</a></li>
             <li><a href="../documents/devsecops-dir-001.html">Rendered Directive</a></li>
             <li><a href="../control-evaluation-report.json">Control Evaluation Report JSON</a></li>
