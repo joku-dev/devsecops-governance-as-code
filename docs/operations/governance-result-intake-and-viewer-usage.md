@@ -43,10 +43,10 @@ status/results/<owner>__<repo>/<timestamp>-run-<run-id>.json
 python3 scripts/intake_governance_result.py \
   --repository-id joku-dev/ha-CPsWMS \
   --baseline-level L1 \
-  --governance-baseline-ref l1-baseline-v1.1.2 \
+  --governance-baseline-ref l1-baseline-v1.1.3 \
   --pipeline-name "DevSecOps Baseline" \
-  --pipeline-run-id 28293749755 \
-  --pipeline-url https://github.com/joku-dev/ha-CPsWMS/actions/runs/28293749755 \
+  --pipeline-run-id 28302814664 \
+  --pipeline-url https://github.com/joku-dev/ha-CPsWMS/actions/runs/28302814664 \
   --pipeline-event push \
   --pipeline-status success \
   --branch main \
@@ -62,7 +62,7 @@ python3 scripts/intake_governance_result.py \
   --operations-evidence true \
   --overall-status pass \
   --control-evaluation-summary-file generated/control-evaluation-report.json \
-  --notes "Full structured L1 coverage reached on main."
+  --notes "Full structured L1 coverage retained on main with run-context-aware evaluation."
 ```
 
 ## Recommended Intake Rule

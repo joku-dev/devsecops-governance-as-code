@@ -52,7 +52,7 @@ This is the technical enforcement engine.
 
 File:
 
-- `.github/workflows/devsecops-baseline-l1-v1.0.0.yml`
+- `.github/workflows/devsecops-baseline-l1-v1.1.3.yml`
 
 Purpose:
 
@@ -80,27 +80,19 @@ That would make controlled baseline consumption harder to govern.
 
 Downstream repositories should use:
 
-- `joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-l1-v1.0.0.yml@l1-baseline-v1.0.0`
+- `joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-l1-v1.1.3.yml@l1-baseline-v1.1.3`
 
 This is the recommended revision-safe reference for the current released `L1` baseline.
 
-If a downstream repository also wants to pass the official governance run input contract, the prepared next package is:
+Earlier release path:
 
-- `joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-l1-v1.1.0.yml@l1-baseline-v1.1.0`
+- `v1.0.0` introduced the first revision-protected `L1` wrapper.
+- `v1.1.0` added the optional `governance_run_input_path` consumer input.
+- `v1.1.1` corrected the `v1.1.0` wrapper packaging defect.
+- `v1.1.2` completed the corrected governance run input rollout.
+- `v1.1.3` added explicit run-context handling for release, pull-request, branch-validation, and diagnostic runs.
 
-That package adds the optional `governance_run_input_path` consumer input.
-
-Because `v1.1.0` contained a wrapper packaging defect, the corrected patch package is:
-
-- `joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-l1-v1.1.1.yml@l1-baseline-v1.1.1`
-
-The corrected final patch package is:
-
-- `joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-l1-v1.1.2.yml@l1-baseline-v1.1.2`
-
-The current recommended patch package with explicit run-context handling is:
-
-- `joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-l1-v1.1.3.yml@l1-baseline-v1.1.3`
+Older releases remain documented for traceability and historical audits.
 
 ## What The Pipeline Must Produce
 
@@ -157,7 +149,7 @@ jobs:
   devsecops-baseline-l1:
     name: Central DevSecOps L1 Baseline
     needs: prepare-devsecops-evidence
-    uses: joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-l1-v1.0.0.yml@l1-baseline-v1.0.0
+    uses: joku-dev/devsecops-governance-as-code/.github/workflows/devsecops-baseline-l1-v1.1.3.yml@l1-baseline-v1.1.3
     with:
       artifact_path: dist/example-app.txt
       sbom_path: security/sbom.cyclonedx.json
@@ -178,16 +170,16 @@ The pipeline either:
 
 ## Step-By-Step: Read The Current Example
 
-Open the released downstream example:
+Open the current released downstream example:
 
 ```bash
-sed -n '1,220p' releases/l1/v1.0.0/examples/github-actions/devsecops-baseline-l1-v1.0.0.yml
+sed -n '1,220p' releases/l1/v1.1.3/examples/github-actions/devsecops-baseline-l1-v1.1.3.yml
 ```
 
 Then inspect the versioned wrapper:
 
 ```bash
-sed -n '1,220p' .github/workflows/devsecops-baseline-l1-v1.0.0.yml
+sed -n '1,220p' .github/workflows/devsecops-baseline-l1-v1.1.3.yml
 ```
 
 Then inspect the generic reusable engine:
@@ -246,15 +238,15 @@ The pipeline baseline should be consumed through released workflow entrypoints w
 
 Current released entrypoint:
 
-- `.github/workflows/devsecops-baseline-l1-v1.0.0.yml`
+- `.github/workflows/devsecops-baseline-l1-v1.1.3.yml`
 
 Current release tag:
 
-- `l1-baseline-v1.0.0`
+- `l1-baseline-v1.1.3`
 
-Prepared next entrypoint:
+Current consumer example:
 
-- `.github/workflows/devsecops-baseline-l1-v1.1.0.yml`
+- `releases/l1/v1.1.3/examples/github-actions/devsecops-baseline-l1-v1.1.3.yml`
 
 ## How This Connects To Results Storage
 
@@ -269,8 +261,8 @@ This creates a central record of which downstream repositories passed which base
 
 1. `docs/onboarding/application-repo-onboarding.md`
 2. `docs/onboarding/how-other-repositories-use-the-central-governance-baseline.md`
-3. `releases/l1/v1.0.0/examples/github-actions/devsecops-baseline-l1-v1.0.0.yml`
-4. `.github/workflows/devsecops-baseline-l1-v1.0.0.yml`
+3. `releases/l1/v1.1.3/examples/github-actions/devsecops-baseline-l1-v1.1.3.yml`
+4. `.github/workflows/devsecops-baseline-l1-v1.1.3.yml`
 5. `.github/workflows/devsecops-baseline-reusable.yml`
 
 ## Recommended Next Document

@@ -80,7 +80,7 @@ It is intended for:
 - L1 baseline v1.1.2 release statement: `docs/releases/l1-baseline-v1.1.2-release-statement.md`
 - L1 baseline v1.1.3: `docs/releases/l1-baseline-v1.1.3.md`
 - L1 baseline v1.1.3 release statement: `docs/releases/l1-baseline-v1.1.3-release-statement.md`
-- Technical release package: `releases/l1/v1.0.0/baseline-package.md`
+- Current technical release package: `releases/l1/v1.1.3/baseline-package.md`
 
 ## Consumer Entrypoints
 

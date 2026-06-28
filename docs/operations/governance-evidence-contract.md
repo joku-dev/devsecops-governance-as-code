@@ -87,7 +87,7 @@ It does not replace the released baseline version.
 
 Example:
 
-- baseline version: `l1-baseline-v1.1.2`
+- baseline version: `l1-baseline-v1.1.3`
 - evidence contract version: `1.0`
 
 ## Recommended Extended Sections

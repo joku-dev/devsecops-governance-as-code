@@ -10,7 +10,7 @@ It complements the pure status documentation by explaining what worked, what fai
 
 The repository `joku-dev/ha-CPsWMS` reached a successful `L1` governance state with:
 
-- released central baseline `l1-baseline-v1.1.2`
+- released central baseline `l1-baseline-v1.1.3`
 - protected `main` branch
 - successful baseline gate on `main`
 - successful CI on `main`
@@ -20,8 +20,8 @@ The repository `joku-dev/ha-CPsWMS` reached a successful `L1` governance state w
 
 Final main-branch governance run:
 
-- run ID: `28293749755`
-- baseline ref: `l1-baseline-v1.1.2`
+- run ID: `28302814664`
+- baseline ref: `l1-baseline-v1.1.3`
 - result: `16/16 pass`, `0 fail`, `0 not_tested`
 
 ## What Changed During The Rollout
@@ -65,6 +65,7 @@ The correct fix was not to overwrite the old release, but to publish patch relea
 
 - `v1.1.1`
 - then `v1.1.2`
+- and later `v1.1.3` for run-context-aware release evaluation
 
 Practical lesson:
 
@@ -192,7 +193,7 @@ This keeps governance onboarding practical and avoids trying to solve everything
 
 For future consumer repositories, the following should now be treated as standard:
 
-- use `l1-baseline-v1.1.2` or newer released wrappers
+- use `l1-baseline-v1.1.3` or newer released wrappers
 - produce governance run input explicitly
 - produce control-improving evidence incrementally
 - record successful runs back into the central governance repository

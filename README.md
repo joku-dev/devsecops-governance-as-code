@@ -69,8 +69,8 @@ The first implementation should focus on:
 
 ## Current Operational State
 
-- `L1` is now available as a released and revision-protected baseline package via `l1-baseline-v1.0.0`.
-- A prepared `L1 v1.1.0` package now adds a versioned downstream template for `governance/governance-run-input.json`.
+- `L1` is now available as a released and revision-protected baseline package via `l1-baseline-v1.1.3`.
+- The current `L1 v1.1.3` package adds run-context-aware evaluation for release, pull-request, branch-validation, and diagnostic runs.
 - GitHub Pages documentation publishing is active.
 - A normalized central results index exists in `status/repository-results-index.json`.
 - `ha-CPsWMS` has already been validated successfully against the central governance baseline on a protected `main` branch.
@@ -228,11 +228,18 @@ sed -n '1,240p' releases/l1/v1.0.0/baseline-package.md
 sed -n '1,200p' docs/releases/l1-baseline-v1.0.0.md
 ```
 
-Inspect the prepared next L1 release package with governance run input support:
+Inspect the earlier L1 release package that introduced governance run input support:
 
 ```bash
 sed -n '1,240p' releases/l1/v1.1.0/baseline-package.md
 sed -n '1,220p' docs/releases/l1-baseline-v1.1.0.md
+```
+
+Inspect the current L1 release package with run-context-aware evaluation:
+
+```bash
+sed -n '1,240p' releases/l1/v1.1.3/baseline-package.md
+sed -n '1,220p' docs/releases/l1-baseline-v1.1.3.md
 ```
 
 Generate the central repository results index:
