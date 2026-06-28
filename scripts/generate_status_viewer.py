@@ -594,6 +594,15 @@ def main() -> int:
     body {{ font-family: Arial, sans-serif; margin: 0; background: var(--bg); color: var(--ink); }}
     header {{ background: linear-gradient(120deg, #0d4f6c, #1f7a8c); color: white; padding: 32px; }}
     main {{ padding: 24px; max-width: 1280px; margin: 0 auto; }}
+    .section-nav {{ position: sticky; top: 0; z-index: 5; background: rgba(244, 246, 248, 0.96); border-bottom: 1px solid var(--border); backdrop-filter: blur(8px); }}
+    .section-nav-inner {{ max-width: 1280px; margin: 0 auto; padding: 10px 24px; display: flex; flex-wrap: wrap; gap: 8px; }}
+    .section-nav a {{ color: var(--accent); background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 0.45rem 0.65rem; font-size: 0.92rem; text-decoration: none; }}
+    .section-nav a:hover {{ text-decoration: none; border-color: var(--accent); }}
+    .viewer-section {{ margin: 0 0 28px; scroll-margin-top: 72px; }}
+    .viewer-section + .viewer-section {{ padding-top: 8px; }}
+    .section-title {{ margin: 0 0 14px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }}
+    .section-title h2 {{ margin: 0; font-size: 1.55rem; }}
+    .section-title p {{ margin: 6px 0 0; color: var(--muted); max-width: 820px; }}
     .cards {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }}
     .card, .panel {{ background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 18px; box-shadow: 0 8px 20px rgba(13, 79, 108, 0.06); }}
     .card h3, .panel h2 {{ margin-top: 0; }}
@@ -651,64 +660,123 @@ def main() -> int:
     <h1>Governance Status Viewer</h1>
     <p class="meta">Static snapshot of repository health, governance document status, traceability coverage, and open gaps.</p>
   </header>
+  <nav class="section-nav" aria-label="Viewer sections">
+    <div class="section-nav-inner">
+      <a href="#overview">Overview</a>
+      <a href="#runs">Runs</a>
+      <a href="#controls">Controls</a>
+      <a href="#model">Governance Model</a>
+      <a href="#open-work">Open Work</a>
+      <a href="#artifacts">Artifacts & Data</a>
+    </div>
+  </nav>
   <main>
-    {build_latest_repository_cards(results_index)}
-    <section class="cards">
-      {build_operational_cards(integration_status, results_index)}
+    <section id="overview" class="viewer-section">
+      <div class="section-title">
+        <h2>Operational Overview</h2>
+        <p>Current governed state, latest downstream repository result, and high-level coverage signals.</p>
+      </div>
+      {build_latest_repository_cards(results_index)}
+      <section class="cards">
+        {build_operational_cards(integration_status, results_index)}
+      </section>
+      <section class="cards">
+        {build_summary_cards(documents, gaps, controls)}
+      </section>
     </section>
-    <section class="cards">
-      {build_summary_cards(documents, gaps, controls)}
+
+    <section id="runs" class="viewer-section">
+      <div class="section-title">
+        <h2>Repository Execution</h2>
+        <p>Downstream pipeline status, mainline history, branch validation, manual diagnostics, and run links.</p>
+      </div>
+      <section class="panels">
+        <section class="panel">
+          <h2>Operational Integration Status</h2>
+          {html_table(["Repository", "Level", "Status", "Pipeline Result", "Workflow Ref", "Run ID", "Notes"], integration_rows)}
+        </section>
+        {history_panel_html}
+      </section>
     </section>
-    {control_cards_html}
-    {coverage_cards_html}
-    <section class="panel">
-      <h2>Artifacts</h2>
-      <ul class="artifact-list">
-        <li><a href="../reports/open-gap-report.md">Open Gap Report</a></li>
-        <li><a href="../reports/document-control-matrix.md">Document To Control Matrix</a></li>
-        <li><a href="../reports/control-coverage-report.md">Control Coverage Report</a></li>
-        <li><a href="../documents/devsecops-pol-001.html">Rendered Policy</a></li>
-        <li><a href="../documents/devsecops-dir-001.html">Rendered Directive</a></li>
-        <li><a href="../control-evaluation-report.json">Control Evaluation Report JSON</a></li>
-        <li><a href="../control-evaluation-report.md">Control Evaluation Report Markdown</a></li>
-        <li><a href="../../operations/current-governance-platform-state/">Current Governance Platform State</a></li>
-        <li><a href="../../operations/ha-cpswms-governance-validation-status/">ha-CPsWMS Validation Status</a></li>
-        <li><a href="../../releases/l1-baseline-v1.1.3/">L1 Baseline v1.1.3</a></li>
-        <li><a href="../../releases/l1-baseline-v1.1.3-release-statement/">L1 Release Statement</a></li>
-        <li><a href="../../onboarding/how-other-repos-use-this-governance-repo/">Integration Guide</a></li>
-        <li><a href="../../governance/policy-directive-baseline-verification-and-governance-as-code-explained/">Governance Relationship Explanation</a></li>
-      </ul>
+
+    <section id="controls" class="viewer-section">
+      <div class="section-title">
+        <h2>Control Evaluation</h2>
+        <p>Latest structured control result, automation coverage, and searchable control-level status.</p>
+      </div>
+      {control_cards_html}
+      {coverage_cards_html}
+      <section class="panels">
+        {control_snapshot_html}
+        <section class="panel">
+          <h2>Control Automation Coverage</h2>
+          {html_table(["Control", "Level", "Automation Status", "Priority", "Next Action"], control_coverage_rows)}
+        </section>
+      </section>
     </section>
-    <section class="panels">
-      <section class="panel">
-        <h2>Operational Integration Status</h2>
-        {html_table(["Repository", "Level", "Status", "Pipeline Result", "Workflow Ref", "Run ID", "Notes"], integration_rows)}
+
+    <section id="model" class="viewer-section">
+      <div class="section-title">
+        <h2>Governance Model</h2>
+        <p>Source governance documents, policy coverage, and authority mappings that explain why controls exist.</p>
+      </div>
+      <section class="panels">
+        <section class="panel">
+          <h2>Governance Documents</h2>
+          {html_table(["ID", "Type", "Title", "Status", "Source"], document_table_rows)}
+        </section>
+        <section class="panel">
+          <h2>Policy Coverage Snapshot</h2>
+          {html_table(["Control", "Level", "Title", "Policy Candidate", "Authority Documents"], coverage_rows)}
+        </section>
+        <section class="panel">
+          <h2>Authority Mapping Snapshot</h2>
+          {html_table(["Document", "Title", "Control", "Control Title", "Rationale"], authority_rows)}
+        </section>
       </section>
-      {history_panel_html}
-      {control_snapshot_html}
-      <section class="panel">
-        <h2>Governance Documents</h2>
-        {html_table(["ID", "Type", "Title", "Status", "Source"], document_table_rows)}
+    </section>
+
+    <section id="open-work" class="viewer-section">
+      <div class="section-title">
+        <h2>Open Work</h2>
+        <p>Governance gaps and planned control automation work that still need attention.</p>
+      </div>
+      <section class="panels">
+        <section class="panel">
+          <h2>Top Open Gaps</h2>
+          {html_table(["Gap", "Severity", "Category", "Subject", "Summary"], gap_table_rows)}
+        </section>
       </section>
-      <section class="panel">
-        <h2>Top Open Gaps</h2>
-        {html_table(["Gap", "Severity", "Category", "Subject", "Summary"], gap_table_rows)}
-      </section>
-      <section class="panel">
-        <h2>Policy Coverage Snapshot</h2>
-        {html_table(["Control", "Level", "Title", "Policy Candidate", "Authority Documents"], coverage_rows)}
-      </section>
-      <section class="panel">
-        <h2>Control Automation Coverage</h2>
-        {html_table(["Control", "Level", "Automation Status", "Priority", "Next Action"], control_coverage_rows)}
-      </section>
-      <section class="panel">
-        <h2>Authority Mapping Snapshot</h2>
-        {html_table(["Document", "Title", "Control", "Control Title", "Rationale"], authority_rows)}
-      </section>
-      <section class="panel">
-        <h2>Machine Summary</h2>
-        <pre>{escape(json.dumps(payload, indent=2))}</pre>
+    </section>
+
+    <section id="artifacts" class="viewer-section">
+      <div class="section-title">
+        <h2>Artifacts & Machine Data</h2>
+        <p>Generated reports, rendered governance documents, release references, and the machine-readable summary.</p>
+      </div>
+      <section class="panels">
+        <section class="panel">
+          <h2>Artifacts</h2>
+          <ul class="artifact-list">
+            <li><a href="../reports/open-gap-report.md">Open Gap Report</a></li>
+            <li><a href="../reports/document-control-matrix.md">Document To Control Matrix</a></li>
+            <li><a href="../reports/control-coverage-report.md">Control Coverage Report</a></li>
+            <li><a href="../documents/devsecops-pol-001.html">Rendered Policy</a></li>
+            <li><a href="../documents/devsecops-dir-001.html">Rendered Directive</a></li>
+            <li><a href="../control-evaluation-report.json">Control Evaluation Report JSON</a></li>
+            <li><a href="../control-evaluation-report.md">Control Evaluation Report Markdown</a></li>
+            <li><a href="../../operations/current-governance-platform-state/">Current Governance Platform State</a></li>
+            <li><a href="../../operations/ha-cpswms-governance-validation-status/">ha-CPsWMS Validation Status</a></li>
+            <li><a href="../../releases/l1-baseline-v1.1.3/">L1 Baseline v1.1.3</a></li>
+            <li><a href="../../releases/l1-baseline-v1.1.3-release-statement/">L1 Release Statement</a></li>
+            <li><a href="../../onboarding/how-other-repos-use-this-governance-repo/">Integration Guide</a></li>
+            <li><a href="../../governance/policy-directive-baseline-verification-and-governance-as-code-explained/">Governance Relationship Explanation</a></li>
+          </ul>
+        </section>
+        <section class="panel">
+          <h2>Machine Summary</h2>
+          <pre>{escape(json.dumps(payload, indent=2))}</pre>
+        </section>
       </section>
     </section>
   </main>
