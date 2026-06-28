@@ -72,6 +72,20 @@ Run:
 python3 scripts/generate_repository_results_index.py
 ```
 
+## Automated GitHub Actions Intake
+
+For downstream GitHub Actions runs, the preferred operational path is:
+
+```bash
+python3 scripts/intake_github_actions_run.py \
+  --repository-id example-org/example-repo \
+  --run-id 123456789
+```
+
+This keeps raw artifacts in GitHub Actions while storing only the normalized governance snapshot in Git.
+
+The workflow `.github/workflows/intake-governance-result.yml` wraps this script and can commit the updated result snapshot, central index, and status viewer automatically.
+
 ## Step-By-Step For Adding Another Repository Result
 
 ### Step 1

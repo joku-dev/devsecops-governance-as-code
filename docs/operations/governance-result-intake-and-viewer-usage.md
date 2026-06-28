@@ -29,6 +29,16 @@ Use:
 python3 scripts/intake_governance_result.py
 ```
 
+For GitHub Actions runs that already uploaded the standard governance artifacts, use:
+
+```bash
+python3 scripts/intake_github_actions_run.py \
+  --repository-id joku-dev/ha-CPsWMS \
+  --run-id 28314109954
+```
+
+This script fetches the downstream run metadata, jobs, artifact list, `governance-control-evaluation` artifact, governance run input, and control evaluation summary from GitHub Actions.
+
 ## What The Script Produces
 
 The script writes one normalized file to:
@@ -140,6 +150,51 @@ Use this order:
 3. regenerate `generated/viewer/status-viewer.html`
 4. validate the governance repository
 5. commit the updated result and viewer state
+
+## Automated Intake Workflow
+
+The repository includes:
+
+- `.github/workflows/intake-governance-result.yml`
+
+It can be run manually with:
+
+- `repository_id`
+- `run_id`
+- optional `governance_baseline_ref`
+- optional `baseline_level`
+
+The workflow then:
+
+1. downloads the downstream governance-control-evaluation artifact
+2. writes a normalized result under `status/results/`
+3. regenerates `status/repository-results-index.json`
+4. regenerates `generated/viewer/status-viewer.html`
+5. validates the repository
+6. commits and pushes the updated central status
+
+For cross-repository artifact access, configure a repository secret:
+
+- `GH_RESULT_INTAKE_TOKEN`
+
+The token should have read access to the downstream repository's GitHub Actions artifacts.
+
+The workflow uses this governance repository's `GITHUB_TOKEN` to commit the updated normalized status files back to the governance repository.
+
+The same workflow also accepts `repository_dispatch` events of type:
+
+- `governance-result-ready`
+
+Expected `client_payload` fields:
+
+```json
+{
+  "repository_id": "joku-dev/ha-CPsWMS",
+  "run_id": "28314109954",
+  "governance_baseline_ref": "l1-baseline-v1.1.3",
+  "baseline_level": "L1"
+}
+```
 
 ## Practical Benefit
 
