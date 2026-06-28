@@ -1,16 +1,56 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-06-28T06:44:44Z",
+  "generated_at": "2026-06-28T08:01:01Z",
   "summary": {
-    "repository_count": 1,
-    "result_count": 9,
-    "passing_results": 8,
+    "repository_count": 2,
+    "result_count": 11,
+    "passing_results": 10,
     "failing_results": 1,
     "mainline_results": 6,
-    "branch_results": 2,
+    "branch_results": 4,
     "manual_results": 1
   },
   "repositories": [
+    {
+      "repository_id": "joku-dev/ai-native-engineering-factory",
+      "baseline_level": "L1",
+      "results_path": "status/results/joku-dev__ai-native-engineering-factory/",
+      "latest_result": {
+        "status": "pass",
+        "pipeline_run_id": "28315832162",
+        "commit_id": "7e80f63fac4ac4695606a195e8c6e7d58b9408c6",
+        "generated_at": "2026-06-28T08:00:21Z",
+        "governance_baseline_ref": "main@34bdc66",
+        "source_file": "status/results/joku-dev__ai-native-engineering-factory/2026-06-28T08-00-21Z-run-28315832162.json",
+        "control_evaluation_summary": {}
+      },
+      "history": [
+        {
+          "generated_at": "2026-06-28T07:49:37Z",
+          "status": "pass",
+          "pipeline_run_id": "28315609025",
+          "pipeline_event": "pull_request",
+          "pipeline_url": "https://github.com/joku-dev/ai-native-engineering-factory/actions/runs/28315609025",
+          "branch": "codex/add-central-l1-baseline-report-clean",
+          "commit_id": "7350225150fd342a2adf3df23ce04d7277a36d3f",
+          "governance_baseline_ref": "main@34bdc66",
+          "control_evaluation_summary": {},
+          "source_file": "status/results/joku-dev__ai-native-engineering-factory/2026-06-28T07-49-37Z-run-28315609025.json"
+        },
+        {
+          "generated_at": "2026-06-28T08:00:21Z",
+          "status": "pass",
+          "pipeline_run_id": "28315832162",
+          "pipeline_event": "pull_request",
+          "pipeline_url": "https://github.com/joku-dev/ai-native-engineering-factory/actions/runs/28315832162",
+          "branch": "codex/add-central-l1-baseline-report-clean",
+          "commit_id": "7e80f63fac4ac4695606a195e8c6e7d58b9408c6",
+          "governance_baseline_ref": "main@34bdc66",
+          "control_evaluation_summary": {},
+          "source_file": "status/results/joku-dev__ai-native-engineering-factory/2026-06-28T08-00-21Z-run-28315832162.json"
+        }
+      ]
+    },
     {
       "repository_id": "joku-dev/ha-CPsWMS",
       "baseline_level": "L1",

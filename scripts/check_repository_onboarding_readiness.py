@@ -165,6 +165,12 @@ def assess_repository(target_repo: Path, repository_id: str) -> dict:
 
     integration = run_integration_scanner(target_repo)
     integration_status = "pass" if integration["status"] == "pass" else "warn"
+    integration_recommendation = (
+        "Continue report-only L1 branch runs, publish a released baseline pin before production use, "
+        "and move to block-on-error only after branch protection is ready."
+        if integration_status == "pass"
+        else "Add the reusable L1 workflow in report-only mode, then record the first branch run."
+    )
     checks.append(
         make_check(
             "central_baseline_integration",
@@ -177,7 +183,7 @@ def assess_repository(target_repo: Path, repository_id: str) -> dict:
                     for item in integration.get("checks", [])
                 ],
             ],
-            "Add the reusable L1 workflow pinned to l1-baseline-v1.1.3 in report-only mode, then record the first branch run.",
+            integration_recommendation,
         )
     )
 
@@ -189,6 +195,12 @@ def assess_repository(target_repo: Path, repository_id: str) -> dict:
         status = "ready_with_gaps"
     else:
         status = "ready"
+
+    recommended_next_step = (
+        "Continue report-only central L1 runs and prepare branch protection before block-on-error enforcement."
+        if integration_status == "pass"
+        else "Create a report-only central L1 baseline branch run."
+    )
 
     return {
         "schema_version": "1.0.0",
@@ -202,7 +214,7 @@ def assess_repository(target_repo: Path, repository_id: str) -> dict:
             "pass": sum(1 for check in checks if check["status"] == "pass"),
             "warn": warnings,
             "fail": failing,
-            "recommended_next_step": "Create a report-only central L1 baseline branch run.",
+            "recommended_next_step": recommended_next_step,
         },
         "checks": checks,
     }

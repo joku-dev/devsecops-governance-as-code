@@ -200,6 +200,9 @@ def build_latest_repository_cards(results_index: dict) -> str:
         status_tone = "ok" if status == "pass" else "danger"
         run_id = latest.get("pipeline_run_id", "unknown")
         run_url = latest_history.get("pipeline_url", "")
+        latest_branch = latest_history.get("branch", "")
+        latest_event = latest_history.get("pipeline_event", "")
+        latest_scope = "Mainline" if latest_branch == "main" and latest_event == "push" else "Tracked"
         baseline = latest.get("governance_baseline_ref", "unknown")
         generated_at = latest.get("generated_at", "unknown")
         commit_id = latest.get("commit_id", "unknown")
@@ -207,12 +210,12 @@ def build_latest_repository_cards(results_index: dict) -> str:
         cards.append(
             "<section class=\"latest-card\">"
             "<div class=\"latest-card-header\">"
-            f"<div><h3>{escape(repo_id)}</h3><p>Mainline governance status</p></div>"
+            f"<div><h3>{escape(repo_id)}</h3><p>{escape(latest_scope)} governance status</p></div>"
             f"{badge(status, status_tone)}"
             "</div>"
             "<dl class=\"latest-grid\">"
             f"<div><dt>Baseline</dt><dd><code>{escape(baseline)}</code></dd></div>"
-            f"<div><dt>Last Main Run</dt><dd>{run_link(run_id, run_url)}</dd></div>"
+            f"<div><dt>Last {escape(latest_scope)} Run</dt><dd>{run_link(run_id, run_url)}</dd></div>"
             f"<div><dt>Commit</dt><dd><code>{escape(short_sha(commit_id))}</code></dd></div>"
             f"<div><dt>Generated</dt><dd>{escape(generated_at)}</dd></div>"
             "</dl>"
