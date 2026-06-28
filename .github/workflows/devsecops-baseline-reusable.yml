@@ -13,6 +13,11 @@ on:
         required: false
         default: high
         type: string
+      governance_mode:
+        description: Governance enforcement mode. Use report-only for onboarding diagnostics and block-on-error for required gates.
+        required: false
+        default: block-on-error
+        type: string
       artifact_path:
         description: Path to the build artifact in the application repository workspace.
         required: false
@@ -262,6 +267,7 @@ jobs:
                   "pipeline_run_id": run_id,
                   "commit_id": commit_id,
                   "event": event_name,
+                  "governance_mode": "${{ inputs.governance_mode }}",
                   "status": "success",
                   "security_gates": {"enforced": True},
                   "security_thresholds_exceeded": security_thresholds_exceeded,
@@ -356,6 +362,7 @@ jobs:
                   errors.append(f"expected {path}={expected!r}, got {value!r}")
 
           level = "${{ inputs.level }}"
+          governance_mode = "${{ inputs.governance_mode }}"
           max_allowed_severity = "${{ inputs.max_allowed_severity }}".lower()
           data = json.loads(Path("generated/evidence/pipeline-evidence.json").read_text(encoding="utf-8"))
           errors = []
@@ -395,10 +402,23 @@ jobs:
           if level == "L3":
               require(errors, data, "artifact.signature.exists", True)
 
+          gate_result = {
+              "status": "fail" if errors else "pass",
+              "governance_mode": governance_mode,
+              "blocks_merge": governance_mode in {"block-on-error", "waiver-required"},
+              "errors": errors,
+          }
+          gate_result_path = Path("generated/evidence/baseline-gate-result.json")
+          gate_result_path.parent.mkdir(parents=True, exist_ok=True)
+          gate_result_path.write_text(json.dumps(gate_result, indent=2) + "\n", encoding="utf-8")
+
           if errors:
               print("DevSecOps pipeline baseline gate failed:")
               for error in errors:
                   print(f"- {error}")
+              if governance_mode in {"report-only", "warn-on-error"}:
+                  print(f"Governance mode {governance_mode!r} records the failure without failing this workflow run.")
+                  sys.exit(0)
               sys.exit(1)
 
           print(f"DevSecOps pipeline baseline gate passed (level={level}, max_allowed_severity={max_allowed_severity})")
@@ -416,12 +436,13 @@ jobs:
           cp "${{ inputs.governance_run_input_path }}" generated/evidence/governance-run-input.json
 
       - name: Upload DevSecOps evidence
-        if: ${{ inputs.upload_evidence }}
+        if: ${{ always() && inputs.upload_evidence }}
         uses: actions/upload-artifact@v4
         with:
           name: devsecops-pipeline-evidence
           path: |
             application/generated/evidence/pipeline-evidence.json
+            application/generated/evidence/baseline-gate-result.json
             application/${{ inputs.artifact_path }}
             application/${{ inputs.sbom_path }}
             application/${{ inputs.vulnerability_scan_path }}
