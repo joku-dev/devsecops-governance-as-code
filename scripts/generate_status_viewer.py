@@ -87,6 +87,49 @@ def summarize_control_delta(current_summary: dict, previous_summary: dict | None
     )
 
 
+def summarize_history_change(entry: dict, current_summary: dict, previous_entry: dict | None) -> str:
+    if not current_summary:
+        return "No structured control summary"
+    if not previous_entry or not previous_entry.get("control_evaluation_summary"):
+        return "First structured control summary"
+
+    previous_summary = previous_entry.get("control_evaluation_summary", {})
+    changes = []
+    previous_baseline = previous_entry.get("governance_baseline_ref", "unknown")
+    current_baseline = entry.get("governance_baseline_ref", "unknown")
+    if previous_baseline != current_baseline:
+        changes.append(f"Baseline {previous_baseline} -> {current_baseline}")
+
+    previous_status = previous_entry.get("status", "unknown")
+    current_status = entry.get("status", "unknown")
+    if previous_status != current_status:
+        changes.append(f"Status {previous_status} -> {current_status}")
+
+    for key, label in (("pass", "Pass"), ("fail", "Fail"), ("not_tested", "Not tested")):
+        previous_value = previous_summary.get(key, 0)
+        current_value = current_summary.get(key, 0)
+        if previous_value != current_value:
+            changes.append(f"{label} {previous_value} -> {current_value}")
+
+    applicable = current_summary.get("applicable_controls", 0)
+    if (
+        applicable
+        and current_summary.get("pass", 0) == applicable
+        and current_summary.get("fail", 0) == 0
+        and current_summary.get("not_tested", 0) == 0
+        and (
+            previous_summary.get("pass", 0) != applicable
+            or previous_summary.get("fail", 0) != 0
+            or previous_summary.get("not_tested", 0) != 0
+        )
+    ):
+        changes.append("Full applicable coverage reached")
+
+    if not changes:
+        return "No control-status change"
+    return "; ".join(changes)
+
+
 def short_sha(value: str) -> str:
     if not value or value == "unknown":
         return "unknown"
@@ -281,18 +324,19 @@ def build_control_coverage_cards(control_coverage: dict | None) -> str:
     return "".join(html)
 
 
-def build_repository_history_rows(results_index: dict) -> list[list[str]]:
+def build_repository_history_rows(results_index: dict) -> list[dict]:
     rows = []
     for repository in results_index.get("repositories", []):
+        repo_id = repository.get("repository_id", "unknown")
         history = repository.get("history", [])
         for index in range(len(history) - 1, -1, -1):
             entry = history[index]
             current_summary = entry.get("control_evaluation_summary", {})
-            previous_summary = None
+            previous_entry = None
             for older_index in range(index - 1, -1, -1):
                 candidate = history[older_index].get("control_evaluation_summary", {})
                 if candidate:
-                    previous_summary = candidate
+                    previous_entry = history[older_index]
                     break
 
             status_tone = "ok" if entry.get("status") == "pass" else "danger"
@@ -314,17 +358,28 @@ def build_repository_history_rows(results_index: dict) -> list[list[str]]:
                 else "No structured control summary"
             )
             rows.append(
-                [
-                    f"<code>{escape(repository.get('repository_id', 'unknown'))}</code>",
-                    escape(entry.get("generated_at", "")),
-                    badge(scope, scope_tone),
-                    badge(entry.get("status", "unknown"), status_tone),
-                    f"<code>{escape(entry.get('governance_baseline_ref', 'unknown'))}</code>",
-                    escape(branch_name),
-                    run_link(entry.get("pipeline_run_id", "unknown"), entry.get("pipeline_url", "")),
-                    coverage_text,
-                    summarize_control_delta(current_summary, previous_summary),
-                ]
+                {
+                    "attrs": {
+                        "data-history-row": "true",
+                        "data-scope": scope,
+                        "data-status": entry.get("status", "unknown"),
+                        "data-baseline": entry.get("governance_baseline_ref", "unknown"),
+                        "data-branch": branch_name,
+                        "data-repository": repo_id,
+                        "data-run-id": entry.get("pipeline_run_id", "unknown"),
+                    },
+                    "cells": [
+                        f"<code>{escape(repo_id)}</code>",
+                        escape(entry.get("generated_at", "")),
+                        badge(scope, scope_tone),
+                        badge(entry.get("status", "unknown"), status_tone),
+                        f"<code>{escape(entry.get('governance_baseline_ref', 'unknown'))}</code>",
+                        escape(branch_name),
+                        run_link(entry.get("pipeline_run_id", "unknown"), entry.get("pipeline_url", "")),
+                        coverage_text,
+                        summarize_history_change(entry, current_summary, previous_entry),
+                    ],
+                }
             )
     return rows
 
@@ -561,14 +616,47 @@ def main() -> int:
         else ""
     )
     repository_history_rows = build_repository_history_rows(results_index)
+    history_baselines = sorted(
+        {
+            row.get("attrs", {}).get("data-baseline", "")
+            for row in repository_history_rows
+            if row.get("attrs", {}).get("data-baseline")
+        }
+    )
+    history_baseline_options = "".join(
+        f'<option value="{escape(baseline)}">{escape(baseline)}</option>' for baseline in history_baselines
+    )
     history_panel_html = (
         "<section class=\"panel history-compact\">"
         "<h2>Repository Result History</h2>"
-        "<p class=\"filter-summary\">Compact run history with baseline evolution, linked run IDs, and control summary deltas.</p>"
-        + html_table(
-            ["Repository", "Generated At", "Scope", "Status", "Baseline Ref", "Branch", "Run ID", "Coverage", "Trend"],
+        "<p class=\"filter-summary\">Filterable run history with baseline evolution, linked run IDs, and readable change reasons.</p>"
+        "<div class=\"filters history-filters\">"
+        "<label for=\"history-scope-filter\">Scope</label>"
+        "<select id=\"history-scope-filter\">"
+        "<option value=\"all\">All</option>"
+        "<option value=\"mainline\">Mainline</option>"
+        "<option value=\"branch\">Branch</option>"
+        "<option value=\"manual\">Manual</option>"
+        "</select>"
+        "<label for=\"history-status-filter\">Status</label>"
+        "<select id=\"history-status-filter\">"
+        "<option value=\"all\">All</option>"
+        "<option value=\"pass\">Pass</option>"
+        "<option value=\"fail\">Fail</option>"
+        "</select>"
+        "<label for=\"history-baseline-filter\">Baseline</label>"
+        "<select id=\"history-baseline-filter\">"
+        "<option value=\"all\">All</option>"
+        f"{history_baseline_options}"
+        "</select>"
+        "<label for=\"history-search-filter\">Search</label>"
+        "<input id=\"history-search-filter\" type=\"search\" placeholder=\"branch, run ID, repository\" />"
+        "</div>"
+        + html_table_with_row_attrs(
+            ["Repository", "Generated At", "Scope", "Status", "Baseline Ref", "Branch", "Run ID", "Coverage", "Why changed?"],
             repository_history_rows,
         )
+        + "<p id=\"history-filter-summary\" class=\"filter-summary\"></p>"
         + "</section>"
         if repository_history_rows
         else ""
@@ -642,6 +730,7 @@ def main() -> int:
     .filters select, .filters input {{ padding: 0.45rem 0.6rem; border: 1px solid var(--border); border-radius: 8px; font: inherit; }}
     .filters input {{ min-width: 240px; }}
     .filter-summary {{ margin: 10px 0 0; color: var(--muted); font-size: 0.9rem; }}
+    .history-filters {{ padding: 10px; background: #f8fafb; border: 1px solid var(--border); border-radius: 10px; }}
     .history-compact table {{ font-size: 0.92rem; }}
     .history-compact th, .history-compact td {{ padding: 8px 7px; }}
     a {{ color: var(--accent); text-decoration: none; }}
@@ -807,6 +896,47 @@ def main() -> int:
         summary.textContent = `${{visible}} of ${{rows.length}} controls shown`;
       }};
       statusFilter.addEventListener('change', applyFilters);
+      searchFilter.addEventListener('input', applyFilters);
+      applyFilters();
+    }})();
+    (() => {{
+      const scopeFilter = document.getElementById('history-scope-filter');
+      const statusFilter = document.getElementById('history-status-filter');
+      const baselineFilter = document.getElementById('history-baseline-filter');
+      const searchFilter = document.getElementById('history-search-filter');
+      const summary = document.getElementById('history-filter-summary');
+      const rows = Array.from(document.querySelectorAll('tr[data-history-row="true"]'));
+      if (!scopeFilter || !statusFilter || !baselineFilter || !searchFilter || !summary || rows.length === 0) {{
+        return;
+      }}
+      const applyFilters = () => {{
+        const scope = scopeFilter.value;
+        const status = statusFilter.value;
+        const baseline = baselineFilter.value;
+        const query = searchFilter.value.trim().toLowerCase();
+        let visible = 0;
+        for (const row of rows) {{
+          const scopeMatch = scope === 'all' || row.dataset.scope === scope;
+          const statusMatch = status === 'all' || row.dataset.status === status;
+          const baselineMatch = baseline === 'all' || row.dataset.baseline === baseline;
+          const queryText = [
+            row.dataset.repository || '',
+            row.dataset.branch || '',
+            row.dataset.runId || '',
+            row.textContent || '',
+          ].join(' ').toLowerCase();
+          const queryMatch = query === '' || queryText.includes(query);
+          const show = scopeMatch && statusMatch && baselineMatch && queryMatch;
+          row.style.display = show ? '' : 'none';
+          if (show) {{
+            visible += 1;
+          }}
+        }}
+        summary.textContent = `${{visible}} of ${{rows.length}} runs shown`;
+      }};
+      for (const element of [scopeFilter, statusFilter, baselineFilter]) {{
+        element.addEventListener('change', applyFilters);
+      }}
       searchFilter.addEventListener('input', applyFilters);
       applyFilters();
     }})();
