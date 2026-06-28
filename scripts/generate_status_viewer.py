@@ -87,6 +87,85 @@ def summarize_control_delta(current_summary: dict, previous_summary: dict | None
     )
 
 
+def short_sha(value: str) -> str:
+    if not value or value == "unknown":
+        return "unknown"
+    return value[:12]
+
+
+def format_control_summary(summary: dict) -> str:
+    if not summary:
+        return "No structured summary"
+    passed = summary.get("pass", 0)
+    failed = summary.get("fail", 0)
+    not_tested = summary.get("not_tested", 0)
+    applicable = summary.get("applicable_controls", 0)
+    return f"{passed}/{failed}/{not_tested} pass/fail/not tested · {applicable} applicable"
+
+
+def run_link(run_id: str, url: str) -> str:
+    run_text = escape(run_id or "unknown")
+    if not url:
+        return f"<code>{run_text}</code>"
+    return f'<a href="{escape(url)}"><code>{run_text}</code></a>'
+
+
+def build_latest_repository_cards(results_index: dict) -> str:
+    cards = []
+    for repository in results_index.get("repositories", []):
+        repo_id = repository.get("repository_id", "unknown")
+        latest = repository.get("latest_result", {})
+        history = repository.get("history", [])
+        latest_history = next(
+            (
+                entry
+                for entry in reversed(history)
+                if entry.get("pipeline_run_id") == latest.get("pipeline_run_id")
+            ),
+            {},
+        )
+        summary = latest.get("control_evaluation_summary", {})
+        status = latest.get("status", "unknown")
+        status_tone = "ok" if status == "pass" else "danger"
+        run_id = latest.get("pipeline_run_id", "unknown")
+        run_url = latest_history.get("pipeline_url", "")
+        baseline = latest.get("governance_baseline_ref", "unknown")
+        generated_at = latest.get("generated_at", "unknown")
+        commit_id = latest.get("commit_id", "unknown")
+        summary_class = "ok" if summary.get("fail", 0) == 0 and summary.get("not_tested", 0) == 0 else "warn"
+        cards.append(
+            "<section class=\"latest-card\">"
+            "<div class=\"latest-card-header\">"
+            f"<div><h3>{escape(repo_id)}</h3><p>Mainline governance status</p></div>"
+            f"{badge(status, status_tone)}"
+            "</div>"
+            "<dl class=\"latest-grid\">"
+            f"<div><dt>Baseline</dt><dd><code>{escape(baseline)}</code></dd></div>"
+            f"<div><dt>Last Main Run</dt><dd>{run_link(run_id, run_url)}</dd></div>"
+            f"<div><dt>Commit</dt><dd><code>{escape(short_sha(commit_id))}</code></dd></div>"
+            f"<div><dt>Generated</dt><dd>{escape(generated_at)}</dd></div>"
+            "</dl>"
+            f"<div class=\"control-score {summary_class}\">"
+            f"<strong>{escape(format_control_summary(summary))}</strong>"
+            "<span>Control summary</span>"
+            "</div>"
+            "</section>"
+        )
+    if not cards:
+        return ""
+    return (
+        "<section class=\"latest-results\">"
+        "<div class=\"section-heading\">"
+        "<h2>Latest Repository Results</h2>"
+        "<p>Official latest main push result per downstream repository.</p>"
+        "</div>"
+        "<div class=\"latest-grid-cards\">"
+        + "".join(cards)
+        + "</div>"
+        "</section>"
+    )
+
+
 def build_summary_cards(documents, gaps, controls):
     automated = sum(1 for control in controls if control.get("verification", {}).get("method") == "automated")
     policy_candidates = sum(1 for control in controls if control.get("policy_as_code", {}).get("candidate"))
@@ -242,7 +321,7 @@ def build_repository_history_rows(results_index: dict) -> list[list[str]]:
                     badge(entry.get("status", "unknown"), status_tone),
                     f"<code>{escape(entry.get('governance_baseline_ref', 'unknown'))}</code>",
                     escape(branch_name),
-                    f"<code>{escape(entry.get('pipeline_run_id', 'unknown'))}</code>",
+                    run_link(entry.get("pipeline_run_id", "unknown"), entry.get("pipeline_url", "")),
                     coverage_text,
                     summarize_control_delta(current_summary, previous_summary),
                 ]
@@ -483,9 +562,9 @@ def main() -> int:
     )
     repository_history_rows = build_repository_history_rows(results_index)
     history_panel_html = (
-        "<section class=\"panel\">"
+        "<section class=\"panel history-compact\">"
         "<h2>Repository Result History</h2>"
-        "<p class=\"filter-summary\">Shows baseline evolution, run history, and structured control coverage where available.</p>"
+        "<p class=\"filter-summary\">Compact run history with baseline evolution, linked run IDs, and control summary deltas.</p>"
         + html_table(
             ["Repository", "Generated At", "Scope", "Status", "Baseline Ref", "Branch", "Run ID", "Coverage", "Trend"],
             repository_history_rows,
@@ -519,6 +598,23 @@ def main() -> int:
     .card, .panel {{ background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 18px; box-shadow: 0 8px 20px rgba(13, 79, 108, 0.06); }}
     .card h3, .panel h2 {{ margin-top: 0; }}
     .value {{ font-size: 2rem; font-weight: 700; margin: 8px 0; }}
+    .latest-results {{ margin-bottom: 24px; }}
+    .section-heading {{ display: flex; justify-content: space-between; gap: 16px; align-items: end; margin-bottom: 12px; }}
+    .section-heading h2 {{ margin: 0; }}
+    .section-heading p {{ margin: 0; color: var(--muted); }}
+    .latest-grid-cards {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px; }}
+    .latest-card {{ background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 20px; box-shadow: 0 10px 26px rgba(13, 79, 108, 0.08); }}
+    .latest-card-header {{ display: flex; justify-content: space-between; gap: 16px; align-items: start; margin-bottom: 16px; }}
+    .latest-card h3 {{ margin: 0 0 4px; font-size: 1.25rem; }}
+    .latest-card p {{ margin: 0; color: var(--muted); }}
+    .latest-grid {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0 0 16px; }}
+    .latest-grid div {{ min-width: 0; }}
+    .latest-grid dt {{ color: var(--muted); font-size: 0.78rem; text-transform: uppercase; }}
+    .latest-grid dd {{ margin: 4px 0 0; overflow-wrap: anywhere; }}
+    .control-score {{ border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; gap: 12px; align-items: center; }}
+    .control-score.ok {{ background: var(--ok); }}
+    .control-score.warn {{ background: var(--warn); }}
+    .control-score span {{ color: var(--muted); font-size: 0.9rem; }}
     .panels {{ display: grid; grid-template-columns: 1fr; gap: 18px; }}
     table {{ width: 100%; border-collapse: collapse; }}
     th, td {{ border-bottom: 1px solid var(--border); text-align: left; padding: 10px 8px; vertical-align: top; }}
@@ -537,6 +633,17 @@ def main() -> int:
     .filters select, .filters input {{ padding: 0.45rem 0.6rem; border: 1px solid var(--border); border-radius: 8px; font: inherit; }}
     .filters input {{ min-width: 240px; }}
     .filter-summary {{ margin: 10px 0 0; color: var(--muted); font-size: 0.9rem; }}
+    .history-compact table {{ font-size: 0.92rem; }}
+    .history-compact th, .history-compact td {{ padding: 8px 7px; }}
+    a {{ color: var(--accent); text-decoration: none; }}
+    a:hover {{ text-decoration: underline; }}
+    @media (max-width: 700px) {{
+      main {{ padding: 16px; }}
+      .latest-grid-cards {{ grid-template-columns: 1fr; }}
+      .latest-grid {{ grid-template-columns: 1fr; }}
+      .section-heading {{ display: block; }}
+      table {{ display: block; overflow-x: auto; }}
+    }}
   </style>
 </head>
 <body>
@@ -545,6 +652,7 @@ def main() -> int:
     <p class="meta">Static snapshot of repository health, governance document status, traceability coverage, and open gaps.</p>
   </header>
   <main>
+    {build_latest_repository_cards(results_index)}
     <section class="cards">
       {build_operational_cards(integration_status, results_index)}
     </section>
