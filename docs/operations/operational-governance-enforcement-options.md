@@ -6,6 +6,36 @@ If this repository becomes the enterprise governance baseline, other software re
 
 ## Recommended Enforcement Layers
 
+## Repository Governance Modes
+
+Each downstream repository should declare an explicit governance mode in:
+
+- `status/application-repository-integrations.yaml`
+
+Recommended modes:
+
+| Mode | Meaning | Merge behavior |
+| --- | --- | --- |
+| `readiness` | Repository is being assessed before central workflow integration. | No central merge impact. |
+| `report-only` | Central governance workflow runs and records evidence, but is not a required merge gate. | Does not block merge. |
+| `warn-on-error` | Governance failures are visible and tracked, but still allow merge during transition. | Does not block merge by default. |
+| `block-on-error` | Governance failures block merge or mainline promotion. | Blocks merge. |
+| `waiver-required` | Governance failures block unless approved structured waiver evidence exists. | Blocks without waiver. |
+| `disabled` | Integration is intentionally paused or disabled with a documented reason. | No active governance signal. |
+
+The mode should be accompanied by structured enforcement flags:
+
+```yaml
+governance_mode: report-only
+enforcement:
+  blocks_merge: false
+  records_result: true
+  requires_waiver_on_failure: false
+  mode_reason: Candidate repository is being onboarded before mainline enforcement.
+```
+
+Use `report-only` for new repositories until at least one branch or pull-request run has produced usable evidence. Move to `block-on-error` or `waiver-required` only after the repository has stable evidence generation and an agreed operating model.
+
 ### 1. Shared Pipeline Template
 
 The strongest operational pattern is to provide a central CI template and require teams to import it.

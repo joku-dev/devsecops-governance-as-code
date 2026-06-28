@@ -146,6 +146,34 @@ def format_control_summary(summary: dict) -> str:
     return f"{passed}/{failed}/{not_tested} pass/fail/not tested · {applicable} applicable"
 
 
+def format_bool_flag(value: bool | None) -> str:
+    if value is True:
+        return "yes"
+    if value is False:
+        return "no"
+    return "unknown"
+
+
+def governance_mode_tone(mode: str) -> str:
+    return {
+        "readiness": "plain",
+        "report-only": "warn",
+        "warn-on-error": "warn",
+        "block-on-error": "ok",
+        "waiver-required": "ok",
+        "disabled": "danger",
+    }.get(mode, "plain")
+
+
+def enforcement_summary(integration: dict) -> str:
+    enforcement = integration.get("enforcement", {})
+    return (
+        f"blocks merge: {format_bool_flag(enforcement.get('blocks_merge'))}; "
+        f"records result: {format_bool_flag(enforcement.get('records_result'))}; "
+        f"waiver on failure: {format_bool_flag(enforcement.get('requires_waiver_on_failure'))}"
+    )
+
+
 def run_link(run_id: str, url: str) -> str:
     run_text = escape(run_id or "unknown")
     if not url:
@@ -243,6 +271,15 @@ def build_operational_cards(integration_status: dict, results_index: dict) -> st
     mainline_results = results_summary.get("mainline_results", 0)
     branch_results = results_summary.get("branch_results", 0)
     manual_results = results_summary.get("manual_results", 0)
+    mode_counts = {}
+    for integration in integration_status.get("integrations", []):
+        mode = integration.get("governance_mode", "unknown")
+        mode_counts[mode] = mode_counts.get(mode, 0) + 1
+    enforcing_count = sum(
+        1
+        for integration in integration_status.get("integrations", [])
+        if integration.get("enforcement", {}).get("blocks_merge")
+    )
     baseline_refs = sorted(
         {
             repository.get("latest_result", {}).get("governance_baseline_ref")
@@ -267,6 +304,11 @@ def build_operational_cards(integration_status: dict, results_index: dict) -> st
             "Run Mix",
             str(mainline_results),
             f"Mainline push runs, branch/PR: {branch_results}, manual: {manual_results}",
+        ),
+        (
+            "Governance Modes",
+            f"{enforcing_count} blocking",
+            f"Report-only: {mode_counts.get('report-only', 0)}, warn: {mode_counts.get('warn-on-error', 0)}",
         ),
     ]
     html = []
@@ -507,6 +549,8 @@ def main() -> int:
                 f"<code>{escape(repo_id)}</code>",
                 badge(integration.get("baseline_level", repository.get("baseline_level", "unknown")), "plain"),
                 badge(integration.get("status", latest_result.get("status", "unknown")), tone),
+                badge(integration.get("governance_mode", "unknown"), governance_mode_tone(integration.get("governance_mode", "unknown"))),
+                escape(enforcement_summary(integration)),
                 escape(integration.get("pipeline_result", latest_result.get("status", "unknown"))),
                 f"<code>{escape(latest_result.get('governance_baseline_ref', integration.get('governance_workflow_ref', 'unknown')))}</code>",
                 f"<code>{escape(latest_result.get('pipeline_run_id', integration.get('pipeline_run_id', 'unknown')))}</code>",
@@ -522,6 +566,8 @@ def main() -> int:
                 f"<code>{escape(row['repository'])}</code>",
                 badge(row.get("baseline_level", "unknown"), "plain"),
                 badge(row.get("status", "unknown"), tone),
+                badge(row.get("governance_mode", "unknown"), governance_mode_tone(row.get("governance_mode", "unknown"))),
+                escape(enforcement_summary(row)),
                 escape(row.get("pipeline_result", "unknown")),
                 f"<code>{escape(row.get('governance_workflow_ref', 'unknown'))}</code>",
                 f"<code>{escape(row.get('pipeline_run_id', 'unknown'))}</code>",
@@ -782,7 +828,7 @@ def main() -> int:
       <section class="panels">
         <section class="panel">
           <h2>Operational Integration Status</h2>
-          {html_table(["Repository", "Level", "Status", "Pipeline Result", "Workflow Ref", "Run ID", "Notes"], integration_rows)}
+          {html_table(["Repository", "Level", "Status", "Mode", "Enforcement", "Pipeline Result", "Workflow Ref", "Run ID", "Notes"], integration_rows)}
         </section>
         {history_panel_html}
       </section>

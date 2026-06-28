@@ -117,6 +117,9 @@ class RepoValidationTests(unittest.TestCase):
         self.assertIn("joku-dev/ha-CPsWMS", content)
         self.assertIn("Latest Control Evaluation Snapshot", content)
         self.assertIn("DSCB-L1-REQ-003", content)
+        self.assertIn("block-on-error", content)
+        self.assertIn("report-only", content)
+        self.assertIn("blocks merge:", content)
 
     def test_demo_run_succeeds(self):
         result = self.run_command("python3", str(ROOT / "scripts" / "run_demo.py"))
