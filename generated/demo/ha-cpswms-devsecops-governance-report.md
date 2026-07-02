@@ -3,7 +3,7 @@
 ## Target
 
 - Repository: `/workspace/ha-CPsWMS`
-- Commit: `e223503`
+- Commit: `77e8fcd`
 - Release ID: `ha-CPsWMS-demo`
 
 ## Gate Summary
