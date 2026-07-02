@@ -1,24 +1,15 @@
 {
   "target": {
     "path": "/workspace/ha-CPsWMS",
-    "commit": "002db4e",
+    "commit": "e223503",
     "release_id": "ha-CPsWMS-demo"
   },
   "gate": {
     "id": "devsecops_release_readiness",
-    "status": "findings",
-    "findings": [
-      "DSCB-L1-REQ-006: Release candidates require an SBOM.",
-      "DSCB-L1-REQ-009: Release candidates require vulnerability scan evidence.",
-      "DSCB-L1-REQ-011: Releasable artifacts require checksum, digest, or signature evidence.",
-      "DSCB-L2-REQ-006: Dependency ha-sync/requirements.txt is not retrieved from an approved source.",
-      "DSCB-L2-REQ-006: Dependency query-api/requirements.txt is not retrieved from an approved source.",
-      "DSCB-L2-REQ-006: Dependency semantic-enrichment/requirements.txt is not retrieved from an approved source.",
-      "DSCB-L2-REQ-006: Dependency world-model-chat/requirements.txt is not retrieved from an approved source.",
-      "DSCB-L2-REQ-011: DevSecOps pipelines must enforce security gates."
-    ]
+    "status": "pass",
+    "findings": []
   },
   "summary": {
-    "finding_count": 8
+    "finding_count": 0
   }
 }

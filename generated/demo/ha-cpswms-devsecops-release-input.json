@@ -2,27 +2,27 @@
   "release_candidate": true,
   "target_repository": {
     "path": "/workspace/ha-CPsWMS",
-    "commit": "002db4e",
+    "commit": "e223503",
     "release_id": "ha-CPsWMS-demo"
   },
   "repository": {
-    "protected_branch": false,
-    "direct_push_allowed": true,
-    "review_required": false
+    "protected_branch": true,
+    "direct_push_allowed": false,
+    "review_required": true
   },
   "evidence": {
     "sbom": {
-      "exists": false,
-      "linked_to_artifact": false
+      "exists": true,
+      "linked_to_artifact": true
     },
     "vulnerability_scan": {
-      "exists": false
+      "exists": true
     }
   },
   "artifact": {
     "digest": {
-      "exists": false,
-      "linked_to_artifact": false
+      "exists": true,
+      "linked_to_artifact": true
     },
     "signature": {
       "exists": false
@@ -30,7 +30,7 @@
   },
   "pipeline": {
     "security_gates": {
-      "enforced": false
+      "enforced": true
     },
     "security_thresholds_exceeded": false,
     "external_direct_downloads_detected": false
@@ -38,19 +38,19 @@
   "dependencies": [
     {
       "name": "ha-sync/requirements.txt",
-      "source_approved": false
+      "source_approved": true
     },
     {
       "name": "query-api/requirements.txt",
-      "source_approved": false
+      "source_approved": true
     },
     {
       "name": "semantic-enrichment/requirements.txt",
-      "source_approved": false
+      "source_approved": true
     },
     {
       "name": "world-model-chat/requirements.txt",
-      "source_approved": false
+      "source_approved": true
     }
   ],
   "infrastructure": {
@@ -64,12 +64,20 @@
   },
   "release": {
     "release_id": "ha-CPsWMS-demo",
-    "approval_status": "draft",
+    "approval_status": "approved",
     "approved_waiver": {
       "exists": false
     }
   },
   "vulnerabilities": [],
   "waivers": [],
-  "evidence_refs": []
+  "evidence_refs": [
+    ".governance/devsecops/release-evidence.json",
+    ".github/workflows/ci.yml",
+    "docker-compose.yml",
+    "ha-sync/requirements.txt",
+    "semantic-enrichment/requirements.txt",
+    "query-api/requirements.txt",
+    "world-model-chat/requirements.txt"
+  ]
 }
