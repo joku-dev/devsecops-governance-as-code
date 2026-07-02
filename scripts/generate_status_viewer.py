@@ -240,6 +240,59 @@ def build_latest_repository_cards(results_index: dict) -> str:
     )
 
 
+def build_latest_architecture_cards(architecture_index: dict) -> str:
+    cards = []
+    for repository in architecture_index.get("repositories", []):
+        repo_id = repository.get("repository_id", "unknown")
+        latest = repository.get("latest_result", {})
+        summary = latest.get("architecture_summary", {})
+        status = latest.get("status", "unknown")
+        status_label = "PASS" if status == "pass" else status.upper()
+        run_id = latest.get("pipeline_run_id", "unknown")
+        run_url = latest.get("pipeline_url", "")
+        latest_branch = latest.get("branch", "")
+        latest_event = latest.get("pipeline_event", "")
+        latest_scope = "Mainline" if latest_branch == "main" and latest_event == "push" else "Tracked"
+        baseline = latest.get("architecture_baseline_ref", "unknown")
+        generated_at = latest.get("generated_at", "unknown")
+        commit_id = latest.get("commit_id", "unknown")
+        finding_count = summary.get("finding_count", 0)
+        gate_count = summary.get("gate_count", 0)
+        passed = summary.get("passed", 0)
+        summary_class = "ok" if finding_count == 0 else "warn"
+        cards.append(
+            "<section class=\"latest-card\">"
+            "<div class=\"latest-card-header\">"
+            f"<div><h3>{escape(repo_id)}</h3><p>{escape(latest_scope)} architecture governance status</p></div>"
+            f"{badge(status_label, status_tone(status))}"
+            "</div>"
+            "<dl class=\"latest-grid\">"
+            f"<div><dt>Baseline</dt><dd><code>{escape(baseline)}</code></dd></div>"
+            f"<div><dt>Last {escape(latest_scope)} Run</dt><dd>{run_link(run_id, run_url)}</dd></div>"
+            f"<div><dt>Commit</dt><dd><code>{escape(short_sha(commit_id))}</code></dd></div>"
+            f"<div><dt>Generated</dt><dd>{escape(generated_at)}</dd></div>"
+            "</dl>"
+            f"<div class=\"control-score {summary_class}\">"
+            f"<strong>{escape(str(passed))}/{escape(str(gate_count))} gates pass · {escape(str(finding_count))} findings</strong>"
+            "<span>Architecture summary</span>"
+            "</div>"
+            "</section>"
+        )
+    if not cards:
+        return ""
+    return (
+        "<section class=\"latest-results\">"
+        "<div class=\"section-heading\">"
+        "<h2>Latest Architecture Results</h2>"
+        "<p>Latest Architecture Runtime Governance status per downstream repository.</p>"
+        "</div>"
+        "<div class=\"latest-grid-cards\">"
+        + "".join(cards)
+        + "</div>"
+        "</section>"
+    )
+
+
 def build_summary_cards(documents, gaps, controls):
     automated = sum(1 for control in controls if control.get("verification", {}).get("method") == "automated")
     policy_candidates = sum(1 for control in controls if control.get("policy_as_code", {}).get("candidate"))
@@ -380,11 +433,22 @@ def status_tone(status: str) -> str:
     return "plain"
 
 
-def build_runtime_governance_cards(architecture_report: dict | None, devsecops_report: dict | None, end_to_end_report: dict | None) -> str:
+def build_runtime_governance_cards(
+    architecture_report: dict | None,
+    devsecops_report: dict | None,
+    end_to_end_report: dict | None,
+    architecture_index: dict | None = None,
+) -> str:
     if not architecture_report and not devsecops_report and not end_to_end_report:
         return ""
 
     architecture_summary = (architecture_report or {}).get("summary", {})
+    latest_architecture = {}
+    for repository in (architecture_index or {}).get("repositories", []):
+        if repository.get("repository_id") == "joku-dev/ha-CPsWMS":
+            latest_architecture = repository.get("latest_result", {})
+            architecture_summary = latest_architecture.get("architecture_summary", architecture_summary)
+            break
     devsecops_summary = (devsecops_report or {}).get("summary", {})
     end_to_end_summary = (end_to_end_report or {}).get("summary", {})
     overall_status = (end_to_end_report or {}).get("overall_status", "unknown")
@@ -411,7 +475,7 @@ def build_runtime_governance_cards(architecture_report: dict | None, devsecops_r
         ),
         (
             "Demo Target",
-            short_sha(target.get("commit", "unknown")),
+            short_sha(latest_architecture.get("commit_id", target.get("commit", "unknown"))),
             target.get("release_id", "unknown"),
             "plain",
         ),
@@ -540,6 +604,11 @@ def main() -> int:
     document_rows = load_csv(ROOT / "generated" / "xlsx" / "document_control_matrix.csv")
     integration_status = load_yaml(ROOT / "status" / "application-repository-integrations.yaml")
     results_index = load_json(ROOT / "status" / "repository-results-index.json")
+    architecture_index_path = ROOT / "status" / "architecture-results-index.json"
+    architecture_index = load_json(architecture_index_path) if architecture_index_path.exists() else {
+        "summary": {},
+        "repositories": [],
+    }
     control_report_path = ROOT / "generated" / "control-evaluation-report.json"
     control_report = load_json(control_report_path) if control_report_path.exists() else None
     control_coverage_path = ROOT / "generated" / "reports" / "control-coverage-report.json"
@@ -726,6 +795,8 @@ def main() -> int:
             "domains": end_to_end_report.get("domains", {}),
             "finding_count": end_to_end_report.get("summary", {}).get("finding_count", 0),
         }
+    if architecture_index.get("repositories"):
+        payload["architecture_results_summary"] = architecture_index.get("summary", {})
 
     control_rows = []
     if control_report:
@@ -820,7 +891,7 @@ def main() -> int:
         if repository_history_rows
         else ""
     )
-    runtime_cards_html = build_runtime_governance_cards(architecture_report, devsecops_report, end_to_end_report)
+    runtime_cards_html = build_runtime_governance_cards(architecture_report, devsecops_report, end_to_end_report, architecture_index)
     architecture_gate_rows = build_architecture_gate_rows(architecture_report)
     runtime_domain_rows = build_runtime_domain_rows(end_to_end_report)
     runtime_governance_html = (
@@ -960,6 +1031,7 @@ def main() -> int:
         <p>Current governed state, latest downstream repository result, and high-level coverage signals.</p>
       </div>
       {build_latest_repository_cards(results_index)}
+      {build_latest_architecture_cards(architecture_index)}
       <section class="cards">
         {build_operational_cards(integration_status, results_index)}
       </section>
@@ -1051,6 +1123,7 @@ def main() -> int:
             <li><a href="../documents/devsecops-dir-001.html">Rendered Directive</a></li>
             <li><a href="../control-evaluation-report.json">Control Evaluation Report JSON</a></li>
             <li><a href="../control-evaluation-report.md">Control Evaluation Report Markdown</a></li>
+            <li><a href="../../status/architecture-results-index.json">Architecture Results Index JSON</a></li>
             <li><a href="../../operations/current-governance-platform-state/">Current Governance Platform State</a></li>
             <li><a href="../../operations/ha-cpswms-governance-validation-status/">ha-CPsWMS Validation Status</a></li>
             <li><a href="../../releases/l1-baseline-v1.1.3/">L1 Baseline v1.1.3</a></li>

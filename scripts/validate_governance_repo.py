@@ -105,6 +105,9 @@ def main() -> int:
     validate_schema(errors, ROOT / "schemas" / "governance-compliance-result.schema.json", ROOT / "docs" / "governance-compliance-result.example.json")
     validate_schema(errors, ROOT / "schemas" / "governance-run-input.schema.json", ROOT / "docs" / "governance-run-input.example.json")
     validate_schema(errors, ROOT / "schemas" / "waiver.schema.json", MODEL / "waivers" / "waiver-example.yaml")
+    architecture_index_path = ROOT / "status" / "architecture-results-index.json"
+    if architecture_index_path.exists():
+        validate_schema(errors, ROOT / "schemas" / "architecture-results-index.schema.json", architecture_index_path)
 
     for path in sorted((MODEL / "controls").glob("dscb-*.yaml")):
         data = load_yaml(path)

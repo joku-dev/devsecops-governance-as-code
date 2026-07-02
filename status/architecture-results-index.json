@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-07-02T12:38:00Z",
+  "summary": {
+    "repository_count": 1,
+    "result_count": 2,
+    "passing_results": 2,
+    "findings_results": 0,
+    "mainline_results": 0,
+    "branch_results": 2,
+    "manual_results": 0
+  },
+  "repositories": [
+    {
+      "repository_id": "joku-dev/ha-CPsWMS",
+      "architecture_baseline_ref": "ha-CPsWMS-demo-baseline",
+      "results_path": "status/architecture-results/joku-dev__ha-CPsWMS/",
+      "latest_result": {
+        "status": "pass",
+        "pipeline_run_id": "28588778642",
+        "commit_id": "a959e916ff0200c0c3bfadc66650b15c0918c8c7",
+        "generated_at": "2026-07-02T12:08:17Z",
+        "architecture_baseline_ref": "ha-CPsWMS-demo-baseline",
+        "pipeline_url": "https://github.com/joku-dev/ha-CPsWMS/actions/runs/28588778642",
+        "branch": "codex/architecture-governance-workflow",
+        "pipeline_event": "push",
+        "source_file": "status/architecture-results/joku-dev__ha-CPsWMS/2026-07-02T12-08-17Z-run-28588778642.json",
+        "architecture_summary": {
+          "gate_count": 4,
+          "passed": 4,
+          "with_findings": 0,
+          "finding_count": 0
+        }
+      },
+      "history": [
+        {
+          "generated_at": "2026-07-02T12:08:10Z",
+          "status": "pass",
+          "pipeline_run_id": "28588779711",
+          "pipeline_event": "pull_request",
+          "pipeline_url": "https://github.com/joku-dev/ha-CPsWMS/actions/runs/28588779711",
+          "branch": "codex/architecture-governance-workflow",
+          "commit_id": "a959e916ff0200c0c3bfadc66650b15c0918c8c7",
+          "architecture_baseline_ref": "ha-CPsWMS-demo-baseline",
+          "architecture_summary": {
+            "gate_count": 4,
+            "passed": 4,
+            "with_findings": 0,
+            "finding_count": 0
+          },
+          "source_file": "status/architecture-results/joku-dev__ha-CPsWMS/2026-07-02T12-08-10Z-run-28588779711.json"
+        },
+        {
+          "generated_at": "2026-07-02T12:08:17Z",
+          "status": "pass",
+          "pipeline_run_id": "28588778642",
+          "pipeline_event": "push",
+          "pipeline_url": "https://github.com/joku-dev/ha-CPsWMS/actions/runs/28588778642",
+          "branch": "codex/architecture-governance-workflow",
+          "commit_id": "a959e916ff0200c0c3bfadc66650b15c0918c8c7",
+          "architecture_baseline_ref": "ha-CPsWMS-demo-baseline",
+          "architecture_summary": {
+            "gate_count": 4,
+            "passed": 4,
+            "with_findings": 0,
+            "finding_count": 0
+          },
+          "source_file": "status/architecture-results/joku-dev__ha-CPsWMS/2026-07-02T12-08-17Z-run-28588778642.json"
+        }
+      ]
+    }
+  ]
+}

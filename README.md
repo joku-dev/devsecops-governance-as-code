@@ -332,6 +332,18 @@ python3 scripts/generate_end_to_end_governance_report.py \
   --output-md generated/demo/ha-cpswms-end-to-end-governance-report.md
 ```
 
+Intake a downstream Architecture Runtime Governance GitHub Actions run and refresh the architecture status index:
+
+```bash
+python3 scripts/intake_architecture_github_actions_run.py \
+  --repository-id joku-dev/ha-CPsWMS \
+  --run-id 28588778642 \
+  --architecture-baseline-ref ha-CPsWMS-demo-baseline
+
+python3 scripts/generate_architecture_results_index.py
+python3 scripts/generate_status_viewer.py
+```
+
 The detailed live demo runbook is:
 
 ```text

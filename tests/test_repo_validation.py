@@ -120,6 +120,9 @@ class RepoValidationTests(unittest.TestCase):
         self.assertIn("block-on-error", content)
         self.assertIn("report-only", content)
         self.assertIn("blocks merge:", content)
+        self.assertIn("Latest Architecture Results", content)
+        self.assertIn("Architecture Runtime Gates", content)
+        self.assertIn("ha-CPsWMS-demo-baseline", content)
 
     def test_demo_run_succeeds(self):
         result = self.run_command("python3", str(ROOT / "scripts" / "run_demo.py"))

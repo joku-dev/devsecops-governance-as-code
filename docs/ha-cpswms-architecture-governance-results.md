@@ -430,6 +430,36 @@ GitHub Actions Step Summary
 GitHub Actions artifact: architecture-governance-evidence
 ```
 
+## Architecture Status Index
+
+The architecture result is now also stored in the same style as the DevSecOps governance status.
+
+Architecture snapshots are stored under:
+
+```text
+status/architecture-results/
+```
+
+The generated architecture index is:
+
+```text
+status/architecture-results-index.json
+```
+
+The current latest tracked architecture result for `ha-CPsWMS` contains:
+
+| Field | Value |
+|---|---|
+| Repository | `joku-dev/ha-CPsWMS` |
+| Architecture baseline | `ha-CPsWMS-demo-baseline` |
+| Last tracked run | `28588778642` |
+| Run URL | `https://github.com/joku-dev/ha-CPsWMS/actions/runs/28588778642` |
+| Commit | `a959e916ff0200c0c3bfadc66650b15c0918c8c7` |
+| Generated | `2026-07-02T12:08:17Z` |
+| Result | `PASS`, `4/4 gates`, `0 findings` |
+
+This is a tracked branch result, not a mainline result. A true architecture mainline status will appear after the architecture workflow runs on `main`.
+
 ## Current Known Limitations
 
 The current evidence files intentionally record follow-up work. Important examples:
