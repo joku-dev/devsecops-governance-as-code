@@ -15,6 +15,7 @@ Use it as the first navigation point after `AGENTS.md`.
 | Understand current ha-CPsWMS status | `docs/operations/ha-cpswms-governance-validation-status.md`, `docs/ha-cpswms-architecture-governance-results.md` |
 | Understand source-document lineage | `generated/reports/source-lineage-report.md` |
 | Intake updated input documents | `docs/governance/governance-change-lifecycle.md`, `model/documents/source-document-register.yaml` |
+| Understand source update impact | `generated/reports/governance-change-impact.md` |
 | Understand DevSecOps baseline releases | `docs/releases/index.md`, `docs/releases/l1-baseline-v1.1.3.md` |
 | Understand architecture baseline releases | `docs/releases/architecture-baseline-l1-v0.1.0.md` |
 | Understand intake and viewer | `docs/operations/governance-result-intake-and-viewer-usage.md` |
@@ -52,6 +53,12 @@ Use the lifecycle and template for future updates:
 docs/governance/governance-change-lifecycle.md
 docs/governance/change-requests/TEMPLATE.md
 model/documents/source-document-register.yaml
+```
+
+Generate the current source-document impact overview:
+
+```bash
+python3 scripts/generate_governance_change_impact_report.py
 ```
 
 ## DevSecOps Governance Map

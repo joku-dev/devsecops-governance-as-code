@@ -1,23 +1,23 @@
 # Source Lineage Report
 
-Generated: `2026-07-02T16:41:53Z`
+Generated: `2026-07-02T16:47:09Z`
 
 ## Summary
 
 - Source documents: `5`
 - Source documents with lineage entries: `5`
-- Derived artifact links: `74`
+- Derived artifact links: `84`
 - Missing derived artifacts: `0`
 
 ## Source Documents
 
 | Source document | Exists | Derived artifacts |
 |---|---:|---:|
-| `docs/governance/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx` | `true` | `23` |
-| `docs/governance/source-documents/DevSecOps-Platform-Reference-Architecture-Standard_aligned_with_Control_Baseline.docx` | `true` | `19` |
-| `docs/governance/source-documents/DevSecOps_Directive_Version_0_draft1.docx` | `true` | `3` |
-| `docs/governance/source-documents/DevSecOps_Policy_Version_1_draft3.docx` | `true` | `3` |
-| `docs/governance/source-documents/SDD_Architecture_Governance_Framework_20260630v2.md` | `true` | `26` |
+| `docs/governance/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx` | `true` | `25` |
+| `docs/governance/source-documents/DevSecOps-Platform-Reference-Architecture-Standard_aligned_with_Control_Baseline.docx` | `true` | `21` |
+| `docs/governance/source-documents/DevSecOps_Directive_Version_0_draft1.docx` | `true` | `5` |
+| `docs/governance/source-documents/DevSecOps_Policy_Version_1_draft3.docx` | `true` | `5` |
+| `docs/governance/source-documents/SDD_Architecture_Governance_Framework_20260630v2.md` | `true` | `28` |
 
 ## Lineage Details
 
@@ -25,6 +25,8 @@ Generated: `2026-07-02T16:41:53Z`
 
 | Artifact | Type | Role | Exists |
 |---|---|---|---:|
+| `generated/reports/governance-change-impact.json` | `derived_artifact` | `governance_change_impact` | `true` |
+| `generated/reports/governance-change-impact.md` | `derived_artifact` | `governance_change_impact` | `true` |
 | `docs/governance/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx` | `governance_document` | `DSCB-STD-001` | `true` |
 | `model/controls/control-coverage.yaml` | `governance_model` | `DSCB-STD-001` | `true` |
 | `model/controls/dscb-gov.yaml` | `governance_model` | `DSCB-STD-001` | `true` |
@@ -55,6 +57,8 @@ Generated: `2026-07-02T16:41:53Z`
 |---|---|---|---:|
 | `generated/reports/control-coverage-report.md` | `derived_artifact` | `devsecops_baseline` | `true` |
 | `generated/reports/document-control-matrix.md` | `derived_artifact` | `devsecops_baseline` | `true` |
+| `generated/reports/governance-change-impact.json` | `derived_artifact` | `governance_change_impact` | `true` |
+| `generated/reports/governance-change-impact.md` | `derived_artifact` | `governance_change_impact` | `true` |
 | `generated/viewer/status-viewer.html` | `derived_artifact` | `devsecops_baseline` | `true` |
 | `generated/xlsx/document_control_matrix.csv` | `derived_artifact` | `devsecops_baseline` | `true` |
 | `generated/xlsx/traceability_matrix.csv` | `derived_artifact` | `devsecops_baseline` | `true` |
@@ -77,6 +81,8 @@ Generated: `2026-07-02T16:41:53Z`
 
 | Artifact | Type | Role | Exists |
 |---|---|---|---:|
+| `generated/reports/governance-change-impact.json` | `derived_artifact` | `governance_change_impact` | `true` |
+| `generated/reports/governance-change-impact.md` | `derived_artifact` | `governance_change_impact` | `true` |
 | `docs/governance/devsecops-directive.md` | `governance_document` | `DEVSECOPS-DIR-001` | `true` |
 | `model/documents/source-document-register.yaml` | `governance_model` | `source_document_intake` | `true` |
 | `model/traceability/document-to-control.yaml` | `traceability_mapping` | `DEVSECOPS-DIR-001` | `true` |
@@ -85,6 +91,8 @@ Generated: `2026-07-02T16:41:53Z`
 
 | Artifact | Type | Role | Exists |
 |---|---|---|---:|
+| `generated/reports/governance-change-impact.json` | `derived_artifact` | `governance_change_impact` | `true` |
+| `generated/reports/governance-change-impact.md` | `derived_artifact` | `governance_change_impact` | `true` |
 | `docs/governance/devsecops-policy.md` | `governance_document` | `DEVSECOPS-POL-001` | `true` |
 | `model/documents/source-document-register.yaml` | `governance_model` | `source_document_intake` | `true` |
 | `model/traceability/document-to-control.yaml` | `traceability_mapping` | `DEVSECOPS-POL-001` | `true` |
@@ -102,6 +110,8 @@ Generated: `2026-07-02T16:41:53Z`
 | `architecture/remediation-actions.yaml` | `architecture_model` | `working_model` | `true` |
 | `architecture/review-gates.yaml` | `architecture_model` | `working_model` | `true` |
 | `generated/csv/architecture_runtime_traceability.csv` | `derived_artifact` | `architecture_runtime_governance` | `true` |
+| `generated/reports/governance-change-impact.json` | `derived_artifact` | `governance_change_impact` | `true` |
+| `generated/reports/governance-change-impact.md` | `derived_artifact` | `governance_change_impact` | `true` |
 | `generated/viewer/status-viewer.html` | `derived_artifact` | `architecture_runtime_governance` | `true` |
 | `schemas/app-architecture-evidence.schema.json` | `derived_artifact` | `architecture_runtime_governance` | `true` |
 | `schemas/architecture-release-candidate.schema.json` | `derived_artifact` | `architecture_runtime_governance` | `true` |

@@ -69,6 +69,7 @@ It is intended for:
 
 - Control baseline guide: `docs/controls/index.md`
 - Generated control coverage report: `generated/reports/control-coverage-report.md`
+- Governance change impact report: `generated/reports/governance-change-impact.md`
 - Pipeline baseline guide: `docs/pipeline-baseline/index.md`
 
 ## Release Documents

@@ -198,6 +198,17 @@ def build_report() -> dict:
             "governance_model",
             "source_document_intake",
         )
+        for impact_report_path in [
+            "generated/reports/governance-change-impact.json",
+            "generated/reports/governance-change-impact.md",
+        ]:
+            add_lineage(
+                lineage,
+                item["path"],
+                impact_report_path,
+                "derived_artifact",
+                "governance_change_impact",
+            )
 
     missing_artifacts = []
     for source_path, artifacts in lineage.items():

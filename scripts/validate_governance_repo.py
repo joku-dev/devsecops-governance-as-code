@@ -89,6 +89,22 @@ def validate_source_lineage_report(errors):
     return report
 
 
+def validate_governance_change_impact_report(errors):
+    command = [sys.executable, str(ROOT / "scripts" / "generate_governance_change_impact_report.py")]
+    result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, check=False)
+    if result.returncode != 0:
+        errors.append(f"Governance change impact report generation failed: {result.stderr.strip() or result.stdout.strip()}")
+        return
+    report_path = ROOT / "generated" / "reports" / "governance-change-impact.json"
+    if not report_path.exists():
+        errors.append("Governance change impact report JSON was not generated")
+        return
+    report = load_json(report_path)
+    registered = report.get("summary", {}).get("registered_source_documents")
+    if registered != len(load_yaml(MODEL / "documents" / "source-document-register.yaml").get("documents", [])):
+        errors.append("Governance change impact report source document count does not match register")
+
+
 def validate_source_document_path(errors, source_path: str, source_label: str):
     if not source_path:
         errors.append(f"Missing source document path in {source_label}")
@@ -269,6 +285,7 @@ def main() -> int:
 
     source_lineage_report = validate_source_lineage_report(errors) or {}
     validate_source_document_register(errors, source_document_register, source_lineage_report)
+    validate_governance_change_impact_report(errors)
 
     for mapping in traceability.get("mappings", []):
         control_id = mapping["control"]

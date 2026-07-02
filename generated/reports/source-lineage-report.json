@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-07-02T16:41:53Z",
+  "generated_at": "2026-07-02T16:47:09Z",
   "source_document_root": "docs/governance/source-documents",
   "source_documents": [
     {
@@ -28,6 +28,18 @@
     {
       "source_document": "docs/governance/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx",
       "derived_artifacts": [
+        {
+          "artifact_path": "generated/reports/governance-change-impact.json",
+          "artifact_type": "derived_artifact",
+          "role": "governance_change_impact",
+          "exists": true
+        },
+        {
+          "artifact_path": "generated/reports/governance-change-impact.md",
+          "artifact_type": "derived_artifact",
+          "role": "governance_change_impact",
+          "exists": true
+        },
         {
           "artifact_path": "docs/governance/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx",
           "artifact_type": "governance_document",
@@ -184,6 +196,18 @@
           "exists": true
         },
         {
+          "artifact_path": "generated/reports/governance-change-impact.json",
+          "artifact_type": "derived_artifact",
+          "role": "governance_change_impact",
+          "exists": true
+        },
+        {
+          "artifact_path": "generated/reports/governance-change-impact.md",
+          "artifact_type": "derived_artifact",
+          "role": "governance_change_impact",
+          "exists": true
+        },
+        {
           "artifact_path": "generated/viewer/status-viewer.html",
           "artifact_type": "derived_artifact",
           "role": "devsecops_baseline",
@@ -291,6 +315,18 @@
       "source_document": "docs/governance/source-documents/DevSecOps_Directive_Version_0_draft1.docx",
       "derived_artifacts": [
         {
+          "artifact_path": "generated/reports/governance-change-impact.json",
+          "artifact_type": "derived_artifact",
+          "role": "governance_change_impact",
+          "exists": true
+        },
+        {
+          "artifact_path": "generated/reports/governance-change-impact.md",
+          "artifact_type": "derived_artifact",
+          "role": "governance_change_impact",
+          "exists": true
+        },
+        {
           "artifact_path": "docs/governance/devsecops-directive.md",
           "artifact_type": "governance_document",
           "role": "DEVSECOPS-DIR-001",
@@ -313,6 +349,18 @@
     {
       "source_document": "docs/governance/source-documents/DevSecOps_Policy_Version_1_draft3.docx",
       "derived_artifacts": [
+        {
+          "artifact_path": "generated/reports/governance-change-impact.json",
+          "artifact_type": "derived_artifact",
+          "role": "governance_change_impact",
+          "exists": true
+        },
+        {
+          "artifact_path": "generated/reports/governance-change-impact.md",
+          "artifact_type": "derived_artifact",
+          "role": "governance_change_impact",
+          "exists": true
+        },
         {
           "artifact_path": "docs/governance/devsecops-policy.md",
           "artifact_type": "governance_document",
@@ -388,6 +436,18 @@
           "artifact_path": "generated/csv/architecture_runtime_traceability.csv",
           "artifact_type": "derived_artifact",
           "role": "architecture_runtime_governance",
+          "exists": true
+        },
+        {
+          "artifact_path": "generated/reports/governance-change-impact.json",
+          "artifact_type": "derived_artifact",
+          "role": "governance_change_impact",
+          "exists": true
+        },
+        {
+          "artifact_path": "generated/reports/governance-change-impact.md",
+          "artifact_type": "derived_artifact",
+          "role": "governance_change_impact",
           "exists": true
         },
         {
@@ -498,7 +558,7 @@
   "summary": {
     "source_document_count": 5,
     "lineage_source_count": 5,
-    "derived_artifact_count": 74,
+    "derived_artifact_count": 84,
     "missing_derived_artifacts": 0
   },
   "missing_derived_artifacts": []

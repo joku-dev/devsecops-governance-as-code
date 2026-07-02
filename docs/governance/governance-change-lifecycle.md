@@ -96,6 +96,18 @@ The change request should answer:
 ## Step 3: Impact Analysis
 
 At v0.1, impact analysis may be written directly into the change request.
+The repository also provides a lightweight generated impact report:
+
+```bash
+python3 scripts/generate_governance_change_impact_report.py
+```
+
+Generated outputs:
+
+```text
+generated/reports/governance-change-impact.md
+generated/reports/governance-change-impact.json
+```
 
 Minimum impact categories:
 
@@ -111,6 +123,7 @@ Minimum impact categories:
 | Downstream repositories | Do consumers need migration work? |
 
 Future versions may generate an impact report automatically.
+The current report is register- and lineage-based. It does not infer semantic document deltas yet; it shows likely affected artifact areas, review lanes, validation commands and release considerations for each registered source document.
 
 ## Step 4: Derived Artifact Update
 
@@ -192,5 +205,6 @@ The repository currently enforces:
 - every file under `docs/governance/source-documents/` must be registered
 - every registered source document must have a source-lineage entry
 - source-lineage report must have no missing derived artifacts
+- governance change impact report must be generatable
 
 This gives governance over the governance repository without requiring full automated semantic extraction from source documents yet.

@@ -1,0 +1,298 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-07-02T16:47:09Z",
+  "inputs": {
+    "source_document_register": "model/documents/source-document-register.yaml",
+    "source_lineage_report": "generated/reports/source-lineage-report.json"
+  },
+  "summary": {
+    "registered_source_documents": 5,
+    "source_documents_with_lineage": 5,
+    "derived_artifact_links": 84,
+    "domains": {
+      "architecture": 1,
+      "devsecops": 4,
+      "directive": 1,
+      "platform": 1,
+      "policy": 1
+    },
+    "statuses": {
+      "draft": 2,
+      "intake": 3
+    },
+    "release_considerations": {
+      "baseline_release_review": 2,
+      "no_release_by_default": 3
+    },
+    "artifact_types": {
+      "architecture_model": 8,
+      "derived_artifact": 22,
+      "governance_document": 4,
+      "governance_model": 21,
+      "policy_as_code": 15,
+      "release_document": 1,
+      "release_metadata": 1,
+      "release_package": 3,
+      "release_snapshot": 5,
+      "traceability_mapping": 4
+    },
+    "review_lanes": {
+      "architecture-review": 1,
+      "devsecops-review": 4,
+      "governance-review": 2,
+      "platform-review": 1,
+      "policy-as-code-review": 2,
+      "release-review": 2,
+      "schema-review": 1,
+      "viewer-status-review": 2
+    }
+  },
+  "source_impacts": [
+    {
+      "id": "DEVSECOPS-POL-SRC-001",
+      "title": "DevSecOps Policy Version 1 draft 3",
+      "status": "draft",
+      "source_path": "docs/governance/source-documents/DevSecOps_Policy_Version_1_draft3.docx",
+      "owner": "governance-owners",
+      "version": "1 draft 3",
+      "governance_domains": [
+        "policy",
+        "devsecops"
+      ],
+      "derived_artifact_areas": [
+        "docs/governance/devsecops-policy.md",
+        "model/documents/governance-documents.yaml",
+        "model/traceability/document-to-control.yaml"
+      ],
+      "lineage_artifact_count": 5,
+      "lineage_artifact_types": {
+        "derived_artifact": 2,
+        "governance_document": 1,
+        "governance_model": 1,
+        "traceability_mapping": 1
+      },
+      "review_lanes": [
+        "devsecops-review",
+        "governance-review"
+      ],
+      "release_consideration": "no_release_by_default",
+      "suggested_validation": [
+        "python3 -m unittest discover -s tests",
+        "python3 scripts/validate_governance_repo.py"
+      ],
+      "change_request_required_for_source_update": true,
+      "representative_artifacts": [
+        "docs/governance/devsecops-policy.md",
+        "generated/reports/governance-change-impact.json",
+        "generated/reports/governance-change-impact.md",
+        "model/documents/source-document-register.yaml",
+        "model/traceability/document-to-control.yaml"
+      ]
+    },
+    {
+      "id": "DEVSECOPS-DIR-SRC-001",
+      "title": "DevSecOps Directive Version 0 draft 1",
+      "status": "draft",
+      "source_path": "docs/governance/source-documents/DevSecOps_Directive_Version_0_draft1.docx",
+      "owner": "governance-owners",
+      "version": "0 draft 1",
+      "governance_domains": [
+        "directive",
+        "devsecops"
+      ],
+      "derived_artifact_areas": [
+        "docs/governance/devsecops-directive.md",
+        "model/documents/governance-documents.yaml",
+        "model/traceability/document-to-control.yaml"
+      ],
+      "lineage_artifact_count": 5,
+      "lineage_artifact_types": {
+        "derived_artifact": 2,
+        "governance_document": 1,
+        "governance_model": 1,
+        "traceability_mapping": 1
+      },
+      "review_lanes": [
+        "devsecops-review",
+        "governance-review"
+      ],
+      "release_consideration": "no_release_by_default",
+      "suggested_validation": [
+        "python3 -m unittest discover -s tests",
+        "python3 scripts/validate_governance_repo.py"
+      ],
+      "change_request_required_for_source_update": true,
+      "representative_artifacts": [
+        "docs/governance/devsecops-directive.md",
+        "generated/reports/governance-change-impact.json",
+        "generated/reports/governance-change-impact.md",
+        "model/documents/source-document-register.yaml",
+        "model/traceability/document-to-control.yaml"
+      ]
+    },
+    {
+      "id": "DSCB-STD-SRC-001",
+      "title": "DevSecOps Control Baseline Standard aligned with Platform Levels",
+      "status": "intake",
+      "source_path": "docs/governance/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx",
+      "owner": "devsecops-owners",
+      "version": "imported",
+      "governance_domains": [
+        "devsecops"
+      ],
+      "derived_artifact_areas": [
+        "model/controls",
+        "model/evidence",
+        "policies/opa",
+        "releases/l1",
+        "generated/reports"
+      ],
+      "lineage_artifact_count": 25,
+      "lineage_artifact_types": {
+        "derived_artifact": 2,
+        "governance_document": 1,
+        "governance_model": 7,
+        "policy_as_code": 11,
+        "release_package": 3,
+        "traceability_mapping": 1
+      },
+      "review_lanes": [
+        "devsecops-review",
+        "policy-as-code-review",
+        "release-review"
+      ],
+      "release_consideration": "baseline_release_review",
+      "suggested_validation": [
+        "python3 -m unittest discover -s tests",
+        "python3 scripts/validate_governance_repo.py",
+        "verify release package metadata and checksums"
+      ],
+      "change_request_required_for_source_update": true,
+      "representative_artifacts": [
+        "docs/governance/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx",
+        "generated/reports/governance-change-impact.json",
+        "generated/reports/governance-change-impact.md",
+        "model/controls/control-coverage.yaml",
+        "model/controls/dscb-gov.yaml",
+        "model/controls/dscb-l1.yaml",
+        "model/controls/dscb-l2.yaml",
+        "model/controls/dscb-l3.yaml",
+        "model/documents/source-document-register.yaml",
+        "model/evidence/evidence-types.yaml"
+      ]
+    },
+    {
+      "id": "PRA-STD-SRC-001",
+      "title": "DevSecOps Platform Reference Architecture Standard aligned with Control Baseline",
+      "status": "intake",
+      "source_path": "docs/governance/source-documents/DevSecOps-Platform-Reference-Architecture-Standard_aligned_with_Control_Baseline.docx",
+      "owner": "platform-owners",
+      "version": "imported",
+      "governance_domains": [
+        "platform",
+        "devsecops"
+      ],
+      "derived_artifact_areas": [
+        "model/platform",
+        "pipeline-baseline",
+        "model/traceability",
+        "generated/reports",
+        "generated/viewer"
+      ],
+      "lineage_artifact_count": 21,
+      "lineage_artifact_types": {
+        "derived_artifact": 8,
+        "governance_document": 1,
+        "governance_model": 11,
+        "traceability_mapping": 1
+      },
+      "review_lanes": [
+        "devsecops-review",
+        "platform-review",
+        "viewer-status-review"
+      ],
+      "release_consideration": "no_release_by_default",
+      "suggested_validation": [
+        "python3 -m unittest discover -s tests",
+        "python3 scripts/generate_status_viewer.py",
+        "python3 scripts/validate_governance_repo.py"
+      ],
+      "change_request_required_for_source_update": true,
+      "representative_artifacts": [
+        "docs/governance/source-documents/DevSecOps-Platform-Reference-Architecture-Standard_aligned_with_Control_Baseline.docx",
+        "generated/reports/control-coverage-report.md",
+        "generated/reports/document-control-matrix.md",
+        "generated/reports/governance-change-impact.json",
+        "generated/reports/governance-change-impact.md",
+        "generated/viewer/status-viewer.html",
+        "generated/xlsx/document_control_matrix.csv",
+        "generated/xlsx/traceability_matrix.csv",
+        "model/documents/source-document-register.yaml",
+        "model/platform/platform-capabilities.yaml"
+      ]
+    },
+    {
+      "id": "ARCH-SDD-SRC-001",
+      "title": "SDD Architecture Governance Framework",
+      "status": "intake",
+      "source_path": "docs/governance/source-documents/SDD_Architecture_Governance_Framework_20260630v2.md",
+      "owner": "architecture-owners",
+      "version": "20260630v2",
+      "governance_domains": [
+        "architecture"
+      ],
+      "derived_artifact_areas": [
+        "architecture",
+        "policies/opa/architecture_*.rego",
+        "schemas/architecture-*.json",
+        "releases/architecture",
+        "status/architecture-results-index.json",
+        "generated/viewer"
+      ],
+      "lineage_artifact_count": 28,
+      "lineage_artifact_types": {
+        "architecture_model": 8,
+        "derived_artifact": 8,
+        "governance_model": 1,
+        "policy_as_code": 4,
+        "release_document": 1,
+        "release_metadata": 1,
+        "release_snapshot": 5
+      },
+      "review_lanes": [
+        "architecture-review",
+        "policy-as-code-review",
+        "release-review",
+        "schema-review",
+        "viewer-status-review"
+      ],
+      "release_consideration": "baseline_release_review",
+      "suggested_validation": [
+        "python3 -m unittest discover -s tests",
+        "python3 scripts/generate_status_viewer.py",
+        "python3 scripts/validate_governance_repo.py",
+        "python3 scripts/validate_runtime_governance.py",
+        "verify release package metadata and checksums"
+      ],
+      "change_request_required_for_source_update": true,
+      "representative_artifacts": [
+        "architecture/arch-gov.yaml",
+        "architecture/arch-l1.yaml",
+        "architecture/arch-l2.yaml",
+        "architecture/arch-l3.yaml",
+        "architecture/guardrails.yaml",
+        "architecture/quality-markers.yaml",
+        "architecture/remediation-actions.yaml",
+        "architecture/review-gates.yaml",
+        "generated/csv/architecture_runtime_traceability.csv",
+        "generated/reports/governance-change-impact.json"
+      ]
+    }
+  ],
+  "open_questions": [
+    "Does the source document update change governance behavior or only explanatory text?",
+    "Is the intended rollout report-only or blocking?",
+    "Does the change require a release candidate or a new baseline release?",
+    "Which downstream repositories need migration or communication?"
+  ]
+}

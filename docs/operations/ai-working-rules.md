@@ -70,7 +70,7 @@ The healthy demo state is:
 
 ```text
 Source documents: 5
-Derived artifact links: 74
+Derived artifact links: 84
 Missing derived artifacts: 0
 ```
 

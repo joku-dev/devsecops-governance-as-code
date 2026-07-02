@@ -128,4 +128,5 @@ docs/demo-end-to-end-governance.md
 docs/operations/governance-result-intake-and-viewer-usage.md
 docs/releases/index.md
 generated/reports/source-lineage-report.md
+generated/reports/governance-change-impact.md
 ```
