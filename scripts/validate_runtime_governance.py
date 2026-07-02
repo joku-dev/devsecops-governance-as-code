@@ -109,6 +109,18 @@ def validate_opa_policy(errors: list[str]) -> None:
         errors.append(f"Example architecture release candidate failed policy: {value}")
 
 
+def validate_generated_traceability(errors: list[str]) -> None:
+    command = [sys.executable, str(ROOT / "scripts" / "generate_architecture_traceability_csv.py")]
+    result = subprocess.run(command, capture_output=True, text=True, check=False)
+    if result.returncode != 0:
+        errors.append(f"Architecture traceability generation failed: {result.stderr.strip() or result.stdout.strip()}")
+        return
+
+    output = ROOT / "generated" / "csv" / "architecture_runtime_traceability.csv"
+    if not output.exists():
+        errors.append("Architecture traceability CSV was not generated")
+
+
 def validate_architecture_levels(errors: list[str]) -> None:
     marker_ids = {
         marker["id"]
@@ -172,6 +184,7 @@ def main() -> int:
 
     validate_marker_catalogue(errors)
     validate_architecture_levels(errors)
+    validate_generated_traceability(errors)
     validate_opa_policy(errors)
 
     if errors:

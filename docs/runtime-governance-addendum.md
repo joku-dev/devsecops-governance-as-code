@@ -53,6 +53,7 @@ The first addendum version introduces these structured files:
 | `schemas/architecture-exception.schema.json` | JSON Schema for reusable architecture exception records. |
 | `policies/opa/architecture_release_readiness.rego` | OPA policy for release-readiness checks. |
 | `policies/example-input.architecture-release-candidate.json` | Example policy input for an architecture release candidate. |
+| `generated/csv/architecture_runtime_traceability.csv` | Generated traceability view from architecture levels to markers, guardrails, gates, evidence and policies. |
 
 ## Runtime Gate Model
 
@@ -81,6 +82,12 @@ The architecture levels use architecture-specific semantics:
 | `ARCH-GOV` | Architecture governance | Are guardrails, review gates and exceptions governed as reusable enterprise assets? |
 
 The levels are not intended to replace Enterprise, Solution and Product Architecture. They provide a runtime governance progression across those architecture scopes.
+
+Generate the architecture traceability view with:
+
+```bash
+python3 scripts/generate_architecture_traceability_csv.py
+```
 
 ## Release Readiness Rule
 

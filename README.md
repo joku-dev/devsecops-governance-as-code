@@ -103,6 +103,12 @@ Generate the CI/CD pipeline baseline report:
 python scripts/generate_pipeline_baseline_report.py
 ```
 
+Generate the architecture runtime traceability CSV:
+
+```bash
+python3 scripts/generate_architecture_traceability_csv.py
+```
+
 Validate the runtime governance addendum:
 
 ```bash
