@@ -1,6 +1,6 @@
 level: ARCH-L2
 name: Integration and Release Readiness
-source_document: INPUTS/SDD_Architecture_Governance_Framework_20260630v2.md
+source_document: docs/source-documents/SDD_Architecture_Governance_Framework_20260630v2.md
 requirements:
 - id: ARCH-L2-REQ-001
   domain: Interface and Data

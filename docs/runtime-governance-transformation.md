@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The input document `INPUTS/SDD_Architecture_Governance_Framework_20260630v2.md` is a strong normative architecture governance framework, but it is not yet optimized for runtime governance.
+The input document `docs/source-documents/SDD_Architecture_Governance_Framework_20260630v2.md` is a strong normative architecture governance framework, but it is not yet optimized for runtime governance.
 
 Runtime governance requires the framework to be expressed as:
 
