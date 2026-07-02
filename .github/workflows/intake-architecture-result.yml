@@ -13,9 +13,9 @@ on:
         required: true
         type: string
       architecture_baseline_ref:
-        description: Architecture baseline reference.
+        description: Architecture governance baseline reference.
         required: false
-        default: ha-CPsWMS-demo-baseline
+        default: architecture-baseline-l1-v0.1.0
         type: string
   repository_dispatch:
     types:
@@ -58,7 +58,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_RESULT_INTAKE_TOKEN || github.token }}
           REPOSITORY_ID: ${{ github.event.client_payload.repository_id || inputs.repository_id }}
           RUN_ID: ${{ github.event.client_payload.run_id || inputs.run_id }}
-          ARCHITECTURE_BASELINE_REF: ${{ github.event.client_payload.architecture_baseline_ref || inputs.architecture_baseline_ref || 'unknown' }}
+          ARCHITECTURE_BASELINE_REF: ${{ github.event.client_payload.architecture_baseline_ref || inputs.architecture_baseline_ref || 'architecture-baseline-l1-v0.1.0' }}
         run: |
           if [ -z "${REPOSITORY_ID}" ] || [ -z "${RUN_ID}" ]; then
             echo "repository_id and run_id are required"

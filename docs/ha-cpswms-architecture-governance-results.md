@@ -451,7 +451,8 @@ The current latest tracked architecture result for `ha-CPsWMS` contains:
 | Field | Value |
 |---|---|
 | Repository | `joku-dev/ha-CPsWMS` |
-| Architecture baseline | `ha-CPsWMS-demo-baseline` |
+| Architecture governance baseline | `architecture-baseline-l1-v0.1.0` |
+| ha-CPsWMS solution baseline | `ha-CPsWMS-demo-baseline` |
 | Last tracked run | `28588778642` |
 | Run URL | `https://github.com/joku-dev/ha-CPsWMS/actions/runs/28588778642` |
 | Commit | `a959e916ff0200c0c3bfadc66650b15c0918c8c7` |

@@ -189,7 +189,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repository-id", required=True)
     parser.add_argument("--run-id", required=True)
-    parser.add_argument("--architecture-baseline-ref", default="unknown")
+    parser.add_argument("--architecture-baseline-ref", default="architecture-baseline-l1-v0.1.0")
     parser.add_argument("--artifact-name", default="architecture-governance-evidence")
     parser.add_argument("--api-url", default=DEFAULT_API_URL)
     parser.add_argument("--token", default="")

@@ -338,7 +338,7 @@ Intake a downstream Architecture Runtime Governance GitHub Actions run and refre
 python3 scripts/intake_architecture_github_actions_run.py \
   --repository-id joku-dev/ha-CPsWMS \
   --run-id 28588778642 \
-  --architecture-baseline-ref ha-CPsWMS-demo-baseline
+  --architecture-baseline-ref architecture-baseline-l1-v0.1.0
 
 python3 scripts/generate_architecture_results_index.py
 python3 scripts/generate_status_viewer.py
@@ -374,6 +374,17 @@ Optional app-repo evidence templates are available in:
 ```text
 pipeline-baseline/templates/app-architecture-evidence/
 ```
+
+The released Architecture Runtime Governance baseline is consumed like this:
+
+```yaml
+uses: joku-dev/devsecops-governance-as-code/.github/workflows/architecture-baseline-l1-v0.1.0.yml@architecture-baseline-l1-v0.1.0
+with:
+  solution_baseline: ha-CPsWMS-demo-baseline
+  fail_on_findings: false
+```
+
+`architecture-baseline-l1-v0.1.0` is the architecture governance baseline. `ha-CPsWMS-demo-baseline` is the solution/product baseline used by the application evidence.
 
 ## Important Principle
 
