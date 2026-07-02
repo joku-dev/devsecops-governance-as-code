@@ -6,6 +6,7 @@
       { "id": "B2", "score": 3 },
       { "id": "B3", "score": 3 },
       { "id": "B4", "score": 3 },
+      { "id": "B5", "score": 4 },
       { "id": "P0", "score": 3 },
       { "id": "P1", "score": 3 },
       { "id": "P2", "score": 3 },
@@ -48,6 +49,12 @@
       "exists": true
     },
     "deployment_evidence": {
+      "exists": true
+    },
+    "runtime_evidence": {
+      "exists": true
+    },
+    "feedback_evidence": {
       "exists": true
     },
     "exceptions": []

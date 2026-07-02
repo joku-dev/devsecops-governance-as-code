@@ -60,6 +60,7 @@ The repository now includes a first runtime governance addendum for the SDD Arch
 - `architecture/arch-gov.yaml`
 - `policies/opa/architecture_readiness.rego`
 - `policies/opa/architecture_integration_readiness.rego`
+- `policies/opa/architecture_operation_readiness.rego`
 - `policies/opa/architecture_release_readiness.rego`
 
 The addendum keeps the original framework document as the normative reference and adds machine-readable marker, guardrail, gate and policy artifacts for executable governance.

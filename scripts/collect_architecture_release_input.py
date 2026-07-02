@@ -77,6 +77,8 @@ def collect(repo: Path, release_id: str, baseline: str) -> dict:
     has_rollback = "rollback" in deployment_text
     has_resilience = any(keyword in architecture_text + deployment_text for keyword in ["restart", "failure", "failover", "recovery", "degraded"])
     has_performance = bool(benchmark_reports)
+    has_runtime_observability = any(keyword in deployment_text + compose_text for keyword in ["logs", "health", "metrics", "monitor", "dashboard"])
+    has_feedback_evidence = any_exists(repo, ["*incident*", "docs/*FEEDBACK*", "docs/*feedback*", "benchmark/reports/performance_evolution_summary.md"])
     has_release_baseline = any_exists(repo, ["*baseline*", "docs/*BASELINE*", "docs/*baseline*"])
     has_compatibility_declaration = any_exists(repo, ["*compatibility*", "docs/*COMPATIBILITY*", "docs/*compatibility*"])
     has_security_tests = any_exists(repo, ["*security*", "tests/**/*security*.py", ".github/workflows/*security*"])
@@ -100,6 +102,17 @@ def collect(repo: Path, release_id: str, baseline: str) -> dict:
             *[path for path in tests if "security" in path.lower()],
         ]
     )
+    runtime_refs = compact(
+        [
+            evidence_ref(repo, "docs/DEPLOYMENT.md") if has_runtime_observability else None,
+            evidence_ref(repo, "docker-compose.yml") if has_runtime_observability else None,
+        ]
+    )
+    feedback_refs = compact(
+        [
+            evidence_ref(repo, "benchmark/reports/performance_evolution_summary.md") if has_feedback_evidence else None,
+        ]
+    )
 
     minimum_architecture_refs = compact(
         [
@@ -117,6 +130,7 @@ def collect(repo: Path, release_id: str, baseline: str) -> dict:
         {"id": "B2", "score": score(architecture_doc and deployment_doc), "evidence": minimum_architecture_refs},
         {"id": "B3", "score": score(has_process_description), "evidence": minimum_architecture_refs},
         {"id": "B4", "score": score(has_ownership_hint), "evidence": minimum_architecture_refs},
+        {"id": "B5", "score": score(has_feedback_evidence, False), "evidence": feedback_refs},
         {"id": "P0", "score": score(architecture_doc), "evidence": minimum_architecture_refs},
         {"id": "P1", "score": score(architecture_doc), "evidence": minimum_architecture_refs},
         {"id": "P2", "score": score(architecture_doc), "evidence": minimum_architecture_refs},
@@ -142,6 +156,7 @@ def collect(repo: Path, release_id: str, baseline: str) -> dict:
         {"id": "P8", "score": score(has_security_notes, has_security_tests), "evidence": security_refs},
         {"id": "P9", "score": score(has_performance, has_performance), "evidence": benchmark_reports[-10:]},
         {"id": "P10", "score": score(has_resilience, False), "evidence": deployment_evidence_refs},
+        {"id": "P11", "score": score(has_runtime_observability, False), "evidence": runtime_refs},
         {"id": "P13", "score": score(has_compatibility_declaration, False), "evidence": compatibility_refs},
     ]
 
@@ -179,6 +194,14 @@ def collect(repo: Path, release_id: str, baseline: str) -> dict:
             "deployment_evidence": {
                 "exists": bool(deployment_evidence_refs),
                 "evidence_refs": deployment_evidence_refs,
+            },
+            "runtime_evidence": {
+                "exists": bool(runtime_refs),
+                "evidence_refs": runtime_refs,
+            },
+            "feedback_evidence": {
+                "exists": bool(feedback_refs),
+                "evidence_refs": feedback_refs,
             },
             "exceptions": [],
         },

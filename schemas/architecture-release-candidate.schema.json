@@ -14,6 +14,8 @@
         "compatibility_evidence",
         "security_evidence",
         "deployment_evidence",
+        "runtime_evidence",
+        "feedback_evidence",
         "exceptions"
       ],
       "properties": {
@@ -77,6 +79,28 @@
           }
         },
         "deployment_evidence": {
+          "type": "object",
+          "required": ["exists"],
+          "properties": {
+            "exists": { "type": "boolean" },
+            "evidence_refs": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "runtime_evidence": {
+          "type": "object",
+          "required": ["exists"],
+          "properties": {
+            "exists": { "type": "boolean" },
+            "evidence_refs": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "feedback_evidence": {
           "type": "object",
           "required": ["exists"],
           "properties": {

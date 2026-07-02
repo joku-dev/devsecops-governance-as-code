@@ -74,6 +74,17 @@ opa eval \
 
 Current expected result: no findings. The target repository has enough interface, schema, test and deployment evidence to pass the initial integration-readiness gate.
 
+Operation readiness:
+
+```bash
+opa eval \
+  --data policies/opa/architecture_operation_readiness.rego \
+  --input generated/demo/ha-cpswms-architecture-release-input.json \
+  'data.architecture.operation_readiness.deny'
+```
+
+Current expected result: findings. Runtime and feedback evidence can be detected, but the operation-readiness markers are not yet verified at score 4.
+
 Release readiness:
 
 ```bash
@@ -96,6 +107,7 @@ Expected finding categories:
 | Security markers | Security notes exist, but stronger verified security evidence is not detected. |
 | Resilience markers | Deployment restart behavior exists, but verified resilience or degraded-mode evidence is not detected. |
 | Release architecture markers | Architecture and deployment evidence exist, but release baseline and compatibility evidence are incomplete. |
+| Operation readiness | Runtime and feedback evidence exist, but observability and feedback-loop maturity are not verified at score 4. |
 
 ## Demo Message
 

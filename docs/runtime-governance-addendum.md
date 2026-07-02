@@ -54,6 +54,7 @@ The first addendum version introduces these structured files:
 | `policies/opa/architecture_release_readiness.rego` | OPA policy for release-readiness checks. |
 | `policies/opa/architecture_readiness.rego` | OPA policy for architecture-readiness checks. |
 | `policies/opa/architecture_integration_readiness.rego` | OPA policy for integration-readiness checks. |
+| `policies/opa/architecture_operation_readiness.rego` | OPA policy for operation-readiness checks. |
 | `policies/example-input.architecture-release-candidate.json` | Example policy input for an architecture release candidate. |
 | `generated/csv/architecture_runtime_traceability.csv` | Generated traceability view from architecture levels to markers, guardrails, gates, evidence and policies. |
 

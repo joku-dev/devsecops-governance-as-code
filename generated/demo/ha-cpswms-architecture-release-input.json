@@ -45,6 +45,13 @@
         ]
       },
       {
+        "id": "B5",
+        "score": 3,
+        "evidence": [
+          "benchmark/reports/performance_evolution_summary.md"
+        ]
+      },
+      {
         "id": "P0",
         "score": 3,
         "evidence": [
@@ -377,6 +384,14 @@
         ]
       },
       {
+        "id": "P11",
+        "score": 3,
+        "evidence": [
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml"
+        ]
+      },
+      {
         "id": "P13",
         "score": 1,
         "evidence": [
@@ -446,6 +461,19 @@
         "query-api/Dockerfile",
         "semantic-enrichment/Dockerfile",
         "world-model-chat/Dockerfile"
+      ]
+    },
+    "runtime_evidence": {
+      "exists": true,
+      "evidence_refs": [
+        "docs/DEPLOYMENT.md",
+        "docker-compose.yml"
+      ]
+    },
+    "feedback_evidence": {
+      "exists": true,
+      "evidence_refs": [
+        "benchmark/reports/performance_evolution_summary.md"
       ]
     },
     "exceptions": []
