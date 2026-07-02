@@ -96,7 +96,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git pull --rebase origin main
+          git pull --rebase --autostash origin main
           python3 scripts/generate_repository_results_index.py
           python3 scripts/generate_architecture_results_index.py
           python3 scripts/generate_status_viewer.py
