@@ -2,27 +2,123 @@
 
 ## Purpose
 
-This demo shows how the governance repository can evaluate architecture runtime governance evidence from a real target repository.
-
-Target repository:
+This document is the architecture-specific companion to the full end-to-end demo runbook:
 
 ```text
-/workspace/ha-CPsWMS
+docs/demo-end-to-end-governance.md
 ```
 
-The demo does not require changing the target repository. The governance repository reads observable signals such as architecture documentation, deployment documentation, Dockerfiles, schemas, tests and benchmark reports, then generates a policy input for architecture release readiness.
+Use this document when the demo audience wants to go deeper into the architecture runtime governance part only.
+
+## Current Demo State
+
+| Field | Value |
+|---|---|
+| Application repository | `joku-dev/ha-CPsWMS` |
+| Application branch | `main` |
+| Architecture governance baseline | `architecture-baseline-l1-v0.1.0` |
+| Solution baseline | `ha-CPsWMS-demo-baseline` |
+| Latest mainline run | `28592256765` |
+| Latest mainline commit | `4a86f0c5b3d7aa1883533fa787530a1f5ff886e7` |
+| Generated | `2026-07-02T13:05:12Z` |
+| Current result | `PASS`, `4/4 gates`, `0 findings` |
+
+Interpretation:
+
+- The architecture checks are demo-ready on mainline.
+- The checks are currently used report-only for the demo.
+- A `PASS` means the current evidence satisfies the released L1 architecture governance checks. It is not a formal production approval.
 
 ## Demo Flow
 
-1. Collect architecture release-readiness input from `ha-CPsWMS`.
-2. Validate the generated JSON against the architecture release candidate schema.
-3. Run the OPA architecture release-readiness policy.
-4. Generate a combined architecture governance report.
-5. Review the governance findings.
+1. Show the source architecture framework document.
+2. Show the machine-readable architecture addendum.
+3. Show the released architecture baseline.
+4. Show the app repository evidence.
+5. Show the GitHub Actions run.
+6. Show the viewer result.
+7. Explain what would create findings.
 
-## Generate Input
+## Source-To-Runtime Mapping
+
+Start with:
+
+```text
+docs/governance/source-documents/SDD_Architecture_Governance_Framework_20260630v2.md
+```
+
+Then show the derived runtime governance artifacts:
+
+```text
+architecture/quality-markers.yaml
+architecture/guardrails.yaml
+architecture/review-gates.yaml
+architecture/arch-l1.yaml
+architecture/arch-l2.yaml
+architecture/arch-l3.yaml
+architecture/arch-gov.yaml
+policies/opa/architecture_readiness.rego
+policies/opa/architecture_integration_readiness.rego
+policies/opa/architecture_operation_readiness.rego
+policies/opa/architecture_release_readiness.rego
+schemas/architecture-release-candidate.schema.json
+```
+
+Why:
+
+- The original framework remains the human governance reference.
+- The YAML, schemas and OPA policies are the machine-readable runtime addendum.
+- The addendum allows CI/CD to evaluate architecture evidence repeatably.
+
+## Released Baseline
+
+Open:
+
+```text
+docs/releases/architecture-baseline-l1-v0.1.0.md
+docs/releases/architecture-baseline-l1-v0.1.0-release-statement.md
+releases/architecture/l1/v0.1.0/baseline-package.md
+releases/architecture/l1/v0.1.0/release-metadata.json
+```
+
+Explain:
+
+- `architecture-baseline-l1-v0.1.0` is the released governance baseline.
+- `ha-CPsWMS-demo-baseline` is the solution/product baseline supplied by the application evidence.
+- The app workflow should report the governance baseline as `architecture-baseline-l1-v0.1.0` and keep the solution baseline inside the collected release input.
+
+## Application Evidence
+
+In the application repository:
 
 ```bash
+cd /workspace/ha-CPsWMS
+find .governance/architecture -maxdepth 2 -type f | sort
+```
+
+Expected evidence areas:
+
+```text
+.governance/architecture/solution-baseline.json
+.governance/architecture/release-compatibility-declaration.json
+.governance/architecture/security-evidence.json
+.governance/architecture/resilience-evidence.json
+.governance/architecture/operation-evidence.json
+.governance/architecture/feedback-evidence.json
+```
+
+Why:
+
+- The app repository owns product evidence.
+- The governance repository owns reusable policy logic.
+- Findings should be resolved by improving evidence or approved exceptions, not by changing policy logic for one application.
+
+## Local Reproduction
+
+Generate architecture release input:
+
+```bash
+cd /workspace/devsecops-governance-as-code
 python3 scripts/collect_architecture_release_input.py \
   --repo /workspace/ha-CPsWMS \
   --output generated/demo/ha-cpswms-architecture-release-input.json \
@@ -30,76 +126,7 @@ python3 scripts/collect_architecture_release_input.py \
   --baseline ha-CPsWMS-demo-baseline
 ```
 
-Generated file:
-
-```text
-generated/demo/ha-cpswms-architecture-release-input.json
-```
-
-## Validate Input Schema
-
-```bash
-python3 - <<'PY'
-from pathlib import Path
-import json
-import jsonschema
-
-schema = json.loads(Path("schemas/architecture-release-candidate.schema.json").read_text())
-data = json.loads(Path("generated/demo/ha-cpswms-architecture-release-input.json").read_text())
-jsonschema.validate(data, schema)
-print("ha-CPsWMS architecture input validates against schema")
-PY
-```
-
-## Run OPA Release Readiness
-
-Architecture readiness:
-
-```bash
-opa eval \
-  --data policies/opa/architecture_readiness.rego \
-  --input generated/demo/ha-cpswms-architecture-release-input.json \
-  'data.architecture.readiness.deny'
-```
-
-Current expected result: no findings. The target repository has enough architecture documentation, component structure and deployment/process evidence to pass the initial architecture-readiness gate.
-
-Integration readiness:
-
-```bash
-opa eval \
-  --data policies/opa/architecture_integration_readiness.rego \
-  --input generated/demo/ha-cpswms-architecture-release-input.json \
-  'data.architecture.integration_readiness.deny'
-```
-
-Current expected result: no findings. The target repository has enough interface, schema, test and deployment evidence to pass the initial integration-readiness gate.
-
-Operation readiness:
-
-```bash
-opa eval \
-  --data policies/opa/architecture_operation_readiness.rego \
-  --input generated/demo/ha-cpswms-architecture-release-input.json \
-  'data.architecture.operation_readiness.deny'
-```
-
-Current expected result: findings. Runtime and feedback evidence can be detected, but the operation-readiness markers are not yet verified at score 4.
-
-Release readiness:
-
-```bash
-opa eval \
-  --data policies/opa/architecture_release_readiness.rego \
-  --input generated/demo/ha-cpswms-architecture-release-input.json \
-  'data.architecture.release_readiness.deny'
-```
-
-## Current Demo Findings
-
-The current `ha-CPsWMS` demo input is expected to pass architecture readiness and integration readiness, then produce release-readiness findings. That is useful for the demo because it shows staged governance: a repository can be good enough to continue architecture and integration work, but not yet ready for governed release.
-
-## Generate Combined Report
+Generate the architecture governance report:
 
 ```bash
 python3 scripts/generate_architecture_governance_report.py \
@@ -108,25 +135,81 @@ python3 scripts/generate_architecture_governance_report.py \
   --output-md generated/demo/ha-cpswms-architecture-governance-report.md
 ```
 
-The Markdown report can be used as GitHub Actions step summary or as a demo artifact. It includes gate status, findings and recommended remediation actions with expected evidence types.
+Expected current gate summary:
 
-Expected finding categories:
+| Gate | Status | Findings |
+|---|---:|---:|
+| Architecture Readiness | `PASS` | `0` |
+| Integration Readiness | `PASS` | `0` |
+| Operation Readiness | `PASS` | `0` |
+| Release Readiness | `PASS` | `0` |
 
-| Area | Why it is flagged |
+## GitHub Actions Result
+
+Current known-good architecture run:
+
+```text
+https://github.com/joku-dev/ha-CPsWMS/actions/runs/28592256765
+```
+
+Expected interpretation:
+
+- The workflow ran on `main`.
+- The result was ingested by the governance repository.
+- The viewer shows this as the latest architecture result for `joku-dev/ha-CPsWMS`.
+
+## Viewer
+
+Open:
+
+```text
+http://localhost:8000/status-viewer.html
+```
+
+Show:
+
+- Latest Architecture Results
+- Runtime Governance
+- Runtime Governance Artifacts
+- Source Lineage Report
+
+Expected current viewer values:
+
+| Viewer value | Expected |
 |---|---|
-| Release compatibility declaration | No explicit approved release compatibility declaration is detected. |
-| Solution baseline | No explicit solution baseline artifact is detected. |
-| Security markers | Security notes exist, but stronger verified security evidence is not detected. |
-| Resilience markers | Deployment restart behavior exists, but verified resilience or degraded-mode evidence is not detected. |
-| Release architecture markers | Architecture and deployment evidence exist, but release baseline and compatibility evidence are incomplete. |
-| Operation readiness | Runtime and feedback evidence exist, but observability and feedback-loop maturity are not verified at score 4. |
+| Repository | `joku-dev/ha-CPsWMS` |
+| Status | `PASS` |
+| Baseline | `architecture-baseline-l1-v0.1.0` |
+| Last Mainline Run | `28592256765` |
+| Summary | `4/4 gates pass`, `0 findings` |
+
+## What Would Produce Findings
+
+Findings are generated by OPA `deny` rules when required evidence is missing or too weak.
+
+Examples:
+
+| Situation | Expected effect |
+|---|---|
+| Missing solution baseline | Release readiness finding |
+| Missing release compatibility declaration | Release readiness finding |
+| Missing runtime evidence | Operation readiness finding |
+| Missing interface or schema evidence | Integration readiness finding |
+| Expired architecture exception | Finding instead of accepted exception |
+
+In report-only mode, these findings are visible in the report, GitHub Actions summary, artifacts and viewer. Blocking behavior is an enforcement choice that can be enabled later without changing the basic evidence model.
 
 ## Demo Message
 
-The governance repository can now show three things:
+The architecture framework has been moved into the same operating model as the DevSecOps controls:
 
-1. Architecture governance concepts from the SDD framework are represented as machine-readable markers, guardrails and levels.
-2. A target repository can be converted into a release-readiness policy input.
-3. OPA can produce concrete, reviewable architecture governance findings.
+1. Human source document.
+2. Machine-readable markers and levels.
+3. OPA policies.
+4. Released baseline.
+5. Application evidence.
+6. GitHub Actions execution.
+7. Governance repository intake.
+8. Viewer status.
 
-This is the bridge from document-based governance to runtime governance as code.
+This is the bridge from document-oriented architecture governance to runtime governance as code.
