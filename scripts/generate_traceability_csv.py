@@ -7,6 +7,7 @@ import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
+MODEL = ROOT / "model"
 OUT = ROOT / "generated" / "xlsx" / "traceability_matrix.csv"
 
 
@@ -17,7 +18,7 @@ def load_yaml(path: Path):
 
 def main() -> int:
     controls = {}
-    for path in sorted((ROOT / "controls").glob("dscb-*.yaml")):
+    for path in sorted((MODEL / "controls").glob("dscb-*.yaml")):
         data = load_yaml(path)
         level = data.get("level")
         for requirement in data.get("requirements", []):
@@ -26,10 +27,24 @@ def main() -> int:
                 "level": level,
             }
 
-    traceability = load_yaml(ROOT / "traceability" / "control-to-platform.yaml")
+    traceability = load_yaml(MODEL / "traceability" / "control-to-platform.yaml")
+    document_catalog = load_yaml(MODEL / "documents" / "governance-documents.yaml")
+    document_traceability = load_yaml(MODEL / "traceability" / "document-to-control.yaml")
+    document_titles = {item["id"]: item["title"] for item in document_catalog.get("documents", [])}
+    control_documents = {control_id: [] for control_id in controls}
+
+    for mapping in document_traceability.get("mappings", []):
+        document_id = mapping["document_id"]
+        target_ids = set(mapping.get("control_ids", []))
+        target_levels = set(mapping.get("control_levels", []))
+        for control_id, control in controls.items():
+            if control_id in target_ids or control["level"] in target_levels:
+                control_documents.setdefault(control_id, []).append(document_id)
+
     rows = []
     for mapping in traceability.get("mappings", []):
         control = controls[mapping["control"]]
+        authority_documents = control_documents.get(control["id"], [])
         rows.append(
             {
                 "control_id": control["id"],
@@ -37,17 +52,13 @@ def main() -> int:
                 "domain": control["domain"],
                 "title": control["title"],
                 "requirement": control["requirement"],
-                "verification_requirement": control.get("verification_requirement", ""),
                 "required_platform_level": mapping["platform_level"],
                 "platform_capabilities": "; ".join(mapping.get("platform_capabilities", [])),
                 "evidence": "; ".join(mapping.get("evidence", [])),
                 "verification_method": control.get("verification", {}).get("method", ""),
                 "verification_frequency": control.get("verification", {}).get("frequency", ""),
-                "automation_type": control.get("automation", {}).get("type", ""),
-                "automation_maturity": control.get("automation", {}).get("maturity", ""),
-                "automation_check_type": control.get("automation", {}).get("check_type", ""),
-                "machine_readable_evidence_required": str(control.get("automation", {}).get("machine_readable_evidence_required", "")).lower(),
-                "automation_rationale": control.get("automation", {}).get("rationale", ""),
+                "authority_documents": "; ".join(authority_documents),
+                "authority_document_titles": "; ".join(document_titles[doc_id] for doc_id in authority_documents),
                 "policy_candidate": str(mapping.get("policy_candidate", False)).lower(),
                 "policy_rule": control.get("policy_as_code", {}).get("rule", ""),
                 "waiver_allowed": str(control.get("waiver", {}).get("allowed", "")).lower(),

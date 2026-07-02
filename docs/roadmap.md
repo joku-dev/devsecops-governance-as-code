@@ -6,7 +6,7 @@ Migrate all 46 Control Baseline requirements into structured YAML. The current r
 
 ## Step 2: Complete Platform Capability Mapping
 
-Extend `platform/platform-capabilities.yaml` until every relevant control requirement has at least one mapped platform capability.
+Extend `model/platform/platform-capabilities.yaml` until every relevant control requirement has at least one mapped platform capability.
 
 ## Step 3: Review Verification Requirements
 
@@ -23,6 +23,7 @@ Create scripts to generate:
 - Control-to-platform traceability matrix
 - Policy/Directive-to-Control traceability matrix
 - Control-to-evidence matrix
+- Document-to-control authority matrix
 - Policy candidate matrix
 - Open gap report
 

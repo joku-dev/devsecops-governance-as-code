@@ -12,15 +12,22 @@ useful for the pilot than pure schema validation:
 """
 
 from pathlib import Path
+import json
+import shutil
+import subprocess
 import sys
+
 import yaml
+
+try:
+    from jsonschema import Draft202012Validator
+except ModuleNotFoundError:
+    Draft202012Validator = None
 
 
 ROOT = Path(__file__).resolve().parents[1]
+MODEL = ROOT / "model"
 EXPECTED_COUNTS = {"L1": 16, "L2": 14, "L3": 11, "GOV": 5}
-VALID_AUTOMATION_TYPES = {"blocking_gate", "warning_gate", "evidence_check", "review_check"}
-VALID_AUTOMATION_MATURITY = {"immediate", "tool_integration_required", "future"}
-VALID_CHECK_TYPES = {"presence", "linkage", "threshold", "configuration", "approval", "review", "integrity", "provenance"}
 
 
 def load_yaml(path: Path):
@@ -28,25 +35,84 @@ def load_yaml(path: Path):
         return yaml.safe_load(handle)
 
 
+def load_json(path: Path):
+    with path.open("r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def validate_schema(errors, schema_path: Path, instance_path: Path):
+    if Draft202012Validator is None:
+        print(
+            "Warning: jsonschema is not installed; skipping schema validation for "
+            f"{instance_path.relative_to(ROOT)}",
+            file=sys.stderr,
+        )
+        return
+    validator = Draft202012Validator(load_json(schema_path))
+    instance = load_yaml(instance_path)
+    for issue in validator.iter_errors(instance):
+        location = " -> ".join(str(part) for part in issue.absolute_path) or "<root>"
+        errors.append(f"Schema validation failed for {instance_path.relative_to(ROOT)} at {location}: {issue.message}")
+
+
+def run_opa_check(errors):
+    opa = shutil.which("opa")
+    if not opa:
+        errors.append("OPA CLI not found on PATH.")
+        return
+
+    result = subprocess.run(
+        [opa, "check", str(ROOT / "policies" / "opa")],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        details = result.stderr.strip() or result.stdout.strip() or "unknown OPA error"
+        errors.append(f"OPA policy validation failed: {details}")
+
+
+def validate_waiver_authority(errors, waiver, waiver_authorities, source_label: str):
+    risk = waiver.get("risk_classification")
+    expected_authority = waiver_authorities.get(risk, {}).get("approval_authority")
+    actual_authority = waiver.get("approval_authority")
+    if expected_authority and actual_authority and expected_authority != actual_authority:
+        errors.append(
+            f"Waiver authority mismatch in {source_label} for risk {risk}: "
+            f"expected '{expected_authority}', got '{actual_authority}'"
+        )
+
+
 def main() -> int:
     errors = []
     controls = []
-    governance_requirements = []
+    capabilities = load_yaml(MODEL / "platform" / "platform-capabilities.yaml")
+    evidence_catalog = load_yaml(MODEL / "evidence" / "evidence-types.yaml")
+    governance_documents = load_yaml(MODEL / "documents" / "governance-documents.yaml")
+    document_traceability = load_yaml(MODEL / "traceability" / "document-to-control.yaml")
+    waiver_authorities = load_yaml(MODEL / "waivers" / "waiver-authorities.yaml").get("authorities", {})
+    governance_run_input_example = load_json(ROOT / "docs" / "governance-run-input.example.json")
+    waiver_example = load_yaml(MODEL / "waivers" / "waiver-example.yaml")
 
-    for path in sorted((ROOT / "controls").glob("dscb-*.yaml")):
+    validate_schema(errors, ROOT / "schemas" / "control.schema.json", MODEL / "controls" / "dscb-l1.yaml")
+    validate_schema(errors, ROOT / "schemas" / "control.schema.json", MODEL / "controls" / "dscb-l2.yaml")
+    validate_schema(errors, ROOT / "schemas" / "control.schema.json", MODEL / "controls" / "dscb-l3.yaml")
+    validate_schema(errors, ROOT / "schemas" / "control.schema.json", MODEL / "controls" / "dscb-gov.yaml")
+    validate_schema(errors, ROOT / "schemas" / "control-coverage.schema.json", MODEL / "controls" / "control-coverage.yaml")
+    validate_schema(errors, ROOT / "schemas" / "governance-document-catalog.schema.json", MODEL / "documents" / "governance-documents.yaml")
+    validate_schema(errors, ROOT / "schemas" / "document-control-traceability.schema.json", MODEL / "traceability" / "document-to-control.yaml")
+    validate_schema(errors, ROOT / "schemas" / "governance-document-rendering.schema.json", MODEL / "documents" / "governance-document-rendering.yaml")
+    validate_schema(errors, ROOT / "schemas" / "governance-compliance-result.schema.json", ROOT / "docs" / "governance-compliance-result.example.json")
+    validate_schema(errors, ROOT / "schemas" / "governance-run-input.schema.json", ROOT / "docs" / "governance-run-input.example.json")
+    validate_schema(errors, ROOT / "schemas" / "waiver.schema.json", MODEL / "waivers" / "waiver-example.yaml")
+
+    for path in sorted((MODEL / "controls").glob("dscb-*.yaml")):
         data = load_yaml(path)
         level = data.get("level")
         for requirement in data.get("requirements", []):
             requirement["_source_file"] = str(path.relative_to(ROOT))
             requirement["_level_file"] = level
             controls.append(requirement)
-
-    for path in sorted((ROOT / "governance").glob("*-requirements.yaml")):
-        data = load_yaml(path)
-        for requirement in data.get("requirements", []):
-            requirement["_source_document"] = data.get("source_document")
-            requirement["_source_file"] = str(path.relative_to(ROOT))
-            governance_requirements.append(requirement)
 
     ids = [item["id"] for item in controls]
     duplicates = sorted({item for item in ids if ids.count(item) > 1})
@@ -58,9 +124,14 @@ def main() -> int:
         if actual != expected:
             errors.append(f"Unexpected {level} count: expected {expected}, got {actual}")
 
-    traceability = load_yaml(ROOT / "traceability" / "control-to-platform.yaml")
+    traceability = load_yaml(MODEL / "traceability" / "control-to-platform.yaml")
+    control_coverage = load_yaml(MODEL / "controls" / "control-coverage.yaml")
     traced = {item["control"] for item in traceability.get("mappings", [])}
     known = set(ids)
+    coverage_controls = {item["control_id"] for item in control_coverage.get("coverage", [])}
+    known_capabilities = {item["id"] for item in capabilities.get("capabilities", [])}
+    known_evidence = {item["id"] for item in evidence_catalog.get("evidence_types", [])}
+    known_documents = {item["id"] for item in governance_documents.get("documents", [])}
 
     missing_traceability = sorted(known - traced)
     if missing_traceability:
@@ -70,71 +141,58 @@ def main() -> int:
     if unknown_traceability:
         errors.append(f"Traceability references unknown controls: {unknown_traceability}")
 
-    stages_path = ROOT / "pipeline-baseline" / "stages.yaml"
-    placement_path = ROOT / "pipeline-baseline" / "control-placement.yaml"
-    if stages_path.exists() and placement_path.exists():
-        stages = load_yaml(stages_path)
-        valid_stages = {item["id"] for item in stages.get("stages", [])}
-        placements = load_yaml(placement_path)
-        placed = {item["control"] for item in placements.get("control_placements", [])}
-        missing_placement = sorted(known - placed)
-        if missing_placement:
-            errors.append(f"Controls missing pipeline placement: {missing_placement}")
-        unknown_placement = sorted(placed - known)
-        if unknown_placement:
-            errors.append(f"Pipeline placement references unknown controls: {unknown_placement}")
-        invalid_stages = sorted({item.get("stage") for item in placements.get("control_placements", []) if item.get("stage") not in valid_stages})
-        if invalid_stages:
-            errors.append(f"Pipeline placement uses invalid stages: {invalid_stages}")
-    else:
-        errors.append("Pipeline baseline stages or control placement file missing")
+    missing_coverage = sorted(known - coverage_controls)
+    if missing_coverage:
+        errors.append(f"Controls missing coverage status: {missing_coverage}")
+
+    unknown_coverage = sorted(coverage_controls - known)
+    if unknown_coverage:
+        errors.append(f"Coverage status references unknown controls: {unknown_coverage}")
+
+    coverage_ids = [item["control_id"] for item in control_coverage.get("coverage", [])]
+    duplicate_coverage = sorted({item for item in coverage_ids if coverage_ids.count(item) > 1})
+    if duplicate_coverage:
+        errors.append(f"Duplicate coverage status entries: {duplicate_coverage}")
 
     for item in controls:
-        if not item.get("verification_requirement"):
-            errors.append(f"Verification requirement missing for {item['id']}")
-
-        automation = item.get("automation")
-        if not automation:
-            errors.append(f"Automation classification missing for {item['id']}")
-            continue
-        if automation.get("type") not in VALID_AUTOMATION_TYPES:
-            errors.append(f"Invalid automation type for {item['id']}: {automation.get('type')}")
-        if automation.get("maturity") not in VALID_AUTOMATION_MATURITY:
-            errors.append(f"Invalid automation maturity for {item['id']}: {automation.get('maturity')}")
-        if automation.get("check_type") not in VALID_CHECK_TYPES:
-            errors.append(f"Invalid automation check_type for {item['id']}: {automation.get('check_type')}")
-        if not isinstance(automation.get("machine_readable_evidence_required"), bool):
-            errors.append(f"Invalid machine_readable_evidence_required for {item['id']}: {automation.get('machine_readable_evidence_required')}")
-        if not automation.get("rationale"):
-            errors.append(f"Automation rationale missing for {item['id']}")
-
         policy = item.get("policy_as_code", {})
         rule = policy.get("rule")
         if policy.get("candidate") and rule and not (ROOT / rule).exists():
             errors.append(f"Policy rule missing for {item['id']}: {rule}")
+        for capability in item.get("platform_capabilities", []):
+            if capability not in known_capabilities:
+                errors.append(f"Unknown platform capability on {item['id']}: {capability}")
+        for evidence in item.get("evidence", []):
+            if evidence not in known_evidence:
+                errors.append(f"Unknown evidence type on {item['id']}: {evidence}")
 
-    governance_ids = [item["id"] for item in governance_requirements]
-    governance_duplicates = sorted({item for item in governance_ids if governance_ids.count(item) > 1})
-    if governance_duplicates:
-        errors.append(f"Duplicate governance requirement IDs: {governance_duplicates}")
+    for document in governance_documents.get("documents", []):
+        document_path = ROOT / document["repository_path"]
+        if not document_path.exists():
+            errors.append(f"Governance document path missing for {document['id']}: {document['repository_path']}")
 
-    for item in governance_requirements:
-        if not item.get("verification_requirement"):
-            errors.append(f"Governance verification requirement missing for {item['id']}")
-        automation = item.get("automation")
-        if not automation:
-            errors.append(f"Governance automation classification missing for {item['id']}")
-            continue
-        if automation.get("type") not in VALID_AUTOMATION_TYPES:
-            errors.append(f"Invalid governance automation type for {item['id']}: {automation.get('type')}")
-        if automation.get("maturity") not in VALID_AUTOMATION_MATURITY:
-            errors.append(f"Invalid governance automation maturity for {item['id']}: {automation.get('maturity')}")
-        if automation.get("check_type") not in VALID_CHECK_TYPES:
-            errors.append(f"Invalid governance automation check_type for {item['id']}: {automation.get('check_type')}")
-        linked = item.get("derived_controls", item.get("implemented_by", []))
-        unknown = sorted(set(linked) - known)
-        if unknown:
-            errors.append(f"Governance requirement {item['id']} links unknown controls: {unknown}")
+    for mapping in traceability.get("mappings", []):
+        control_id = mapping["control"]
+        for capability in mapping.get("platform_capabilities", []):
+            if capability not in known_capabilities:
+                errors.append(f"Unknown traceability platform capability on {control_id}: {capability}")
+        for evidence in mapping.get("evidence", []):
+            if evidence not in known_evidence:
+                errors.append(f"Unknown traceability evidence on {control_id}: {evidence}")
+
+    for mapping in document_traceability.get("mappings", []):
+        document_id = mapping["document_id"]
+        if document_id not in known_documents:
+            errors.append(f"Document traceability references unknown document: {document_id}")
+        for control_id in mapping.get("control_ids", []):
+            if control_id not in known:
+                errors.append(f"Document traceability references unknown control: {control_id}")
+
+    validate_waiver_authority(errors, waiver_example, waiver_authorities, "model/waivers/waiver-example.yaml")
+    for index, waiver in enumerate(governance_run_input_example.get("waivers", [])):
+        validate_waiver_authority(errors, waiver, waiver_authorities, f"docs/governance-run-input.example.json waiver[{index}]")
+
+    run_opa_check(errors)
 
     if errors:
         print("Validation failed:")
@@ -147,19 +205,7 @@ def main() -> int:
     for level in ["L1", "L2", "L3", "GOV"]:
         print(f"- {level}: {sum(1 for item in controls if item.get('_level_file') == level)}")
     print(f"- traceability mappings: {len(traced)}")
-    if (ROOT / "pipeline-baseline" / "control-placement.yaml").exists():
-        placements = load_yaml(ROOT / "pipeline-baseline" / "control-placement.yaml")
-        print(f"- pipeline placements: {len(placements.get('control_placements', []))}")
     print(f"- policy candidates: {sum(1 for item in controls if item.get('policy_as_code', {}).get('candidate'))}")
-    print(f"- governance requirements: {len(governance_requirements)}")
-    print(f"- policy document requirements: {sum(1 for item in governance_requirements if item.get('_source_document') == 'DevSecOps Policy')}")
-    print(f"- directive document requirements: {sum(1 for item in governance_requirements if item.get('_source_document') == 'DevSecOps Directive')}")
-    for automation_type in sorted(VALID_AUTOMATION_TYPES):
-        print(f"- automation {automation_type}: {sum(1 for item in controls if item.get('automation', {}).get('type') == automation_type)}")
-    for maturity in sorted(VALID_AUTOMATION_MATURITY):
-        print(f"- maturity {maturity}: {sum(1 for item in controls if item.get('automation', {}).get('maturity') == maturity)}")
-    for check_type in sorted(VALID_CHECK_TYPES):
-        print(f"- check_type {check_type}: {sum(1 for item in controls if item.get('automation', {}).get('check_type') == check_type)}")
     return 0
 
 

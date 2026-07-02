@@ -1,0 +1,58 @@
+site_name: DevSecOps Governance as Code
+nav:
+  - Home: index.md
+  - Official Entrypoints: official-entrypoints.md
+  - Role-Based Paths:
+      - Overview: paths/index.md
+      - Beginner Path: paths/beginner-path.md
+      - Operator Path: paths/operator-path.md
+      - Auditor Path: paths/auditor-path.md
+      - Maintainer Path: paths/maintainer-path.md
+  - Governance:
+      - Management Readout: governance/MANAGEMENT_READOUT.md
+      - Document Hierarchy: governance/governance-document-hierarchy.md
+      - Source Of Truth: governance/source-of-truth.md
+      - Operating Model: governance/operating-model.md
+      - Policy: governance/devsecops-policy.md
+      - Directive: governance/devsecops-directive.md
+      - Policy/Directive/Baseline Explained: governance/policy-directive-baseline-verification-and-governance-as-code-explained.md
+  - Platform:
+      - Control Baseline and Platform Architecture: platform/control-baseline-and-platform-architecture-relationship-explained.md
+  - Controls:
+      - Overview: controls/index.md
+  - Pipeline Baseline:
+      - Overview: pipeline-baseline/index.md
+  - Onboarding:
+      - Application Repo Onboarding: onboarding/application-repo-onboarding.md
+      - Central Governance Baseline Guide: onboarding/how-other-repositories-use-the-central-governance-baseline.md
+      - Governance Repo Usage by Other Repos: onboarding/how-other-repos-use-this-governance-repo.md
+  - Operations:
+      - How To Use This Repo: operations/how-to-use-this-repo.md
+      - Beginner Guide: operations/beginner-step-by-step-operations-guide.md
+      - Updating Baseline Input Documents: operations/how-to-update-baseline-input-documents.md
+      - Governance Evidence Contract: operations/governance-evidence-contract.md
+      - Governance Evidence Schema Versioning: operations/governance-evidence-schema-versioning.md
+      - Waiver Management Standard: operations/waiver-management-standard.md
+      - Governance Result Intake And Viewer Usage: operations/governance-result-intake-and-viewer-usage.md
+      - Current Governance Platform State: operations/current-governance-platform-state.md
+      - Governance Results Storage Model: operations/governance-results-storage-model.md
+      - MkDocs And GitHub Pages Step By Step: operations/mkdocs-and-github-pages-step-by-step.md
+      - Enforcement Options: operations/operational-governance-enforcement-options.md
+      - Target Structure Plan: operations/repository-target-structure-and-migration-plan.md
+      - ha-CPsWMS Validation Status: operations/ha-cpswms-governance-validation-status.md
+      - Migration Status: migration-status.md
+      - Roadmap: roadmap.md
+  - Releases:
+      - Overview: releases/index.md
+      - Release And Migration Model: releases/release-and-migration-model.md
+      - Release Publication Checklist: releases/release-publication-checklist.md
+      - L1 Baseline v1.0.0: releases/l1-baseline-v1.0.0.md
+      - L1 Baseline v1.0.0 Release Statement: releases/l1-baseline-v1.0.0-release-statement.md
+      - L1 Baseline v1.1.0: releases/l1-baseline-v1.1.0.md
+      - L1 Baseline v1.1.0 Release Statement: releases/l1-baseline-v1.1.0-release-statement.md
+      - L1 Baseline v1.1.1: releases/l1-baseline-v1.1.1.md
+      - L1 Baseline v1.1.1 Release Statement: releases/l1-baseline-v1.1.1-release-statement.md
+      - L1 Baseline v1.1.2: releases/l1-baseline-v1.1.2.md
+      - L1 Baseline v1.1.2 Release Statement: releases/l1-baseline-v1.1.2-release-statement.md
+      - L1 Baseline v1.1.3: releases/l1-baseline-v1.1.3.md
+      - L1 Baseline v1.1.3 Release Statement: releases/l1-baseline-v1.1.3-release-statement.md

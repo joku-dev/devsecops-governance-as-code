@@ -1,0 +1,25 @@
+documents:
+  - id: DEVSECOPS-POL-001
+    type: policy
+    title: DevSecOps Policy - Software Defined Defence (SDD)
+    status: draft
+    repository_path: docs/governance/devsecops-policy.md
+    purpose: Defines mandatory organizational intent, scope, accountability, and foundational principles for DevSecOps in the Software Defined Defence context.
+  - id: DEVSECOPS-DIR-001
+    type: directive
+    title: DevSecOps Directive
+    status: draft
+    repository_path: docs/governance/devsecops-directive.md
+    purpose: Defines binding implementation rules for governance structure, platform ownership, adoption, control baseline management, waiver handling, and compliance reporting.
+  - id: DSCB-STD-001
+    type: standard
+    title: DevSecOps Control Baseline Standard
+    status: imported
+    repository_path: docs/governance/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx
+    purpose: Normative control baseline for L1, L2, L3, and governance requirements.
+  - id: PRA-STD-001
+    type: standard
+    title: DevSecOps Platform Reference Architecture Standard
+    status: imported
+    repository_path: docs/governance/source-documents/DevSecOps-Platform-Reference-Architecture-Standard_aligned_with_Control_Baseline.docx
+    purpose: Normative platform capability model and platform-level support expectations.
