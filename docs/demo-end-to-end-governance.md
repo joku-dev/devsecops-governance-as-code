@@ -275,7 +275,9 @@ In `joku-dev/ha-CPsWMS`, show these GitHub Actions workflows:
 Explain:
 
 - The app workflows execute in the application context.
-- They publish artifacts and send repository-dispatch intake events to the governance repository.
+- They publish artifacts in the application repository's GitHub Actions run.
+- On pull requests, the governance checks run and produce artifacts, but they do not update the central governance viewer.
+- On `push` to `main`, the relevant workflows send repository-dispatch intake events to the governance repository.
 - DevSecOps can be manually switched between report-only and blocking behavior.
 - Architecture is currently used as report-only for the live demo unless the workflow is configured to fail on findings.
 
@@ -306,6 +308,7 @@ Alternative:
 
 Interpretation:
 
+- Pull-request runs are useful for validating a proposed change before merge.
 - Manual reruns are useful for testing.
 - A merged mainline change gives the strongest demo story because it refreshes the repository's official status.
 
@@ -335,8 +338,9 @@ Explain:
 
 Expected interpretation:
 
-- If the workflow succeeds and the viewer updates, the downstream-to-governance loop is working.
-- If the app workflow succeeds but the viewer does not update, inspect the governance intake workflow.
+- If a pull-request workflow succeeds, the proposed change has report evidence in the app repository, but the central viewer is not expected to update.
+- If a `main` push workflow succeeds and the viewer updates, the downstream-to-governance loop is working.
+- If a `main` push workflow succeeds but the viewer does not update, inspect the governance intake workflow.
 
 ## Demo Step 7: Observe Governance Intake
 

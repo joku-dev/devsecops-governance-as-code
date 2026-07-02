@@ -88,6 +88,36 @@ Do not use it for:
 - partial local tests without a real pipeline run
 - duplicate snapshots without new information
 
+## Pull Request Versus Mainline Behavior
+
+For `joku-dev/ha-CPsWMS`, governance checks and central result intake are intentionally separated.
+
+| Event in app repository | Governance checks run in app repo? | Governance repo checked out as tooling? | Artifacts created in app run? | Central governance intake triggered? | Viewer latest mainline updated? |
+|---|---:|---:|---:|---:|---:|
+| `pull_request` | yes | yes | yes | no | no |
+| `workflow_dispatch` | yes | yes | yes | no by default | no |
+| `push` to `main` | yes | yes | yes | yes | yes |
+
+Meaning:
+
+- Pull requests validate the proposed application change and publish evidence in the application repository's GitHub Actions run.
+- Pull requests do not automatically update this governance repository's status indexes or viewer.
+- A merge or direct push to `main` is the official operational signal.
+- Mainline push runs trigger `repository_dispatch` intake into this governance repository when `GH_RESULT_INTAKE_TOKEN` is configured.
+- The viewer's latest status is therefore the official mainline state, not the latest PR state.
+
+This distinction prevents temporary pull-request findings, experimental branch checks, or diagnostic reruns from replacing the official mainline status.
+
+Current `ha-CPsWMS` behavior:
+
+| Workflow | Runs on PR | Runs on push to `main` | Triggers central intake |
+|---|---:|---:|---:|
+| `Architecture Runtime Governance` | yes | yes | only on `push` to `main` |
+| `DevSecOps Baseline` | yes | yes | only on `push` to `main` |
+| `DevSecOps Governance` | yes | yes | no central intake in the current workflow |
+
+If PR-level central visibility is needed later, add explicit PR result intake and keep it marked as `branch` or `pull_request` history so it does not replace `latest_result`.
+
 ## Part 2: Viewer Usage
 
 ## Mainline Versus Branch Results
