@@ -63,6 +63,17 @@ opa eval \
 
 Current expected result: no findings. The target repository has enough architecture documentation, component structure and deployment/process evidence to pass the initial architecture-readiness gate.
 
+Integration readiness:
+
+```bash
+opa eval \
+  --data policies/opa/architecture_integration_readiness.rego \
+  --input generated/demo/ha-cpswms-architecture-release-input.json \
+  'data.architecture.integration_readiness.deny'
+```
+
+Current expected result: no findings. The target repository has enough interface, schema, test and deployment evidence to pass the initial integration-readiness gate.
+
 Release readiness:
 
 ```bash
@@ -74,7 +85,7 @@ opa eval \
 
 ## Current Demo Findings
 
-The current `ha-CPsWMS` demo input is expected to pass architecture readiness and produce release-readiness findings. That is useful for the demo because it shows staged governance: a repository can be good enough to continue architecture work, but not yet ready for governed release.
+The current `ha-CPsWMS` demo input is expected to pass architecture readiness and integration readiness, then produce release-readiness findings. That is useful for the demo because it shows staged governance: a repository can be good enough to continue architecture and integration work, but not yet ready for governed release.
 
 Expected finding categories:
 

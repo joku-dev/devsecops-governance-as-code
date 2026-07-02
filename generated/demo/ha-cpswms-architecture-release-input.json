@@ -117,6 +117,96 @@
         ]
       },
       {
+        "id": "E3",
+        "score": 4,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "semantic-enrichment/schemas/anomaly_detection_schema.json",
+          "semantic-enrichment/schemas/automation_intent_schema.json",
+          "semantic-enrichment/schemas/capability_mapping_schema.json",
+          "semantic-enrichment/schemas/causal_dependency_schema.json",
+          "semantic-enrichment/schemas/dependency_reasoning_schema.json",
+          "semantic-enrichment/schemas/enrichment_schema.json",
+          "semantic-enrichment/schemas/failure_impact_schema.json",
+          "semantic-enrichment/schemas/fault_analysis_schema.json",
+          "semantic-enrichment/schemas/recommended_actions_schema.json",
+          "semantic-enrichment/schemas/room_inference_schema.json",
+          "semantic-enrichment/schemas/semantic_descriptions_schema.json",
+          "semantic-enrichment/schemas/semantic_roles_schema.json",
+          "semantic-enrichment/schemas/simulation_readiness_schema.json",
+          "semantic-enrichment/schemas/temporal_event_model_schema.json",
+          "world-model-chat/schemas/cypher_query_schema.json"
+        ]
+      },
+      {
+        "id": "E5",
+        "score": 4,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "semantic-enrichment/schemas/anomaly_detection_schema.json",
+          "semantic-enrichment/schemas/automation_intent_schema.json",
+          "semantic-enrichment/schemas/capability_mapping_schema.json",
+          "semantic-enrichment/schemas/causal_dependency_schema.json",
+          "semantic-enrichment/schemas/dependency_reasoning_schema.json",
+          "semantic-enrichment/schemas/enrichment_schema.json",
+          "semantic-enrichment/schemas/failure_impact_schema.json",
+          "semantic-enrichment/schemas/fault_analysis_schema.json",
+          "semantic-enrichment/schemas/recommended_actions_schema.json",
+          "semantic-enrichment/schemas/room_inference_schema.json",
+          "semantic-enrichment/schemas/semantic_descriptions_schema.json",
+          "semantic-enrichment/schemas/semantic_roles_schema.json",
+          "semantic-enrichment/schemas/simulation_readiness_schema.json",
+          "semantic-enrichment/schemas/temporal_event_model_schema.json",
+          "world-model-chat/schemas/cypher_query_schema.json"
+        ]
+      },
+      {
+        "id": "S4",
+        "score": 4,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "semantic-enrichment/schemas/anomaly_detection_schema.json",
+          "semantic-enrichment/schemas/automation_intent_schema.json",
+          "semantic-enrichment/schemas/capability_mapping_schema.json",
+          "semantic-enrichment/schemas/causal_dependency_schema.json",
+          "semantic-enrichment/schemas/dependency_reasoning_schema.json",
+          "semantic-enrichment/schemas/enrichment_schema.json",
+          "semantic-enrichment/schemas/failure_impact_schema.json",
+          "semantic-enrichment/schemas/fault_analysis_schema.json",
+          "semantic-enrichment/schemas/recommended_actions_schema.json",
+          "semantic-enrichment/schemas/room_inference_schema.json",
+          "semantic-enrichment/schemas/semantic_descriptions_schema.json",
+          "semantic-enrichment/schemas/semantic_roles_schema.json",
+          "semantic-enrichment/schemas/simulation_readiness_schema.json",
+          "semantic-enrichment/schemas/temporal_event_model_schema.json",
+          "world-model-chat/schemas/cypher_query_schema.json"
+        ]
+      },
+      {
+        "id": "S7",
+        "score": 4,
+        "evidence": [
+          "tests/semantic_core/test_causal.py",
+          "tests/semantic_core/test_confidence_model.py",
+          "tests/semantic_core/test_identity_models.py",
+          "tests/semantic_core/test_identity_resolver.py",
+          "tests/semantic_core/test_normalizer.py",
+          "tests/semantic_core/test_ontology.py",
+          "tests/semantic_core/test_resolution_pipeline.py",
+          "tests/semantic_core/test_temporal.py",
+          "tests/test_benchmark_framework.py"
+        ]
+      },
+      {
+        "id": "P4",
+        "score": 3,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "README.md",
+          "docs/DEPLOYMENT.md"
+        ]
+      },
+      {
         "id": "E6",
         "score": 3,
         "evidence": [
