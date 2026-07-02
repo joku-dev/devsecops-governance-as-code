@@ -1,72 +1,167 @@
-# End-to-End Governance Demo
+# End-to-End Governance Demo Runbook
 
 ## Purpose
 
-This demo shows how the governance repository can be used to evaluate a real application repository against two governance domains:
+This runbook describes the live demo for the governance-as-code repository with the
+`joku-dev/ha-CPsWMS` application repository.
 
-1. Architecture Runtime Governance
-2. DevSecOps Release Governance
+The demo shows the full loop:
 
-The target application repository is:
+1. Source governance documents are kept in the governance repository.
+2. Machine-readable controls, architecture markers, policies and baselines are derived from those documents.
+3. The application repository provides evidence and runs governance workflows.
+4. The governance repository receives the downstream results through intake workflows.
+5. The status viewer shows DevSecOps, architecture and source-lineage results together.
 
-```text
-/workspace/ha-CPsWMS
-```
-
-The governance repository is:
-
-```text
-/workspace/devsecops-governance-as-code
-```
+The target state for the demo is report-only. Findings should be visible and explainable, but the demo should not block delivery unless a workflow is explicitly configured to do so.
 
 ## Demo Message
 
-The demo story is:
+Governance is no longer only a document or a review meeting. The governance repository keeps the source documents, translates them into versioned machine-readable baselines, evaluates application evidence, and publishes human-readable and machine-readable results.
 
-> Governance is no longer only a document or review meeting. The application repository provides machine-readable evidence. The governance repository collects that evidence, evaluates policy-as-code rules, and generates reports that show whether the repository is ready from an architecture and DevSecOps perspective.
+For the demo, the important point is traceability:
 
-The important point is not only that the final result is green. The important point is that findings can be traced back to missing or immature evidence, and that adding approved evidence changes the governance result.
+- A source document explains the governance intent.
+- A model file or OPA policy implements part of that intent.
+- A released baseline freezes a reviewed version of that implementation.
+- An application workflow runs against that baseline.
+- The viewer shows the result and links back to the generated artifacts.
 
-## Repositories And Branches
+## Repositories
 
-Use these branches for the demo:
-
-| Repository | Branch | Purpose |
+| Repository | Role | Demo branch |
 |---|---|---|
-| `devsecops-governance-as-code` | `codex/runtime-governance-addendum` | Contains policies, collectors, schemas, reports and templates. |
-| `ha-CPsWMS` | `codex/architecture-governance-workflow` | Contains GitHub Actions workflows and application evidence. |
+| `joku-dev/devsecops-governance-as-code` | Governance source, models, policies, baselines, intake and viewer | `main` |
+| `joku-dev/ha-CPsWMS` | Application evidence and downstream GitHub Actions workflows | `main` |
+
+Local paths used during development:
+
+```text
+/workspace/devsecops-governance-as-code
+/workspace/ha-CPsWMS
+```
+
+## Current Demo Baselines
+
+| Domain | Baseline | Release package |
+|---|---|---|
+| DevSecOps | `l1-baseline-v1.1.3` | `releases/l1/v1.1.3/` |
+| Architecture | `architecture-baseline-l1-v0.1.0` | `releases/architecture/l1/v0.1.0/` |
+| Application solution | `ha-CPsWMS-demo-baseline` | Supplied by `ha-CPsWMS` architecture evidence |
 
 Why this matters:
 
-- The governance repository is the reusable governance engine.
-- The application repository remains the source of product evidence.
-- The app repo does not copy policy logic; it references the governance repo.
+- DevSecOps and architecture are not evaluated from an unversioned working directory during the demo.
+- The app repository can pin a released governance baseline.
+- The viewer can show which baseline produced a result.
 
-## Prerequisites
+## Current Mainline Results
 
-Required local tools:
+These values are the known-good state after the current end-to-end test.
+
+| Domain | Repository | Status | Baseline | Last mainline run | Commit | Generated |
+|---|---|---|---|---|---|---|
+| DevSecOps | `joku-dev/ha-CPsWMS` | `pass` | `l1-baseline-v1.1.3` | `28592257991` | `4a86f0c5b3d7aa1883533fa787530a1f5ff886e7` | `2026-07-02T13:05:30Z` |
+| Architecture | `joku-dev/ha-CPsWMS` | `PASS` | `architecture-baseline-l1-v0.1.0` | `28592256765` | `4a86f0c5b3d7aa1883533fa787530a1f5ff886e7` | `2026-07-02T13:05:12Z` |
+
+Expected summaries:
+
+| Domain | Expected result |
+|---|---|
+| DevSecOps | `16/16` controls pass, `0` fail |
+| Architecture | `4/4` gates pass, `0` findings |
+
+Interpretation:
+
+- The current `ha-CPsWMS` mainline is demo-ready for both governance domains.
+- The result does not mean formal production approval. It means the repository passes the currently released report-only governance checks.
+
+## Source Documents
+
+The source documents live under:
+
+```text
+docs/governance/source-documents/
+```
+
+Current source documents:
+
+| Source document | Governance domain |
+|---|---|
+| `DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx` | DevSecOps control baseline |
+| `DevSecOps-Platform-Reference-Architecture-Standard_aligned_with_Control_Baseline.docx` | DevSecOps platform reference architecture |
+| `DevSecOps_Directive_Version_0_draft1.docx` | DevSecOps directive |
+| `DevSecOps_Policy_Version_1_draft3.docx` | DevSecOps policy |
+| `SDD_Architecture_Governance_Framework_20260630v2.md` | Architecture runtime governance |
+
+Why this matters:
+
+- The demo can start with the documents instead of the tooling.
+- The governance repository can show which runtime artifacts came from which source.
+- The architecture source document was not originally written as runtime governance, but the repo now contains a machine-readable addendum derived from it.
+
+## Source Lineage
+
+Open the generated source-lineage report:
+
+```text
+generated/reports/source-lineage-report.md
+generated/reports/source-lineage-report.json
+```
+
+Current expected summary:
+
+| Metric | Value |
+|---|---:|
+| Source documents | `5` |
+| Source documents with lineage entries | `5` |
+| Derived artifact links | `69` |
+| Missing derived artifacts | `0` |
+
+Interpretation:
+
+- Every current source document has at least one lineage entry.
+- The derived artifact links cover governance models, OPA policies, release packages, schemas, generated reports, indexes and the viewer.
+- `0` missing derived artifacts means the lineage catalog currently points to files that exist in the repository.
+
+This is the first demo proof point: the repository can explain how document-based governance flows into machine-readable governance assets.
+
+## Local Prerequisites
+
+Required tools:
 
 ```bash
 python3
-opa
 git
 ```
 
-Optional but useful:
+Useful tools:
 
 ```bash
 gh
+opa
 ```
 
-Check the tools:
+Check GitHub authentication if you want to inspect or rerun GitHub Actions from the terminal:
 
 ```bash
-python3 --version
-opa version
-git --version
+gh auth status
 ```
 
-## Step 1: Validate The Governance Repository
+The local viewer can be served from the generated viewer directory:
+
+```bash
+cd /workspace/devsecops-governance-as-code/generated/viewer
+python3 -m http.server 8000
+```
+
+Then open:
+
+```text
+http://localhost:8000/status-viewer.html
+```
+
+## Validate The Governance Repository
 
 Run this in the governance repository:
 
@@ -74,375 +169,355 @@ Run this in the governance repository:
 cd /workspace/devsecops-governance-as-code
 python3 scripts/validate_runtime_governance.py
 python3 scripts/validate_governance_repo.py
+python3 -m unittest discover -s tests
 ```
 
 Why:
 
-- `validate_runtime_governance.py` checks the architecture runtime governance model, schemas, marker catalogue, generated reports and OPA policies.
-- `validate_governance_repo.py` checks the existing DevSecOps control baseline, traceability, pipeline placement and governance requirements.
+- `validate_runtime_governance.py` checks the architecture runtime governance model, architecture schemas, marker catalog, generated reports and OPA readiness examples.
+- `validate_governance_repo.py` checks DevSecOps controls, traceability, pipeline placement, governance requirements and source-document lineage.
+- The unit tests cover the scripts that generate reports, indexes, release packages and viewer data.
 
 Expected result:
 
 ```text
 Runtime governance validation passed
 Validation passed
+OK
 ```
 
 Interpretation:
 
-- The governance repository itself is internally consistent.
-- This does not validate the application repository yet.
+- The governance repository is internally consistent.
+- This step validates the governance engine and generated metadata, not a new application run.
 
-## Step 2: Inspect Application Evidence
+## Demo Step 1: Show The Source-To-Artifact Chain
 
-Run this in the application repository:
+Open:
+
+```text
+docs/governance/source-documents/
+generated/reports/source-lineage-report.md
+```
+
+Explain:
+
+- The source documents are the human governance input.
+- The lineage report is the machine-readable accountability layer.
+- For architecture, the `SDD_Architecture_Governance_Framework_20260630v2.md` source document leads to architecture levels, quality markers, guardrails, OPA policies, schemas, release package and viewer output.
+- For DevSecOps, the source documents lead to control models, policy-as-code, release baselines, generated reports and viewer output.
+
+Expected interpretation:
+
+- If a stakeholder asks "where did this check come from?", the demo can point to the source document and the derived artifacts.
+- If a derived artifact is missing, validation should fail and the lineage report should show it.
+
+## Demo Step 2: Show Released Baselines
+
+Open the release packages:
+
+```text
+releases/l1/v1.1.3/baseline-package.md
+releases/l1/v1.1.3/release-metadata.json
+releases/architecture/l1/v0.1.0/baseline-package.md
+releases/architecture/l1/v0.1.0/release-metadata.json
+```
+
+Explain:
+
+- A baseline freezes a reviewed governance state.
+- Application repositories should consume baseline tags or pinned commits, not an arbitrary local working tree.
+- DevSecOps and architecture now use the same operating model: source documents, machine-readable model, OPA checks, released baseline, downstream execution, result intake and viewer status.
+
+Expected interpretation:
+
+- `l1-baseline-v1.1.3` is the current DevSecOps L1 demo baseline.
+- `architecture-baseline-l1-v0.1.0` is the current architecture L1 demo baseline.
+- The architecture baseline is intentionally early, but it is now versioned and demo-ready.
+
+## Demo Step 3: Show Application Evidence
+
+In the application repository, inspect governance evidence:
 
 ```bash
 cd /workspace/ha-CPsWMS
 find .governance -maxdepth 4 -type f | sort
 ```
 
-Expected architecture evidence:
+Expected evidence areas:
 
 ```text
-.governance/architecture/feedback-evidence.json
-.governance/architecture/operation-evidence.json
-.governance/architecture/release-compatibility-declaration.json
-.governance/architecture/resilience-evidence.json
-.governance/architecture/security-evidence.json
-.governance/architecture/solution-baseline.json
-```
-
-Expected DevSecOps evidence:
-
-```text
-.governance/devsecops/release-evidence.json
+.governance/architecture/
+.governance/devsecops/
 ```
 
 Why:
 
-- These files are the machine-readable evidence supplied by the application repository.
-- They represent baseline, compatibility, security, resilience, runtime, feedback and DevSecOps release evidence.
+- The application repository owns its evidence.
+- The governance repository owns the reusable rules, schemas, collectors and viewer.
+- This split allows the same governance repo to evaluate multiple application repositories later.
 
 Interpretation:
 
-- If these files are missing, the governance checks still run, but they should produce findings.
-- If the files exist and are approved, the collector can treat them as verified evidence.
+- Missing or incomplete evidence should become report findings.
+- Approved evidence can turn findings into passing gates without changing the policy code.
 
-## Step 3: Generate Architecture Governance Input
+## Demo Step 4: Show The App Workflows
 
-Run this in the governance repository:
+In `joku-dev/ha-CPsWMS`, show these GitHub Actions workflows:
 
-```bash
-cd /workspace/devsecops-governance-as-code
-python3 scripts/collect_architecture_release_input.py \
-  --repo /workspace/ha-CPsWMS \
-  --output generated/demo/ha-cpswms-architecture-release-input.json \
-  --release-id ha-CPsWMS-demo \
-  --baseline ha-CPsWMS-demo-baseline
-```
+| Workflow | Purpose | Expected demo behavior |
+|---|---|---|
+| `DevSecOps Baseline` | Runs the released DevSecOps baseline | Passes on mainline |
+| `DevSecOps Governance` | Runs DevSecOps governance with selectable mode | Report-only by default for demo |
+| `Architecture Runtime Governance` | Runs architecture governance against `architecture-baseline-l1-v0.1.0` | Passes on mainline |
+
+Explain:
+
+- The app workflows execute in the application context.
+- They publish artifacts and send repository-dispatch intake events to the governance repository.
+- DevSecOps can be manually switched between report-only and blocking behavior.
+- Architecture is currently used as report-only for the live demo unless the workflow is configured to fail on findings.
+
+Expected interpretation:
+
+- The demo is safe to run live because findings can be reported without blocking.
+- The same mechanics can later be hardened into mandatory gates.
+
+## Demo Step 5: Trigger A Live Mainline Refresh
+
+Preferred demo flow:
+
+1. Create a small pull request in `ha-CPsWMS`.
+2. Merge it to `main`.
+3. Watch the app repository workflows run on `main`.
+4. Watch the governance repository intake workflows update the indexes and viewer.
 
 Why:
 
-- This converts observable repository evidence into a policy input JSON.
-- It reads application documents, schemas, deployment files, benchmark reports and `.governance/architecture/*.json`.
+- Mainline status is the most useful demo artifact.
+- A mainline run proves that the status does not only come from local scripts.
+- The viewer can show the latest real repository result.
 
-Generated output:
+Alternative:
 
-```text
-generated/demo/ha-cpswms-architecture-release-input.json
-```
+1. Manually rerun the app workflows.
+2. Use this only when a mainline change is not practical.
 
 Interpretation:
 
-- This file is the machine-readable architecture governance input.
-- It contains marker assessments, evidence links, baseline information, compatibility declaration, runtime evidence and exceptions.
+- Manual reruns are useful for testing.
+- A merged mainline change gives the strongest demo story because it refreshes the repository's official status.
 
-## Step 4: Generate Architecture Governance Report
+## Demo Step 6: Observe Downstream App Runs
 
-Run:
+Current known-good app runs:
 
-```bash
-python3 scripts/generate_architecture_governance_report.py \
-  --input generated/demo/ha-cpswms-architecture-release-input.json \
-  --output-json generated/demo/ha-cpswms-architecture-governance-report.json \
-  --output-md generated/demo/ha-cpswms-architecture-governance-report.md
+| Workflow | Run | Expected status |
+|---|---:|---|
+| Architecture Runtime Governance | `28592256765` | Success |
+| DevSecOps Baseline | `28592257991` | Success |
+| DevSecOps Governance | `28592256817` | Success |
+| CI | `28592256856` | Success |
+
+Open the run URLs:
+
+```text
+https://github.com/joku-dev/ha-CPsWMS/actions/runs/28592256765
+https://github.com/joku-dev/ha-CPsWMS/actions/runs/28592257991
 ```
 
-Why:
+Explain:
 
-- This evaluates all architecture OPA gates.
-- It generates both machine-readable JSON and human-readable Markdown.
+- The app repo runs the checks and creates evidence artifacts.
+- The architecture result is associated with `architecture-baseline-l1-v0.1.0`.
+- The DevSecOps result is associated with `l1-baseline-v1.1.3`.
 
-The architecture gates are:
+Expected interpretation:
 
-| Gate | Meaning |
+- If the workflow succeeds and the viewer updates, the downstream-to-governance loop is working.
+- If the app workflow succeeds but the viewer does not update, inspect the governance intake workflow.
+
+## Demo Step 7: Observe Governance Intake
+
+In the governance repository, inspect the intake workflows:
+
+```text
+.github/workflows/intake-governance-result.yml
+.github/workflows/intake-architecture-result.yml
+```
+
+Explain:
+
+- The app repository sends result metadata and artifacts to the governance repository.
+- The governance repository updates:
+
+```text
+status/repository-results-index.json
+status/architecture-results-index.json
+generated/viewer/status-viewer.html
+```
+
+- The intake workflows regenerate indexes and the viewer before committing.
+- The intake workflows use rebase with autostash so near-simultaneous DevSecOps and architecture intakes can both land.
+
+Expected interpretation:
+
+- Intake commits are not manual demo cosmetics; they are part of the governance feedback loop.
+- A race between two intake workflows should be recoverable by rerunning the failed intake.
+
+## Demo Step 8: Interpret The Viewer
+
+Open:
+
+```text
+http://localhost:8000/status-viewer.html
+```
+
+Show these sections:
+
+| Viewer section | What to explain |
 |---|---|
-| Architecture Readiness | Is minimum architecture evidence present and owned? |
-| Integration Readiness | Are interfaces, data, tests and deployment evidence sufficient? |
-| Operation Readiness | Is runtime and feedback evidence mature enough? |
-| Release Readiness | Is architecture evidence sufficient for governed release? |
+| Mainline governance status | Current mainline status for `joku-dev/ha-CPsWMS` |
+| DevSecOps result details | Baseline, run ID, commit, generated timestamp and control summary |
+| Architecture result details | Baseline, run ID, commit, generated timestamp and gate summary |
+| Artifacts & Machine Data | Links to indexes, reports, lineage and generated machine-readable files |
 
-View the report:
+Expected interpretation:
 
-```bash
-sed -n '1,160p' generated/demo/ha-cpswms-architecture-governance-report.md
-```
+- DevSecOps should show `pass` for baseline `l1-baseline-v1.1.3`.
+- Architecture should show `PASS` for baseline `architecture-baseline-l1-v0.1.0`.
+- The viewer is the demo cockpit: it makes the current governance state visible without opening every raw JSON file.
 
-Expected result:
+## Report-Only Versus Blocking
 
-```text
-Architecture Readiness | PASS | 0
-Integration Readiness  | PASS | 0
-Operation Readiness    | PASS | 0
-Release Readiness      | PASS | 0
-```
+The demo should run report-only unless a blocking gate is intentionally demonstrated.
 
-Interpretation:
-
-- The application repository currently satisfies the demo architecture governance gates.
-- This means approved architecture evidence is present and accepted by the current policies.
-- It does not mean formal certification; it means the current governance-as-code checks pass.
-
-## Step 5: Generate DevSecOps Governance Input
-
-Run:
-
-```bash
-python3 scripts/collect_devsecops_release_input.py \
-  --repo /workspace/ha-CPsWMS \
-  --output generated/demo/ha-cpswms-devsecops-release-input.json \
-  --release-id ha-CPsWMS-demo
-```
+| Domain | Report-only behavior | Blocking behavior |
+|---|---|---|
+| DevSecOps | Findings are reported in summaries, artifacts and viewer data | Manual workflow mode can fail on findings |
+| Architecture | Findings are reported in summaries, artifacts and viewer data | Can be hardened by enabling fail-on-findings in the consuming workflow |
 
 Why:
 
-- This converts application DevSecOps evidence into a policy input JSON.
-- It reads `.governance/devsecops/release-evidence.json`, CI workflow evidence, dependency files and deployment/IaC signals.
-
-Generated output:
-
-```text
-generated/demo/ha-cpswms-devsecops-release-input.json
-```
+- Report-only mode is the safest way to demonstrate rollout.
+- Blocking mode is useful after teams agree on evidence quality, exceptions and remediation paths.
+- Both modes should use the same evidence and policy logic so the governance result remains comparable.
 
 Interpretation:
 
-- This file is the machine-readable DevSecOps governance input.
-- It contains branch/review posture, SBOM evidence, vulnerability scan evidence, artifact integrity evidence, dependency source approval, IaC presence and pipeline security gate state.
-
-## Step 6: Generate DevSecOps Governance Report
-
-Run:
-
-```bash
-python3 scripts/generate_devsecops_governance_report.py \
-  --input generated/demo/ha-cpswms-devsecops-release-input.json \
-  --output-json generated/demo/ha-cpswms-devsecops-governance-report.json \
-  --output-md generated/demo/ha-cpswms-devsecops-governance-report.md
-```
-
-View the report:
-
-```bash
-sed -n '1,120p' generated/demo/ha-cpswms-devsecops-governance-report.md
-```
-
-Expected result:
-
-```text
-DevSecOps Release Readiness | PASS | 0
-```
-
-Interpretation:
-
-- The app repository currently satisfies the demo DevSecOps release governance gate.
-- The result depends on approved DevSecOps evidence in `.governance/devsecops/release-evidence.json`.
-- The local command is report-only by default. Add `--fail-on-findings` when a manual run should behave as a blocking gate.
-
-## Step 7: Generate Combined End-To-End Report
-
-Run:
-
-```bash
-python3 scripts/generate_end_to_end_governance_report.py \
-  --architecture-json generated/demo/ha-cpswms-architecture-governance-report.json \
-  --devsecops-json generated/demo/ha-cpswms-devsecops-governance-report.json \
-  --output-json generated/demo/ha-cpswms-end-to-end-governance-report.json \
-  --output-md generated/demo/ha-cpswms-end-to-end-governance-report.md
-```
-
-View the report:
-
-```bash
-sed -n '1,180p' generated/demo/ha-cpswms-end-to-end-governance-report.md
-```
-
-Expected result:
-
-```text
-Architecture Runtime Governance | PASS | 0
-DevSecOps Governance            | PASS | 0
-Overall                         | PASS | 0
-```
-
-Interpretation:
-
-- The demo target passes both governance domains.
-- The result is supported by machine-readable evidence in the application repository.
-- The governance repository produces repeatable evidence, policy output and reports.
-
-## Step 8: Run GitHub Actions In The App Repo
-
-In GitHub, open the `ha-CPsWMS` repository on branch:
-
-```text
-codex/architecture-governance-workflow
-```
-
-Run these workflows manually:
-
-```text
-Architecture Runtime Governance
-DevSecOps Governance
-```
-
-Why:
-
-- This shows that the same checks work in CI, not only locally.
-- The application repository checks out the governance repository as tooling.
-
-Expected GitHub Actions outputs:
-
-| Workflow | Expected step summary |
-|---|---|
-| Architecture Runtime Governance | Architecture gates all PASS |
-| DevSecOps Governance | DevSecOps Release Readiness PASS |
-
-Expected artifacts:
-
-```text
-architecture-governance-evidence
-devsecops-governance-evidence
-```
-
-Interpretation:
-
-- The application repository can run governance checks without copying the governance policy logic.
-- Governance logic remains centrally maintained in the governance repository.
-- Evidence remains close to the application repository.
-
-## Before / After Demo Option
-
-To show the value more clearly, demonstrate two states:
-
-### Before
-
-Temporarily remove or rename:
-
-```text
-/workspace/ha-CPsWMS/.governance/architecture
-/workspace/ha-CPsWMS/.governance/devsecops
-```
-
-Then rerun the collectors and reports.
-
-Expected result:
-
-- Architecture has operation/release findings.
-- DevSecOps has release findings.
-
-### After
-
-Restore the `.governance` folders and rerun the collectors and reports.
-
-Expected result:
-
-- Architecture PASS
-- DevSecOps PASS
-- Overall PASS
-
-Interpretation:
-
-- Governance findings are not arbitrary.
-- Findings disappear when the application repository provides approved, machine-readable evidence.
-- This demonstrates a practical path from document-based governance to runtime governance as code.
+- A report-only failure is still a real governance signal.
+- Blocking is an enforcement choice, not a different governance model.
 
 ## What The Demo Proves
 
 The demo proves that:
 
-1. Governance requirements can be represented as structured data and OPA policies.
-2. Application repositories can provide evidence in a repeatable format.
-3. Collectors can translate repository state into policy input.
-4. OPA can evaluate architecture and DevSecOps readiness.
-5. Reports can be generated for humans and machines.
-6. GitHub Actions can run the same process in CI.
+1. Governance source documents can be linked to machine-readable artifacts.
+2. DevSecOps controls and architecture topics can use the same baseline mechanics.
+3. Application repositories can provide evidence without copying policy logic.
+4. GitHub Actions can run governance checks on the app repository.
+5. Governance repository intake can collect downstream results.
+6. A viewer can show mainline governance status for both DevSecOps and architecture.
 
 ## What The Demo Does Not Yet Prove
 
 The demo does not yet prove:
 
 - formal production approval
-- complete security certification
-- full compliance with every enterprise process
-- real SBOM/vulnerability tool integration
-- real artifact signing infrastructure
+- complete enterprise security certification
+- fully automated semantic extraction from every source document
+- live SBOM, vulnerability scanner or artifact-signing integrations for every application
 - live operational monitoring integration
+- mature architecture L2/L3 rollout
 
-These are future hardening steps. The demo shows the operating model and the technical governance loop.
+Interpretation:
+
+- The demo is a working governance loop.
+- Some evidence is still demo evidence or manually curated governance evidence.
+- The next maturity step is tool integration and broader application coverage.
 
 ## Troubleshooting
 
-### OPA Not Found
+### Viewer Is Stale
 
-Install OPA or use the GitHub Actions workflow, which installs OPA automatically.
+Regenerate it:
 
-### Schema Validation Fails
-
-Check that evidence files follow:
-
-```text
-schemas/app-architecture-evidence.schema.json
-schemas/app-devsecops-evidence.schema.json
-schemas/architecture-release-candidate.schema.json
+```bash
+cd /workspace/devsecops-governance-as-code
+python3 scripts/generate_status_viewer.py
 ```
 
-### Architecture Findings Remain
-
-Open:
+Then refresh:
 
 ```text
-generated/demo/ha-cpswms-architecture-governance-report.md
+http://localhost:8000/status-viewer.html
 ```
 
-Read the finding and recommended action. Then update the relevant file under:
+### Source Lineage Looks Wrong
+
+Regenerate and validate:
+
+```bash
+python3 scripts/generate_source_lineage_report.py
+python3 scripts/validate_governance_repo.py
+```
+
+Expected result:
 
 ```text
-/workspace/ha-CPsWMS/.governance/architecture/
+Validation passed
 ```
 
-### DevSecOps Findings Remain
+### Architecture Findings Appear
 
-Open:
+Inspect the architecture report artifact from the app workflow or the local generated report.
+
+Typical causes:
+
+- missing `.governance/architecture/*.json` evidence
+- evidence does not match the schema
+- baseline or compatibility declaration is missing
+- runtime or feedback evidence is below the expected marker level
+
+Interpretation:
+
+- The finding should describe the missing evidence and the expected remediation.
+- In report-only mode, the workflow can still complete while making the issue visible.
+
+### DevSecOps Findings Appear
+
+Inspect the DevSecOps report artifact from the app workflow.
+
+Typical causes:
+
+- missing `.governance/devsecops/release-evidence.json`
+- missing CI, dependency or artifact evidence
+- policy candidate configured as blocking in the selected mode
+
+Interpretation:
+
+- Report-only mode should publish the finding.
+- Blocking mode should fail the workflow when the finding is configured as enforceable.
+
+### Intake Does Not Update The Viewer
+
+Check the governance repository Actions tab for:
 
 ```text
-generated/demo/ha-cpswms-devsecops-governance-report.md
+Intake Governance Result
+Intake Architecture Result
 ```
 
-Then update:
+If two intake runs overlap, rerun the failed one. The workflows use `git pull --rebase --autostash origin main`, so a rerun should usually recover from a concurrent update.
 
-```text
-/workspace/ha-CPsWMS/.governance/devsecops/release-evidence.json
+### GitHub Authentication Fails
+
+Use:
+
+```bash
+gh auth login
+gh auth status
 ```
 
-### GitHub Actions Cannot Checkout Governance Repo
-
-Check the workflow uses the correct governance repository and branch:
-
-```text
-joku-dev/devsecops-governance-as-code
-codex/runtime-governance-addendum
-```
-
-For production usage, replace the branch with a version tag or pinned commit SHA.
+The demo also needs the application repository to have a token or secret that can dispatch result intake to the governance repository.
