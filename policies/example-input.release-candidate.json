@@ -24,6 +24,10 @@
     }
   },
   "pipeline": {
+    "security_gates": {
+      "enforced": true
+    },
+    "security_thresholds_exceeded": false,
     "external_direct_downloads_detected": false
   },
   "dependencies": [

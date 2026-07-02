@@ -22,6 +22,7 @@ The repository separates four concerns:
 | `schemas` | JSON Schemas for validating structured governance data. |
 | `generated` | Generated DOCX, PDF, HTML, and XLSX outputs. |
 | `releases` | Versioned baseline packages for controlled publication. |
+| `architecture` | Runtime governance addendum data derived from the SDD Architecture Governance Framework. |
 
 ## Target Model
 
@@ -49,6 +50,25 @@ The first implementation should focus on:
 - Platform Reference Architecture levels 1 to 3
 - Traceability from control requirement to platform capability and expected evidence
 - Initial automated checks for branch protection, SBOM, vulnerability evidence, artifact integrity, dependency source control, IaC, and waiver validity
+
+## Runtime Governance Addendum
+
+The repository now includes a first runtime governance addendum for the SDD Architecture Governance Framework:
+
+- `docs/runtime-governance-addendum.md`
+- `architecture/quality-markers.yaml`
+- `architecture/guardrails.yaml`
+- `architecture/review-gates.yaml`
+- `architecture/arch-l1.yaml`
+- `architecture/arch-l2.yaml`
+- `architecture/arch-l3.yaml`
+- `architecture/arch-gov.yaml`
+- `policies/opa/architecture_readiness.rego`
+- `policies/opa/architecture_integration_readiness.rego`
+- `policies/opa/architecture_operation_readiness.rego`
+- `policies/opa/architecture_release_readiness.rego`
+
+The addendum keeps the original framework document as the normative reference and adds machine-readable marker, guardrail, gate and policy artifacts for executable governance.
 
 ## Recommended Workflow
 
@@ -253,6 +273,86 @@ Run the local demonstration environment:
 
 ```bash
 python scripts/run_demo.py
+```
+
+Generate the architecture runtime traceability CSV:
+
+```bash
+python3 scripts/generate_architecture_traceability_csv.py
+```
+
+Validate the runtime governance addendum:
+
+```bash
+python3 scripts/validate_runtime_governance.py
+```
+
+Generate a demo architecture release-readiness input for `ha-CPsWMS`:
+
+```bash
+python3 scripts/collect_architecture_release_input.py \
+  --repo /workspace/ha-CPsWMS \
+  --output generated/demo/ha-cpswms-architecture-release-input.json \
+  --release-id ha-CPsWMS-demo \
+  --baseline ha-CPsWMS-demo-baseline
+```
+
+Generate a demo architecture governance report:
+
+```bash
+python3 scripts/generate_architecture_governance_report.py \
+  --input generated/demo/ha-cpswms-architecture-release-input.json \
+  --output-json generated/demo/ha-cpswms-architecture-governance-report.json \
+  --output-md generated/demo/ha-cpswms-architecture-governance-report.md
+```
+
+Generate a demo DevSecOps governance report:
+
+```bash
+python3 scripts/collect_devsecops_release_input.py \
+  --repo /workspace/ha-CPsWMS \
+  --output generated/demo/ha-cpswms-devsecops-release-input.json \
+  --release-id ha-CPsWMS-demo
+
+python3 scripts/generate_devsecops_governance_report.py \
+  --input generated/demo/ha-cpswms-devsecops-release-input.json \
+  --output-json generated/demo/ha-cpswms-devsecops-governance-report.json \
+  --output-md generated/demo/ha-cpswms-devsecops-governance-report.md
+```
+
+Generate the combined end-to-end demo report:
+
+```bash
+python3 scripts/generate_end_to_end_governance_report.py \
+  --architecture-json generated/demo/ha-cpswms-architecture-governance-report.json \
+  --devsecops-json generated/demo/ha-cpswms-devsecops-governance-report.json \
+  --output-json generated/demo/ha-cpswms-end-to-end-governance-report.json \
+  --output-md generated/demo/ha-cpswms-end-to-end-governance-report.md
+```
+
+The detailed live demo runbook is:
+
+```text
+docs/demo-end-to-end-governance.md
+```
+
+The reusable GitHub Actions template for application repositories is:
+
+```text
+pipeline-baseline/templates/github-actions/architecture-governance.yml
+```
+
+For the minimal copy-paste app-repo workflow and onboarding guide, see:
+
+```text
+pipeline-baseline/templates/github-actions/app-repo-architecture-governance.yml
+pipeline-baseline/templates/github-actions/ADOPTION.md
+```
+
+Optional app-repo evidence templates are available in:
+
+```text
+pipeline-baseline/templates/app-architecture-evidence/
 ```
 
 ## Important Principle
