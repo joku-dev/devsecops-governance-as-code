@@ -113,6 +113,19 @@ def validate_opa_policy(errors: list[str]) -> None:
     if value:
         errors.append(f"Example architecture release candidate failed policy: {value}")
 
+    readiness_command = [
+        "opa",
+        "eval",
+        "--data",
+        str(ROOT / "policies" / "opa" / "architecture_readiness.rego"),
+        "--input",
+        str(ROOT / "policies" / "example-input.architecture-release-candidate.json"),
+        "data.architecture.readiness.deny",
+    ]
+    readiness_result = subprocess.run(readiness_command, capture_output=True, text=True, check=False)
+    if readiness_result.returncode != 0:
+        errors.append(f"OPA architecture-readiness evaluation failed: {readiness_result.stderr.strip() or readiness_result.stdout.strip()}")
+
 
 def validate_generated_traceability(errors: list[str]) -> None:
     command = [sys.executable, str(ROOT / "scripts" / "generate_architecture_traceability_csv.py")]

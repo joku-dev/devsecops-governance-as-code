@@ -52,6 +52,19 @@ PY
 
 ## Run OPA Release Readiness
 
+Architecture readiness:
+
+```bash
+opa eval \
+  --data policies/opa/architecture_readiness.rego \
+  --input generated/demo/ha-cpswms-architecture-release-input.json \
+  'data.architecture.readiness.deny'
+```
+
+Current expected result: no findings. The target repository has enough architecture documentation, component structure and deployment/process evidence to pass the initial architecture-readiness gate.
+
+Release readiness:
+
 ```bash
 opa eval \
   --data policies/opa/architecture_release_readiness.rego \
@@ -61,7 +74,7 @@ opa eval \
 
 ## Current Demo Findings
 
-The current `ha-CPsWMS` demo input is expected to produce release-readiness findings. That is useful for the demo because it shows that runtime governance does not merely collect documents; it turns evidence gaps into actionable policy output.
+The current `ha-CPsWMS` demo input is expected to pass architecture readiness and produce release-readiness findings. That is useful for the demo because it shows staged governance: a repository can be good enough to continue architecture work, but not yet ready for governed release.
 
 Expected finding categories:
 

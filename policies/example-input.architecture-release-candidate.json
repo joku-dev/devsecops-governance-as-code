@@ -2,6 +2,18 @@
   "release_candidate": true,
   "architecture": {
     "marker_assessments": [
+      { "id": "B1", "score": 3 },
+      { "id": "B2", "score": 3 },
+      { "id": "B3", "score": 3 },
+      { "id": "B4", "score": 3 },
+      { "id": "P0", "score": 3 },
+      { "id": "P1", "score": 3 },
+      { "id": "P2", "score": 3 },
+      { "id": "P3", "score": 3 },
+      { "id": "P7", "score": 3 },
+      { "id": "S0", "score": 3 },
+      { "id": "S1", "score": 3 },
+      { "id": "S2", "score": 3 },
       { "id": "E6", "score": 4 },
       { "id": "E7", "score": 4 },
       { "id": "E8", "score": 4 },

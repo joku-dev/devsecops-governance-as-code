@@ -9,6 +9,114 @@
   "architecture": {
     "marker_assessments": [
       {
+        "id": "B1",
+        "score": 3,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "README.md",
+          "docs/DEPLOYMENT.md"
+        ]
+      },
+      {
+        "id": "B2",
+        "score": 3,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "README.md",
+          "docs/DEPLOYMENT.md"
+        ]
+      },
+      {
+        "id": "B3",
+        "score": 3,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "README.md",
+          "docs/DEPLOYMENT.md"
+        ]
+      },
+      {
+        "id": "B4",
+        "score": 3,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "README.md",
+          "docs/DEPLOYMENT.md"
+        ]
+      },
+      {
+        "id": "P0",
+        "score": 3,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "README.md",
+          "docs/DEPLOYMENT.md"
+        ]
+      },
+      {
+        "id": "P1",
+        "score": 3,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "README.md",
+          "docs/DEPLOYMENT.md"
+        ]
+      },
+      {
+        "id": "P2",
+        "score": 3,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "README.md",
+          "docs/DEPLOYMENT.md"
+        ]
+      },
+      {
+        "id": "P3",
+        "score": 3,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "README.md",
+          "docs/DEPLOYMENT.md"
+        ]
+      },
+      {
+        "id": "P7",
+        "score": 3,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "README.md",
+          "docs/DEPLOYMENT.md"
+        ]
+      },
+      {
+        "id": "S0",
+        "score": 3,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "README.md",
+          "docs/DEPLOYMENT.md"
+        ]
+      },
+      {
+        "id": "S1",
+        "score": 3,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "README.md",
+          "docs/DEPLOYMENT.md"
+        ]
+      },
+      {
+        "id": "S2",
+        "score": 3,
+        "evidence": [
+          "docs/ARCHITECTURE.md",
+          "README.md",
+          "docs/DEPLOYMENT.md"
+        ]
+      },
+      {
         "id": "E6",
         "score": 3,
         "evidence": [

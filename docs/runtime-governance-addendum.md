@@ -52,6 +52,7 @@ The first addendum version introduces these structured files:
 | `schemas/architecture-release-candidate.schema.json` | JSON Schema for architecture release candidate policy input. |
 | `schemas/architecture-exception.schema.json` | JSON Schema for reusable architecture exception records. |
 | `policies/opa/architecture_release_readiness.rego` | OPA policy for release-readiness checks. |
+| `policies/opa/architecture_readiness.rego` | OPA policy for architecture-readiness checks. |
 | `policies/example-input.architecture-release-candidate.json` | Example policy input for an architecture release candidate. |
 | `generated/csv/architecture_runtime_traceability.csv` | Generated traceability view from architecture levels to markers, guardrails, gates, evidence and policies. |
 

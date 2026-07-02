@@ -101,7 +101,30 @@ def collect(repo: Path, release_id: str, baseline: str) -> dict:
         ]
     )
 
+    minimum_architecture_refs = compact(
+        [
+            evidence_ref(repo, "docs/ARCHITECTURE.md"),
+            evidence_ref(repo, "README.md"),
+            evidence_ref(repo, "docs/DEPLOYMENT.md"),
+        ]
+    )
+    has_component_description = architecture_doc and all(component in architecture_text for component in ["neo4j", "ha-sync", "semantic-enrichment", "query-api"])
+    has_process_description = deployment_doc and compose_file
+    has_ownership_hint = any(keyword in architecture_text for keyword in ["verantwortung", "responsibility", "owner"])
+
     marker_assessments = [
+        {"id": "B1", "score": score(architecture_doc), "evidence": minimum_architecture_refs},
+        {"id": "B2", "score": score(architecture_doc and deployment_doc), "evidence": minimum_architecture_refs},
+        {"id": "B3", "score": score(has_process_description), "evidence": minimum_architecture_refs},
+        {"id": "B4", "score": score(has_ownership_hint), "evidence": minimum_architecture_refs},
+        {"id": "P0", "score": score(architecture_doc), "evidence": minimum_architecture_refs},
+        {"id": "P1", "score": score(architecture_doc), "evidence": minimum_architecture_refs},
+        {"id": "P2", "score": score(architecture_doc), "evidence": minimum_architecture_refs},
+        {"id": "P3", "score": score(has_component_description), "evidence": minimum_architecture_refs},
+        {"id": "P7", "score": score("designentscheidungen" in architecture_text or "decision" in architecture_text), "evidence": minimum_architecture_refs},
+        {"id": "S0", "score": score(architecture_doc), "evidence": minimum_architecture_refs},
+        {"id": "S1", "score": score(architecture_doc and has_component_description), "evidence": minimum_architecture_refs},
+        {"id": "S2", "score": score(has_component_description), "evidence": minimum_architecture_refs},
         {"id": "E6", "score": score(has_security_notes, has_security_tests), "evidence": security_refs},
         {"id": "E7", "score": score(bool(tests or requirements), bool(tests)), "evidence": tests[:20] + requirements},
         {"id": "E8", "score": score(compose_file or bool(dockerfiles), deployment_doc), "evidence": deployment_evidence_refs},
