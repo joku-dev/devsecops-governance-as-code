@@ -369,6 +369,103 @@ def build_control_coverage_cards(control_coverage: dict | None) -> str:
     return "".join(html)
 
 
+def status_tone(status: str) -> str:
+    normalized = (status or "unknown").lower()
+    if normalized in {"pass", "success", "operational"}:
+        return "ok"
+    if normalized in {"findings", "warn", "warning", "report-only"}:
+        return "warn"
+    if normalized in {"fail", "failure", "error", "disabled"}:
+        return "danger"
+    return "plain"
+
+
+def build_runtime_governance_cards(architecture_report: dict | None, devsecops_report: dict | None, end_to_end_report: dict | None) -> str:
+    if not architecture_report and not devsecops_report and not end_to_end_report:
+        return ""
+
+    architecture_summary = (architecture_report or {}).get("summary", {})
+    devsecops_summary = (devsecops_report or {}).get("summary", {})
+    end_to_end_summary = (end_to_end_report or {}).get("summary", {})
+    overall_status = (end_to_end_report or {}).get("overall_status", "unknown")
+    target = (end_to_end_report or {}).get("target") or (architecture_report or {}).get("target") or (devsecops_report or {}).get("target", {})
+
+    cards = [
+        (
+            "End-to-End Governance",
+            overall_status.upper(),
+            f"Findings: {end_to_end_summary.get('finding_count', 'unknown')}",
+            status_tone(overall_status),
+        ),
+        (
+            "Architecture Gates",
+            f"{architecture_summary.get('passed', 0)}/{architecture_summary.get('gate_count', 0)}",
+            f"Findings: {architecture_summary.get('finding_count', 0)}",
+            "ok" if architecture_summary.get("finding_count", 0) == 0 else "warn",
+        ),
+        (
+            "DevSecOps Release",
+            (devsecops_report or {}).get("gate", {}).get("status", "unknown").upper(),
+            f"Findings: {devsecops_summary.get('finding_count', 0)}",
+            status_tone((devsecops_report or {}).get("gate", {}).get("status", "unknown")),
+        ),
+        (
+            "Demo Target",
+            short_sha(target.get("commit", "unknown")),
+            target.get("release_id", "unknown"),
+            "plain",
+        ),
+    ]
+
+    html = []
+    for title, value, detail, tone in cards:
+        html.append(
+            "<section class=\"card\">"
+            f"<h3>{escape(title)}</h3>"
+            f"<div class=\"value\">{escape(str(value))}</div>"
+            f"<p>{badge(str(detail), tone)}</p>"
+            "</section>"
+        )
+    return "".join(html)
+
+
+def build_architecture_gate_rows(architecture_report: dict | None) -> list[list[str]]:
+    rows = []
+    if not architecture_report:
+        return rows
+    for gate in architecture_report.get("gates", []):
+        findings = gate.get("findings", [])
+        status = gate.get("status", "unknown")
+        rows.append(
+            [
+                escape(gate.get("title", gate.get("id", "unknown"))),
+                badge(status.upper(), status_tone(status)),
+                str(len(findings)),
+                "No findings." if not findings else "<br>".join(escape(finding) for finding in findings),
+            ]
+        )
+    return rows
+
+
+def build_runtime_domain_rows(end_to_end_report: dict | None) -> list[list[str]]:
+    rows = []
+    domain_labels = {
+        "architecture": "Architecture",
+        "devsecops": "DevSecOps",
+    }
+    for domain, payload in (end_to_end_report or {}).get("domains", {}).items():
+        status = payload.get("status", "unknown")
+        rows.append(
+            [
+                escape(domain_labels.get(domain, domain.replace("_", " ").title())),
+                badge(status.upper(), status_tone(status)),
+                str(payload.get("finding_count", 0)),
+                "No findings." if not payload.get("findings") else "<br>".join(escape(finding) for finding in payload.get("findings", [])),
+            ]
+        )
+    return rows
+
+
 def build_repository_history_rows(results_index: dict) -> list[dict]:
     rows = []
     for repository in results_index.get("repositories", []):
@@ -447,6 +544,12 @@ def main() -> int:
     control_report = load_json(control_report_path) if control_report_path.exists() else None
     control_coverage_path = ROOT / "generated" / "reports" / "control-coverage-report.json"
     control_coverage = load_json(control_coverage_path) if control_coverage_path.exists() else None
+    architecture_report_path = ROOT / "generated" / "demo" / "ha-cpswms-architecture-governance-report.json"
+    architecture_report = load_json(architecture_report_path) if architecture_report_path.exists() else None
+    devsecops_report_path = ROOT / "generated" / "demo" / "ha-cpswms-devsecops-governance-report.json"
+    devsecops_report = load_json(devsecops_report_path) if devsecops_report_path.exists() else None
+    end_to_end_report_path = ROOT / "generated" / "demo" / "ha-cpswms-end-to-end-governance-report.json"
+    end_to_end_report = load_json(end_to_end_report_path) if end_to_end_report_path.exists() else None
     latest_result_with_summary = None
     for repository in results_index.get("repositories", []):
         latest_summary = repository.get("latest_result", {}).get("control_evaluation_summary", {})
@@ -616,6 +719,13 @@ def main() -> int:
     }
     if control_cards_source:
         payload["control_evaluation_summary"] = control_cards_source.get("summary", {})
+    if end_to_end_report:
+        payload["runtime_governance_summary"] = {
+            "target": end_to_end_report.get("target", {}),
+            "overall_status": end_to_end_report.get("overall_status", "unknown"),
+            "domains": end_to_end_report.get("domains", {}),
+            "finding_count": end_to_end_report.get("summary", {}).get("finding_count", 0),
+        }
 
     control_rows = []
     if control_report:
@@ -710,6 +820,40 @@ def main() -> int:
         if repository_history_rows
         else ""
     )
+    runtime_cards_html = build_runtime_governance_cards(architecture_report, devsecops_report, end_to_end_report)
+    architecture_gate_rows = build_architecture_gate_rows(architecture_report)
+    runtime_domain_rows = build_runtime_domain_rows(end_to_end_report)
+    runtime_governance_html = (
+        "<section id=\"runtime-governance\" class=\"viewer-section\">"
+        "<div class=\"section-title\">"
+        "<h2>Runtime Governance</h2>"
+        "<p>Architecture and DevSecOps demo readiness for ha-CPsWMS, generated from machine-readable app repository evidence.</p>"
+        "</div>"
+        f"<section class=\"cards\">{runtime_cards_html}</section>"
+        "<section class=\"panels\">"
+        "<section class=\"panel\">"
+        "<h2>Architecture Runtime Gates</h2>"
+        + html_table(["Gate", "Status", "Findings", "Details"], architecture_gate_rows)
+        + "</section>"
+        "<section class=\"panel\">"
+        "<h2>End-to-End Domain Result</h2>"
+        + html_table(["Domain", "Status", "Findings", "Details"], runtime_domain_rows)
+        + "</section>"
+        "<section class=\"panel\">"
+        "<h2>Runtime Governance Artifacts</h2>"
+        "<ul class=\"artifact-list\">"
+        "<li><a href=\"../demo/ha-cpswms-end-to-end-governance-report.md\">End-to-End Governance Report</a></li>"
+        "<li><a href=\"../demo/ha-cpswms-architecture-governance-report.md\">Architecture Runtime Governance Report</a></li>"
+        "<li><a href=\"../demo/ha-cpswms-devsecops-governance-report.md\">DevSecOps Governance Report</a></li>"
+        "<li><a href=\"../demo/ha-cpswms-architecture-release-input.json\">Architecture Release Input JSON</a></li>"
+        "<li><a href=\"../demo/ha-cpswms-devsecops-release-input.json\">DevSecOps Release Input JSON</a></li>"
+        "</ul>"
+        "</section>"
+        "</section>"
+        "</section>"
+        if runtime_cards_html
+        else ""
+    )
 
     html = f"""<!doctype html>
 <html lang="en">
@@ -801,6 +945,7 @@ def main() -> int:
   <nav class="section-nav" aria-label="Viewer sections">
     <div class="section-nav-inner">
       <a href="#overview">Overview</a>
+      <a href="#runtime-governance">Runtime Governance</a>
       <a href="#runs">Runs</a>
       <a href="#controls">Controls</a>
       <a href="#model">Governance Model</a>
@@ -822,6 +967,8 @@ def main() -> int:
         {build_summary_cards(documents, gaps, controls)}
       </section>
     </section>
+
+    {runtime_governance_html}
 
     <section id="runs" class="viewer-section">
       <div class="section-title">
