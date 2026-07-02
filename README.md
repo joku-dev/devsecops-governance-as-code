@@ -17,6 +17,7 @@ The repository separates four concerns:
 | `waivers` | Waiver model and approval authority structure. |
 | `schemas` | JSON Schemas for validating structured governance data. |
 | `generated` | Generated DOCX, PDF, HTML, and XLSX outputs. |
+| `architecture` | Runtime governance addendum data derived from the SDD Architecture Governance Framework. |
 
 ## Target Model
 
@@ -44,6 +45,18 @@ The first implementation should focus on:
 - Platform Reference Architecture levels 1 to 3
 - Traceability from control requirement to platform capability and expected evidence
 - Initial automated checks for branch protection, SBOM, vulnerability evidence, artifact integrity, dependency source control, IaC, and waiver validity
+
+## Runtime Governance Addendum
+
+The repository now includes a first runtime governance addendum for the SDD Architecture Governance Framework:
+
+- `docs/runtime-governance-addendum.md`
+- `architecture/quality-markers.yaml`
+- `architecture/guardrails.yaml`
+- `architecture/review-gates.yaml`
+- `policies/opa/architecture_release_readiness.rego`
+
+The addendum keeps the original framework document as the normative reference and adds machine-readable marker, guardrail, gate and policy artifacts for executable governance.
 
 ## Recommended Workflow
 
@@ -84,6 +97,12 @@ Generate the CI/CD pipeline baseline report:
 
 ```bash
 python scripts/generate_pipeline_baseline_report.py
+```
+
+Validate the runtime governance addendum:
+
+```bash
+python3 scripts/validate_runtime_governance.py
 ```
 
 ## Important Principle
