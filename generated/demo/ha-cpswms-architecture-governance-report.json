@@ -1,0 +1,53 @@
+{
+  "target": {
+    "path": "/workspace/ha-CPsWMS",
+    "commit": "3babb93",
+    "release_id": "ha-CPsWMS-demo",
+    "detected_services": 5
+  },
+  "gates": [
+    {
+      "id": "architecture_readiness",
+      "title": "Architecture Readiness",
+      "status": "pass",
+      "findings": []
+    },
+    {
+      "id": "integration_readiness",
+      "title": "Integration Readiness",
+      "status": "pass",
+      "findings": []
+    },
+    {
+      "id": "operation_readiness",
+      "title": "Operation Readiness",
+      "status": "findings",
+      "findings": [
+        "RG-OPERATION-READY: Operation-readiness marker B5 requires score 4 or a valid exception; current score is 3.",
+        "RG-OPERATION-READY: Operation-readiness marker P11 requires score 4 or a valid exception; current score is 3."
+      ]
+    },
+    {
+      "id": "release_readiness",
+      "title": "Release Readiness",
+      "status": "findings",
+      "findings": [
+        "RG-RELEASE-READY: Release candidate requires a release compatibility declaration.",
+        "RG-RELEASE-READY: Release candidate requires a solution baseline.",
+        "RG-RELEASE-READY: Release-critical architecture marker E6 requires score 4 or a valid exception; current score is 3.",
+        "RG-RELEASE-READY: Release-critical architecture marker P10 requires score 4 or a valid exception; current score is 3.",
+        "RG-RELEASE-READY: Release-critical architecture marker P13 requires score 4 or a valid exception; current score is 1.",
+        "RG-RELEASE-READY: Release-critical architecture marker P8 requires score 4 or a valid exception; current score is 3.",
+        "RG-RELEASE-READY: Release-critical architecture marker S5 requires score 4 or a valid exception; current score is 3.",
+        "RG-RELEASE-READY: Release-critical architecture marker S6 requires score 4 or a valid exception; current score is 1.",
+        "RG-RELEASE-READY: Release-critical architecture marker S8 requires score 4 or a valid exception; current score is 3."
+      ]
+    }
+  ],
+  "summary": {
+    "gate_count": 4,
+    "passed": 2,
+    "with_findings": 2,
+    "finding_count": 11
+  }
+}

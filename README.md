@@ -128,6 +128,15 @@ python3 scripts/collect_architecture_release_input.py \
   --baseline ha-CPsWMS-demo-baseline
 ```
 
+Generate a demo architecture governance report:
+
+```bash
+python3 scripts/generate_architecture_governance_report.py \
+  --input generated/demo/ha-cpswms-architecture-release-input.json \
+  --output-json generated/demo/ha-cpswms-architecture-governance-report.json \
+  --output-md generated/demo/ha-cpswms-architecture-governance-report.md
+```
+
 The reusable GitHub Actions template for application repositories is:
 
 ```text

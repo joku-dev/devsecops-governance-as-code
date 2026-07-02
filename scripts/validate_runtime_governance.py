@@ -165,6 +165,26 @@ def validate_generated_traceability(errors: list[str]) -> None:
         errors.append("Architecture traceability CSV was not generated")
 
 
+def validate_generated_demo_report(errors: list[str]) -> None:
+    input_path = ROOT / "generated" / "demo" / "ha-cpswms-architecture-release-input.json"
+    if not input_path.exists():
+        return
+
+    command = [
+        sys.executable,
+        str(ROOT / "scripts" / "generate_architecture_governance_report.py"),
+        "--input",
+        str(input_path),
+        "--output-json",
+        str(ROOT / "generated" / "demo" / "ha-cpswms-architecture-governance-report.json"),
+        "--output-md",
+        str(ROOT / "generated" / "demo" / "ha-cpswms-architecture-governance-report.md"),
+    ]
+    result = subprocess.run(command, capture_output=True, text=True, check=False)
+    if result.returncode != 0:
+        errors.append(f"Architecture governance report generation failed: {result.stderr.strip() or result.stdout.strip()}")
+
+
 def validate_architecture_levels(errors: list[str]) -> None:
     marker_ids = {
         marker["id"]
@@ -229,6 +249,7 @@ def main() -> int:
     validate_marker_catalogue(errors)
     validate_architecture_levels(errors)
     validate_generated_traceability(errors)
+    validate_generated_demo_report(errors)
     validate_opa_policy(errors)
 
     if errors:

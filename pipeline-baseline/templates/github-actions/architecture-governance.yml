@@ -119,6 +119,15 @@ jobs:
             > generated/demo/release-readiness-result.json
           cat generated/demo/release-readiness-result.json
 
+      - name: Generate architecture governance report
+        working-directory: governance
+        run: |
+          python scripts/generate_architecture_governance_report.py \
+            --input generated/demo/architecture-release-input.json \
+            --output-json generated/demo/architecture-governance-report.json \
+            --output-md generated/demo/architecture-governance-report.md
+          cat generated/demo/architecture-governance-report.md >> "$GITHUB_STEP_SUMMARY"
+
       - name: Upload architecture governance evidence
         uses: actions/upload-artifact@v4
         with:
@@ -126,6 +135,8 @@ jobs:
           path: |
             governance/generated/demo/architecture-release-input.json
             governance/generated/demo/release-readiness-result.json
+            governance/generated/demo/architecture-governance-report.json
+            governance/generated/demo/architecture-governance-report.md
 
       - name: Enforce release-readiness findings
         if: ${{ github.event.inputs.fail_on_release_findings == 'true' }}

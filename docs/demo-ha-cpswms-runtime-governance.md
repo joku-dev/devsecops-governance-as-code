@@ -17,7 +17,8 @@ The demo does not require changing the target repository. The governance reposit
 1. Collect architecture release-readiness input from `ha-CPsWMS`.
 2. Validate the generated JSON against the architecture release candidate schema.
 3. Run the OPA architecture release-readiness policy.
-4. Review the governance findings.
+4. Generate a combined architecture governance report.
+5. Review the governance findings.
 
 ## Generate Input
 
@@ -97,6 +98,17 @@ opa eval \
 ## Current Demo Findings
 
 The current `ha-CPsWMS` demo input is expected to pass architecture readiness and integration readiness, then produce release-readiness findings. That is useful for the demo because it shows staged governance: a repository can be good enough to continue architecture and integration work, but not yet ready for governed release.
+
+## Generate Combined Report
+
+```bash
+python3 scripts/generate_architecture_governance_report.py \
+  --input generated/demo/ha-cpswms-architecture-release-input.json \
+  --output-json generated/demo/ha-cpswms-architecture-governance-report.json \
+  --output-md generated/demo/ha-cpswms-architecture-governance-report.md
+```
+
+The Markdown report can be used as GitHub Actions step summary or as a demo artifact.
 
 Expected finding categories:
 
