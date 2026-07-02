@@ -10,6 +10,9 @@ The workflow is intentionally minimal. It shows where baseline checks belong, no
 |---|---|
 | `devsecops-baseline.yml` | Sketches where DevSecOps pipeline baseline checks belong. |
 | `architecture-governance.yml` | Runs the architecture runtime governance collector and OPA readiness policies against an application repository. |
+| `app-repo-architecture-governance.yml` | Minimal copy-paste workflow for application repositories. |
+
+See `ADOPTION.md` for application repository onboarding guidance.
 
 ## Architecture Governance Workflow
 

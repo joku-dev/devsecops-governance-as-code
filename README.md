@@ -143,6 +143,13 @@ The reusable GitHub Actions template for application repositories is:
 pipeline-baseline/templates/github-actions/architecture-governance.yml
 ```
 
+For the minimal copy-paste app-repo workflow and onboarding guide, see:
+
+```text
+pipeline-baseline/templates/github-actions/app-repo-architecture-governance.yml
+pipeline-baseline/templates/github-actions/ADOPTION.md
+```
+
 ## Important Principle
 
 Not every requirement should become executable policy. Some requirements are governance obligations, some are evidence obligations, and some are enforceable technical gates. The repository keeps these concerns connected but distinct.
