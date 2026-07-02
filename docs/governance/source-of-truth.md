@@ -2,15 +2,20 @@
 
 ## Current State
 
-The current authoritative content exists in DOCX documents:
+The current authoritative content exists in imported source documents:
 
+- `docs/governance/source-documents/DevSecOps_Policy_Version_1_draft3.docx`
+- `docs/governance/source-documents/DevSecOps_Directive_Version_0_draft1.docx`
 - `docs/governance/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx`
 - `docs/governance/source-documents/DevSecOps-Platform-Reference-Architecture-Standard_aligned_with_Control_Baseline.docx`
+- `docs/governance/source-documents/SDD_Architecture_Governance_Framework_20260630v2.md`
 
 The repository now also contains working draft representations for:
 
 - `docs/governance/devsecops-policy.md`
 - `docs/governance/devsecops-directive.md`
+- `architecture/*.yaml`
+- `model/**/*.yaml`
 
 These are not yet the formal master documents, but they allow the repository to model governance intent and execution semantics above the standards layer.
 

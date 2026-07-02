@@ -27,6 +27,7 @@ except ModuleNotFoundError:
 
 ROOT = Path(__file__).resolve().parents[1]
 MODEL = ROOT / "model"
+SOURCE_DOCUMENT_ROOT = ROOT / "docs" / "governance" / "source-documents"
 EXPECTED_COUNTS = {"L1": 16, "L2": 14, "L3": 11, "GOV": 5}
 
 
@@ -70,6 +71,23 @@ def run_opa_check(errors):
     if result.returncode != 0:
         details = result.stderr.strip() or result.stdout.strip() or "unknown OPA error"
         errors.append(f"OPA policy validation failed: {details}")
+
+
+def validate_source_document_path(errors, source_path: str, source_label: str):
+    if not source_path:
+        errors.append(f"Missing source document path in {source_label}")
+        return
+    path = ROOT / source_path
+    if not path.exists():
+        errors.append(f"Source document path missing in {source_label}: {source_path}")
+        return
+    try:
+        path.relative_to(SOURCE_DOCUMENT_ROOT)
+    except ValueError:
+        errors.append(
+            f"Source document path in {source_label} must be under "
+            f"{SOURCE_DOCUMENT_ROOT.relative_to(ROOT)}: {source_path}"
+        )
 
 
 def validate_waiver_authority(errors, waiver, waiver_authorities, source_label: str):
@@ -173,6 +191,20 @@ def main() -> int:
         document_path = ROOT / document["repository_path"]
         if not document_path.exists():
             errors.append(f"Governance document path missing for {document['id']}: {document['repository_path']}")
+        source_documents = document.get("source_documents", [])
+        if not source_documents:
+            errors.append(f"Governance document missing source_documents for {document['id']}")
+        for source_document in source_documents:
+            validate_source_document_path(errors, source_document, f"model/documents/governance-documents.yaml {document['id']}")
+
+    for architecture_path in sorted((ROOT / "architecture").glob("*.yaml")):
+        payload = load_yaml(architecture_path)
+        if isinstance(payload, dict) and "source_document" in payload:
+            validate_source_document_path(
+                errors,
+                payload.get("source_document", ""),
+                str(architecture_path.relative_to(ROOT)),
+            )
 
     for mapping in traceability.get("mappings", []):
         control_id = mapping["control"]

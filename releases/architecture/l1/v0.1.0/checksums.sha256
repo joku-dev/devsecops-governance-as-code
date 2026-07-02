@@ -1,11 +1,11 @@
 57721ef2b1a333ae51f8c618094301d1a8f948fe2f065323c1dc8faea9e3b382  releases/architecture/l1/v0.1.0/baseline-package.md
 6a76b0c96f3b064386c67b97243728916a946434a4acd0d2712d24309cebab46  releases/architecture/l1/v0.1.0/examples/github-actions/architecture-baseline-l1-v0.1.0.yml
 c74ef71b417874238c9ae60ebfe6262aab6c9f60c0f0a983b95f8fd4ceed9e70  releases/architecture/l1/v0.1.0/release-metadata.json
-1e4def7db754908460335d60875773a233d52b9b8a21e3162a7c2b255af3f6b8  releases/architecture/l1/v0.1.0/source/architecture/arch-l1.yaml
-dc0697ccaf814974d4e40f3c13991305123463ad6f0e3f29c44a175d66bece69  releases/architecture/l1/v0.1.0/source/architecture/guardrails.yaml
-7ef6450f41821defed5eb9a0d69a4c22780efcfd887b4a7248e774344d3bf991  releases/architecture/l1/v0.1.0/source/architecture/quality-markers.yaml
-cecaae0d295cb149240deeca70690700b0cabb9e7e544493eed136a247b6ad95  releases/architecture/l1/v0.1.0/source/architecture/remediation-actions.yaml
-e9fbe1500e9b94fb117ab4cab0cce61247e4b224fb49a0aedde66557a24a75f0  releases/architecture/l1/v0.1.0/source/architecture/review-gates.yaml
+597f7bc4a99bb9b06bdc04326eff7ca6d1f9190c5685efbf1ed11df5833f44e6  releases/architecture/l1/v0.1.0/source/architecture/arch-l1.yaml
+3d036e34fa97015301e596c1af71e69f48c5c2a30865e9a4edf33b3df8314b8c  releases/architecture/l1/v0.1.0/source/architecture/guardrails.yaml
+0cd8eb092780f291289640f73780b93deaf2e4892d34bfcfb56b414a1f350804  releases/architecture/l1/v0.1.0/source/architecture/quality-markers.yaml
+b30865c5dc0191d6db4e097a7bc43b9323ea7d5149c80db0c9367540e97210d0  releases/architecture/l1/v0.1.0/source/architecture/remediation-actions.yaml
+118b114210dec89e74b88eb79f2926fa11e296c7471d28b610d4b18e8b0cc4fa  releases/architecture/l1/v0.1.0/source/architecture/review-gates.yaml
 094a40009cd8f711e2df0b1783da1f1c492018790976b1e49cc121e72f5319ba  releases/architecture/l1/v0.1.0/source/policies/opa/architecture_integration_readiness.rego
 7fd4dbfeb08aea67600b7e083363cfdff1dc93d2e0d457c90d6ca2b0b1a44fda  releases/architecture/l1/v0.1.0/source/policies/opa/architecture_operation_readiness.rego
 e92cc099f836759b0917e689e23953a6b98cbd28a5abb64173be4963ecdef746  releases/architecture/l1/v0.1.0/source/policies/opa/architecture_readiness.rego
