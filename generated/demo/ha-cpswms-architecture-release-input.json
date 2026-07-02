@@ -46,8 +46,10 @@
       },
       {
         "id": "B5",
-        "score": 3,
+        "score": 4,
         "evidence": [
+          ".governance/architecture/feedback-evidence.json",
+          "benchmark/reports/performance_evolution_summary.md",
           "benchmark/reports/performance_evolution_summary.md"
         ]
       },
@@ -127,6 +129,16 @@
         "id": "E3",
         "score": 4,
         "evidence": [
+          ".governance/architecture/release-compatibility-declaration.json",
+          "docs/ARCHITECTURE.md",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
+          "semantic-enrichment/schemas/enrichment_schema.json",
+          "world-model-chat/schemas/cypher_query_schema.json",
+          ".governance/architecture/solution-baseline.json",
+          "docs/ARCHITECTURE.md",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
           "docs/ARCHITECTURE.md",
           "semantic-enrichment/schemas/anomaly_detection_schema.json",
           "semantic-enrichment/schemas/automation_intent_schema.json",
@@ -149,6 +161,16 @@
         "id": "E5",
         "score": 4,
         "evidence": [
+          ".governance/architecture/release-compatibility-declaration.json",
+          "docs/ARCHITECTURE.md",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
+          "semantic-enrichment/schemas/enrichment_schema.json",
+          "world-model-chat/schemas/cypher_query_schema.json",
+          ".governance/architecture/solution-baseline.json",
+          "docs/ARCHITECTURE.md",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
           "docs/ARCHITECTURE.md",
           "semantic-enrichment/schemas/anomaly_detection_schema.json",
           "semantic-enrichment/schemas/automation_intent_schema.json",
@@ -171,6 +193,16 @@
         "id": "S4",
         "score": 4,
         "evidence": [
+          ".governance/architecture/release-compatibility-declaration.json",
+          "docs/ARCHITECTURE.md",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
+          "semantic-enrichment/schemas/enrichment_schema.json",
+          "world-model-chat/schemas/cypher_query_schema.json",
+          ".governance/architecture/solution-baseline.json",
+          "docs/ARCHITECTURE.md",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
           "docs/ARCHITECTURE.md",
           "semantic-enrichment/schemas/anomaly_detection_schema.json",
           "semantic-enrichment/schemas/automation_intent_schema.json",
@@ -215,8 +247,11 @@
       },
       {
         "id": "E6",
-        "score": 3,
+        "score": 4,
         "evidence": [
+          ".governance/architecture/security-evidence.json",
+          "docs/DEPLOYMENT.md",
+          ".github/workflows/ci.yml",
           "docs/DEPLOYMENT.md"
         ]
       },
@@ -255,6 +290,16 @@
         "id": "S3",
         "score": 4,
         "evidence": [
+          ".governance/architecture/release-compatibility-declaration.json",
+          "docs/ARCHITECTURE.md",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
+          "semantic-enrichment/schemas/enrichment_schema.json",
+          "world-model-chat/schemas/cypher_query_schema.json",
+          ".governance/architecture/solution-baseline.json",
+          "docs/ARCHITECTURE.md",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
           "docs/ARCHITECTURE.md",
           "semantic-enrichment/schemas/anomaly_detection_schema.json",
           "semantic-enrichment/schemas/automation_intent_schema.json",
@@ -275,15 +320,28 @@
       },
       {
         "id": "S5",
-        "score": 3,
+        "score": 4,
         "evidence": [
+          ".governance/architecture/security-evidence.json",
+          "docs/DEPLOYMENT.md",
+          ".github/workflows/ci.yml",
           "docs/DEPLOYMENT.md"
         ]
       },
       {
         "id": "S6",
-        "score": 1,
+        "score": 4,
         "evidence": [
+          ".governance/architecture/release-compatibility-declaration.json",
+          "docs/ARCHITECTURE.md",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
+          "semantic-enrichment/schemas/enrichment_schema.json",
+          "world-model-chat/schemas/cypher_query_schema.json",
+          ".governance/architecture/solution-baseline.json",
+          "docs/ARCHITECTURE.md",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
           "docs/ARCHITECTURE.md",
           "semantic-enrichment/schemas/anomaly_detection_schema.json",
           "semantic-enrichment/schemas/automation_intent_schema.json",
@@ -304,8 +362,12 @@
       },
       {
         "id": "S8",
-        "score": 3,
+        "score": 4,
         "evidence": [
+          ".governance/architecture/resilience-evidence.json",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
+          "benchmark/reports/performance_evolution_summary.md",
           "docs/DEPLOYMENT.md",
           "docker-compose.yml",
           "ha-sync/Dockerfile",
@@ -330,6 +392,16 @@
         "id": "P6",
         "score": 4,
         "evidence": [
+          ".governance/architecture/release-compatibility-declaration.json",
+          "docs/ARCHITECTURE.md",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
+          "semantic-enrichment/schemas/enrichment_schema.json",
+          "world-model-chat/schemas/cypher_query_schema.json",
+          ".governance/architecture/solution-baseline.json",
+          "docs/ARCHITECTURE.md",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
           "docs/ARCHITECTURE.md",
           "semantic-enrichment/schemas/anomaly_detection_schema.json",
           "semantic-enrichment/schemas/automation_intent_schema.json",
@@ -350,8 +422,11 @@
       },
       {
         "id": "P8",
-        "score": 3,
+        "score": 4,
         "evidence": [
+          ".governance/architecture/security-evidence.json",
+          "docs/DEPLOYMENT.md",
+          ".github/workflows/ci.yml",
           "docs/DEPLOYMENT.md"
         ]
       },
@@ -373,8 +448,12 @@
       },
       {
         "id": "P10",
-        "score": 3,
+        "score": 4,
         "evidence": [
+          ".governance/architecture/resilience-evidence.json",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
+          "benchmark/reports/performance_evolution_summary.md",
           "docs/DEPLOYMENT.md",
           "docker-compose.yml",
           "ha-sync/Dockerfile",
@@ -385,16 +464,30 @@
       },
       {
         "id": "P11",
-        "score": 3,
+        "score": 4,
         "evidence": [
+          ".governance/architecture/operation-evidence.json",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
+          "benchmark/reports/performance_evolution_summary.md",
           "docs/DEPLOYMENT.md",
           "docker-compose.yml"
         ]
       },
       {
         "id": "P13",
-        "score": 1,
+        "score": 4,
         "evidence": [
+          ".governance/architecture/release-compatibility-declaration.json",
+          "docs/ARCHITECTURE.md",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
+          "semantic-enrichment/schemas/enrichment_schema.json",
+          "world-model-chat/schemas/cypher_query_schema.json",
+          ".governance/architecture/solution-baseline.json",
+          "docs/ARCHITECTURE.md",
+          "docs/DEPLOYMENT.md",
+          "docker-compose.yml",
           "docs/ARCHITECTURE.md",
           "semantic-enrichment/schemas/anomaly_detection_schema.json",
           "semantic-enrichment/schemas/automation_intent_schema.json",
@@ -415,21 +508,31 @@
       }
     ],
     "release_compatibility_declaration": {
-      "exists": false,
+      "exists": true,
       "baseline_version": "ha-CPsWMS-demo-baseline",
-      "approved": false,
-      "declaration_id": "",
-      "approved_by": "",
-      "approval_date": ""
+      "approved": true,
+      "declaration_id": ".governance/architecture/release-compatibility-declaration.json",
+      "approved_by": "Architecture Demo Review",
+      "approval_date": "2026-07-02"
     },
     "solution_baseline": {
-      "exists": false,
-      "baseline_id": "ha-CPsWMS-demo-baseline",
+      "exists": true,
+      "baseline_id": ".governance/architecture/solution-baseline.json",
       "version": "ha-CPsWMS-demo-baseline"
     },
     "compatibility_evidence": {
       "exists": true,
       "evidence_refs": [
+        ".governance/architecture/release-compatibility-declaration.json",
+        "docs/ARCHITECTURE.md",
+        "docs/DEPLOYMENT.md",
+        "docker-compose.yml",
+        "semantic-enrichment/schemas/enrichment_schema.json",
+        "world-model-chat/schemas/cypher_query_schema.json",
+        ".governance/architecture/solution-baseline.json",
+        "docs/ARCHITECTURE.md",
+        "docs/DEPLOYMENT.md",
+        "docker-compose.yml",
         "docs/ARCHITECTURE.md",
         "semantic-enrichment/schemas/anomaly_detection_schema.json",
         "semantic-enrichment/schemas/automation_intent_schema.json",
@@ -451,6 +554,9 @@
     "security_evidence": {
       "exists": true,
       "evidence_refs": [
+        ".governance/architecture/security-evidence.json",
+        "docs/DEPLOYMENT.md",
+        ".github/workflows/ci.yml",
         "docs/DEPLOYMENT.md"
       ]
     },
@@ -468,6 +574,10 @@
     "runtime_evidence": {
       "exists": true,
       "evidence_refs": [
+        ".governance/architecture/operation-evidence.json",
+        "docs/DEPLOYMENT.md",
+        "docker-compose.yml",
+        "benchmark/reports/performance_evolution_summary.md",
         "docs/DEPLOYMENT.md",
         "docker-compose.yml"
       ]
@@ -475,6 +585,8 @@
     "feedback_evidence": {
       "exists": true,
       "evidence_refs": [
+        ".governance/architecture/feedback-evidence.json",
+        "benchmark/reports/performance_evolution_summary.md",
         "benchmark/reports/performance_evolution_summary.md"
       ]
     },
