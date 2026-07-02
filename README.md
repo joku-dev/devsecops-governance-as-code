@@ -128,6 +128,12 @@ python3 scripts/collect_architecture_release_input.py \
   --baseline ha-CPsWMS-demo-baseline
 ```
 
+The reusable GitHub Actions template for application repositories is:
+
+```text
+pipeline-baseline/templates/github-actions/architecture-governance.yml
+```
+
 ## Important Principle
 
 Not every requirement should become executable policy. Some requirements are governance obligations, some are evidence obligations, and some are enforceable technical gates. The repository keeps these concerns connected but distinct.
