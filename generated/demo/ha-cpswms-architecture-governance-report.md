@@ -3,7 +3,7 @@
 ## Target
 
 - Repository: `/workspace/ha-CPsWMS`
-- Commit: `0ccc0e9`
+- Commit: `e223503`
 - Release ID: `ha-CPsWMS-demo`
 - Detected services: `5`
 

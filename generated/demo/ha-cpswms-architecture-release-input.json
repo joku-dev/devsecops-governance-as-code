@@ -2,7 +2,7 @@
   "release_candidate": true,
   "target_repository": {
     "path": "/workspace/ha-CPsWMS",
-    "commit": "0ccc0e9",
+    "commit": "e223503",
     "release_id": "ha-CPsWMS-demo",
     "detected_services": 5
   },
