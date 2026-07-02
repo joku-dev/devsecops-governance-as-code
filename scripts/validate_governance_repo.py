@@ -73,6 +73,21 @@ def run_opa_check(errors):
         errors.append(f"OPA policy validation failed: {details}")
 
 
+def validate_source_lineage_report(errors):
+    command = [sys.executable, str(ROOT / "scripts" / "generate_source_lineage_report.py")]
+    result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, check=False)
+    if result.returncode != 0:
+        errors.append(f"Source lineage report generation failed: {result.stderr.strip() or result.stdout.strip()}")
+        return
+    report_path = ROOT / "generated" / "reports" / "source-lineage-report.json"
+    if not report_path.exists():
+        errors.append("Source lineage report JSON was not generated")
+        return
+    report = load_json(report_path)
+    if report.get("summary", {}).get("missing_derived_artifacts", 0):
+        errors.append("Source lineage report contains missing derived artifacts")
+
+
 def validate_source_document_path(errors, source_path: str, source_label: str):
     if not source_path:
         errors.append(f"Missing source document path in {source_label}")
@@ -205,6 +220,8 @@ def main() -> int:
                 payload.get("source_document", ""),
                 str(architecture_path.relative_to(ROOT)),
             )
+
+    validate_source_lineage_report(errors)
 
     for mapping in traceability.get("mappings", []):
         control_id = mapping["control"]
