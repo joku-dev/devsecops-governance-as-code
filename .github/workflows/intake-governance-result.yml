@@ -95,6 +95,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git pull --rebase origin main
+          python3 scripts/generate_repository_results_index.py
+          python3 scripts/generate_architecture_results_index.py
+          python3 scripts/generate_status_viewer.py
+
           git add status/results status/repository-results-index.json generated/viewer/status-viewer.html
           if git diff --cached --quiet; then
             echo "No governance result changes to commit."
