@@ -2,16 +2,16 @@
 
 ## Target
 
-- Repository: `/workspace/ha-CPsWMS`
-- Commit: `77e8fcd`
-- Release ID: `ha-CPsWMS-demo`
+- Repository: `/tmp/ha-CPsWMS-current-main`
+- Commit: `4a86f0c`
+- Release ID: `ha-CPsWMS-current-main`
 
 ## Overall Result
 
 | Domain | Status | Findings | Detail report |
 |---|---:|---:|---|
-| Architecture Runtime Governance | PASS | 0 | `ha-cpswms-architecture-governance-report.md` |
-| DevSecOps Governance | PASS | 0 | `ha-cpswms-devsecops-governance-report.md` |
+| Architecture Runtime Governance | PASS | 0 | `architecture-governance-report.md` |
+| DevSecOps Governance | PASS | 0 | `devsecops-governance-report.md` |
 | **Overall** | **PASS** | **0** | |
 
 ## Interpretation

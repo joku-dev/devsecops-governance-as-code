@@ -33,7 +33,7 @@ def render_markdown(architecture_report: dict, devsecops_report: dict, architect
     target = architecture_report.get("target") or devsecops_report.get("target") or {}
 
     lines = [
-        "# End-to-End Governance Demo Report",
+        "# End-to-End Governance Report",
         "",
         "## Target",
         "",
@@ -56,9 +56,9 @@ def render_markdown(architecture_report: dict, devsecops_report: dict, architect
     if overall_status == "PASS":
         lines.extend(
             [
-                "The target repository currently satisfies the demo governance gates for both architecture runtime governance and DevSecOps release governance.",
+                "The target repository currently satisfies the governance gates for both architecture runtime governance and DevSecOps release governance.",
                 "",
-                "This does not mean the system is production-certified. It means that the required demo evidence is present, machine-readable, and accepted by the current governance policies.",
+                "This does not mean the system is production-certified. It means that the required evidence is present, machine-readable, and accepted by the current governance policies.",
             ]
         )
     else:
@@ -89,7 +89,7 @@ def render_markdown(architecture_report: dict, devsecops_report: dict, architect
             "",
             "## Evidence Model",
             "",
-            "The demo uses two evidence layers:",
+            "The report uses two evidence layers:",
             "",
             "- `.governance/architecture/*.json` for architecture baseline, compatibility, security, resilience, operation and feedback evidence.",
             "- `.governance/devsecops/release-evidence.json` for DevSecOps release evidence such as SBOM, vulnerability scan, artifact integrity, dependency source approval and pipeline security gate evidence.",
