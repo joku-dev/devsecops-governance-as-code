@@ -19,21 +19,19 @@
       "type": "array",
       "items": {
         "type": "object",
-          "required": [
-            "id",
-            "domain",
-            "title",
-            "control_objective",
-            "requirement",
-            "verification_requirement",
-            "required_platform_level",
-            "platform_capabilities",
-            "evidence",
-            "verification",
-            "automation",
-            "policy_as_code",
-            "waiver"
-          ],
+        "required": [
+          "id",
+          "domain",
+          "title",
+          "control_objective",
+          "requirement",
+          "required_platform_level",
+          "platform_capabilities",
+          "evidence",
+          "verification",
+          "policy_as_code",
+          "waiver"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -49,9 +47,6 @@
             "type": "string"
           },
           "requirement": {
-            "type": "string"
-          },
-          "verification_requirement": {
             "type": "string"
           },
           "required_platform_level": {
@@ -75,30 +70,6 @@
                 "enum": ["automated", "manual", "hybrid"]
               },
               "frequency": {
-                "type": "string"
-              }
-            }
-          },
-          "automation": {
-            "type": "object",
-            "required": ["type", "maturity", "check_type", "machine_readable_evidence_required", "rationale"],
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": ["blocking_gate", "warning_gate", "evidence_check", "review_check"]
-              },
-              "maturity": {
-                "type": "string",
-                "enum": ["immediate", "tool_integration_required", "future"]
-              },
-              "check_type": {
-                "type": "string",
-                "enum": ["presence", "linkage", "threshold", "configuration", "approval", "review", "integrity", "provenance"]
-              },
-              "machine_readable_evidence_required": {
-                "type": "boolean"
-              },
-              "rationale": {
                 "type": "string"
               }
             }
