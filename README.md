@@ -115,6 +115,16 @@ Validate the runtime governance addendum:
 python3 scripts/validate_runtime_governance.py
 ```
 
+Generate a demo architecture release-readiness input for `ha-CPsWMS`:
+
+```bash
+python3 scripts/collect_architecture_release_input.py \
+  --repo /workspace/ha-CPsWMS \
+  --output generated/demo/ha-cpswms-architecture-release-input.json \
+  --release-id ha-CPsWMS-demo \
+  --baseline ha-CPsWMS-demo-baseline
+```
+
 ## Important Principle
 
 Not every requirement should become executable policy. Some requirements are governance obligations, some are evidence obligations, and some are enforceable technical gates. The repository keeps these concerns connected but distinct.

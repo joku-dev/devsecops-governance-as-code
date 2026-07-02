@@ -31,6 +31,11 @@ SCHEMA_CHECKS = [
         "schemas/architecture-release-candidate.schema.json",
         "json",
     ),
+    (
+        "generated/demo/ha-cpswms-architecture-release-input.json",
+        "schemas/architecture-release-candidate.schema.json",
+        "json",
+    ),
 ]
 
 EXPECTED_MARKERS = (
