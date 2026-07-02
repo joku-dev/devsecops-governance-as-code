@@ -85,6 +85,21 @@ def release_consideration(artifacts: list[dict]) -> str:
     return "no_release_by_default"
 
 
+def source_state(document: dict, artifacts: list[dict]) -> str:
+    status = document.get("status")
+    if status == "candidate":
+        return "candidate_pending_similarity_review"
+    if status == "draft" and not artifacts:
+        return "draft_registered_no_lineage_required"
+    if status == "draft":
+        return "draft_with_lineage"
+    if status == "superseded":
+        return "superseded_source"
+    if status == "retired":
+        return "retired_source"
+    return "active_source"
+
+
 def suggested_validation(document: dict, artifacts: list[dict]) -> list[str]:
     validations = {
         "python3 scripts/validate_governance_repo.py",
@@ -146,6 +161,11 @@ def build_report() -> dict:
                 "lineage_artifact_types": dict(sorted(artifact_counts.items())),
                 "review_lanes": lanes,
                 "release_consideration": release,
+                "source_state": source_state(document, artifacts),
+                "candidate_replacement_for": document.get("candidate_replacement_for", []),
+                "supersedes": document.get("supersedes"),
+                "superseded_by": document.get("superseded_by"),
+                "similarity_assessment": document.get("similarity_assessment", {}),
                 "suggested_validation": validations,
                 "change_request_required_for_source_update": True,
                 "representative_artifacts": [
@@ -174,6 +194,7 @@ def build_report() -> dict:
         },
         "source_impacts": source_impacts,
         "open_questions": [
+            "Is the new source document a new source, possible duplicate, or replacement candidate?",
             "Does the source document update change governance behavior or only explanatory text?",
             "Is the intended rollout report-only or blocking?",
             "Does the change require a release candidate or a new baseline release?",
@@ -229,6 +250,7 @@ def render_markdown(report: dict) -> str:
                 f"- Version: `{item['version']}`",
                 f"- Domains: `{', '.join(item['governance_domains'])}`",
                 f"- Lineage artifacts: `{item['lineage_artifact_count']}`",
+                f"- Source state: `{item['source_state']}`",
                 f"- Release consideration: `{item['release_consideration']}`",
                 f"- Review lanes: `{', '.join(item['review_lanes'])}`",
                 "",
@@ -238,6 +260,17 @@ def render_markdown(report: dict) -> str:
         )
         for area in item["derived_artifact_areas"]:
             lines.append(f"- `{area}`")
+        if item["candidate_replacement_for"] or item["supersedes"] or item["superseded_by"] or item["similarity_assessment"]:
+            lines.extend(["", "Replacement and similarity:", ""])
+            if item["candidate_replacement_for"]:
+                lines.append(f"- Candidate replacement for: `{', '.join(item['candidate_replacement_for'])}`")
+            if item["supersedes"]:
+                lines.append(f"- Supersedes: `{item['supersedes']}`")
+            if item["superseded_by"]:
+                lines.append(f"- Superseded by: `{item['superseded_by']}`")
+            assessment = item["similarity_assessment"].get("assessment")
+            if assessment:
+                lines.append(f"- Similarity assessment: `{assessment}`")
         lines.extend(["", "Suggested validation:", ""])
         for validation in item["suggested_validation"]:
             lines.append(f"- `{validation}`")

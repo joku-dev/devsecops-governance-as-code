@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-07-02T16:47:09Z",
+  "generated_at": "2026-07-02T17:00:49Z",
   "inputs": {
     "source_document_register": "model/documents/source-document-register.yaml",
     "source_lineage_report": "generated/reports/source-lineage-report.json"
@@ -76,6 +76,11 @@
         "governance-review"
       ],
       "release_consideration": "no_release_by_default",
+      "source_state": "draft_with_lineage",
+      "candidate_replacement_for": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "similarity_assessment": {},
       "suggested_validation": [
         "python3 -m unittest discover -s tests",
         "python3 scripts/validate_governance_repo.py"
@@ -117,6 +122,11 @@
         "governance-review"
       ],
       "release_consideration": "no_release_by_default",
+      "source_state": "draft_with_lineage",
+      "candidate_replacement_for": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "similarity_assessment": {},
       "suggested_validation": [
         "python3 -m unittest discover -s tests",
         "python3 scripts/validate_governance_repo.py"
@@ -162,6 +172,11 @@
         "release-review"
       ],
       "release_consideration": "baseline_release_review",
+      "source_state": "active_source",
+      "candidate_replacement_for": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "similarity_assessment": {},
       "suggested_validation": [
         "python3 -m unittest discover -s tests",
         "python3 scripts/validate_governance_repo.py",
@@ -212,6 +227,11 @@
         "viewer-status-review"
       ],
       "release_consideration": "no_release_by_default",
+      "source_state": "active_source",
+      "candidate_replacement_for": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "similarity_assessment": {},
       "suggested_validation": [
         "python3 -m unittest discover -s tests",
         "python3 scripts/generate_status_viewer.py",
@@ -267,6 +287,11 @@
         "viewer-status-review"
       ],
       "release_consideration": "baseline_release_review",
+      "source_state": "active_source",
+      "candidate_replacement_for": [],
+      "supersedes": null,
+      "superseded_by": null,
+      "similarity_assessment": {},
       "suggested_validation": [
         "python3 -m unittest discover -s tests",
         "python3 scripts/generate_status_viewer.py",
@@ -290,6 +315,7 @@
     }
   ],
   "open_questions": [
+    "Is the new source document a new source, possible duplicate, or replacement candidate?",
     "Does the source document update change governance behavior or only explanatory text?",
     "Is the intended rollout report-only or blocking?",
     "Does the change require a release candidate or a new baseline release?",

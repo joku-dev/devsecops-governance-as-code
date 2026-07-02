@@ -29,6 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MODEL = ROOT / "model"
 SOURCE_DOCUMENT_ROOT = ROOT / "docs" / "governance" / "source-documents"
 EXPECTED_COUNTS = {"L1": 16, "L2": 14, "L3": 11, "GOV": 5}
+SOURCE_STATUSES_ALLOWING_NO_LINEAGE = {"candidate", "draft", "retired"}
 
 
 def load_yaml(path: Path):
@@ -156,13 +157,35 @@ def validate_source_document_register(errors, source_document_register, source_l
     if registered_but_missing_file:
         errors.append(f"Registered source documents not found in source directory: {registered_but_missing_file}")
 
+    known_source_ids = {
+        document.get("id")
+        for document in source_document_register.get("documents", [])
+    }
+
+    for document in source_document_register.get("documents", []):
+        document_id = document.get("id")
+        supersedes = document.get("supersedes")
+        superseded_by = document.get("superseded_by")
+        if supersedes and supersedes not in known_source_ids:
+            errors.append(f"Source document {document_id} supersedes unknown source id: {supersedes}")
+        if superseded_by and superseded_by not in known_source_ids:
+            errors.append(f"Source document {document_id} is superseded_by unknown source id: {superseded_by}")
+        for candidate_id in document.get("candidate_replacement_for", []):
+            if candidate_id not in known_source_ids:
+                errors.append(f"Source document {document_id} candidate_replacement_for unknown source id: {candidate_id}")
+
     lineage_sources = {
         item.get("source_document")
         for item in source_lineage_report.get("lineage", [])
     }
-    missing_lineage = sorted(set(registered_sources) - lineage_sources)
+    lineage_required_sources = {
+        document.get("source_path")
+        for document in source_document_register.get("documents", [])
+        if document.get("status") not in SOURCE_STATUSES_ALLOWING_NO_LINEAGE
+    }
+    missing_lineage = sorted(lineage_required_sources - lineage_sources)
     if missing_lineage:
-        errors.append(f"Registered source documents missing lineage entries: {missing_lineage}")
+        errors.append(f"Registered non-draft source documents missing lineage entries: {missing_lineage}")
 
 
 def validate_waiver_authority(errors, waiver, waiver_authorities, source_label: str):

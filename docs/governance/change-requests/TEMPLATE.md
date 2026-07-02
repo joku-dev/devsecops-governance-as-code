@@ -20,7 +20,9 @@ GCR-YYYY-NNN
 | Source document path | `docs/governance/source-documents/...` |
 | Register updated? | yes/no |
 | Supersedes existing source? | yes/no, source ID |
-| Source status | draft/intake/review/approved/superseded/retired |
+| Possible duplicate or replacement candidate? | yes/no, source ID |
+| Similarity assessment | not_assessed/new_source/possible_duplicate/replacement_candidate/supersedes_existing/not_relevant |
+| Source status | candidate/draft/intake/review/approved/superseded/retired |
 
 ## Why This Change Is Needed
 
@@ -39,6 +41,26 @@ Explain the governance, platform, audit, architecture or downstream consumer rea
 | Viewer, status indexes or intake |  |
 | Release package or baseline |  |
 | Downstream repositories |  |
+
+## Replacement Review
+
+Use this section when the new source document may match or replace an existing source document.
+
+| Existing source ID | Similarity | Notes |
+|---|---|---|
+|  | unknown/low/medium/high/near_duplicate |  |
+
+Decision:
+
+- [ ] New independent source
+- [ ] Possible duplicate, keep as candidate
+- [ ] Replacement candidate, review required
+- [ ] Replacement confirmed
+- [ ] Not relevant, retire candidate
+
+Replacement notes:
+
+-
 
 ## Derived Artifacts
 

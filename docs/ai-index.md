@@ -55,6 +55,8 @@ docs/governance/change-requests/TEMPLATE.md
 model/documents/source-document-register.yaml
 ```
 
+For new documents that may match or replace an existing source, register them as `candidate` first and use `candidate_replacement_for` plus `similarity_assessment`.
+
 Generate the current source-document impact overview:
 
 ```bash

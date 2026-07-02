@@ -1,6 +1,6 @@
 # Governance Change Impact Report
 
-Generated: `2026-07-02T16:47:09Z`
+Generated: `2026-07-02T17:00:49Z`
 
 ## Inputs
 
@@ -54,6 +54,7 @@ Generated: `2026-07-02T16:47:09Z`
 - Version: `1 draft 3`
 - Domains: `policy, devsecops`
 - Lineage artifacts: `5`
+- Source state: `draft_with_lineage`
 - Release consideration: `no_release_by_default`
 - Review lanes: `devsecops-review, governance-review`
 
@@ -85,6 +86,7 @@ Representative artifacts:
 - Version: `0 draft 1`
 - Domains: `directive, devsecops`
 - Lineage artifacts: `5`
+- Source state: `draft_with_lineage`
 - Release consideration: `no_release_by_default`
 - Review lanes: `devsecops-review, governance-review`
 
@@ -116,6 +118,7 @@ Representative artifacts:
 - Version: `imported`
 - Domains: `devsecops`
 - Lineage artifacts: `25`
+- Source state: `active_source`
 - Release consideration: `baseline_release_review`
 - Review lanes: `devsecops-review, policy-as-code-review, release-review`
 
@@ -155,6 +158,7 @@ Representative artifacts:
 - Version: `imported`
 - Domains: `platform, devsecops`
 - Lineage artifacts: `21`
+- Source state: `active_source`
 - Release consideration: `no_release_by_default`
 - Review lanes: `devsecops-review, platform-review, viewer-status-review`
 
@@ -194,6 +198,7 @@ Representative artifacts:
 - Version: `20260630v2`
 - Domains: `architecture`
 - Lineage artifacts: `28`
+- Source state: `active_source`
 - Release consideration: `baseline_release_review`
 - Review lanes: `architecture-review, policy-as-code-review, release-review, schema-review, viewer-status-review`
 
@@ -229,6 +234,7 @@ Representative artifacts:
 
 ## Open Questions For Change Requests
 
+- Is the new source document a new source, possible duplicate, or replacement candidate?
 - Does the source document update change governance behavior or only explanatory text?
 - Is the intended rollout report-only or blocking?
 - Does the change require a release candidate or a new baseline release?

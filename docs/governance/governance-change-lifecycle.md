@@ -64,6 +64,7 @@ Allowed statuses:
 
 | Status | Meaning |
 |---|---|
+| `candidate` | Source was received but has not yet been classified as new, duplicate or replacement. No lineage is required yet. |
 | `draft` | Source exists but is not yet approved or fully derived. |
 | `intake` | Source has been accepted into the repo for analysis and derivation. |
 | `review` | Derived artifacts are under review. |
@@ -89,9 +90,38 @@ The change request should answer:
 
 - What changed in the input document?
 - Why does it matter?
+- Is the document new, a possible duplicate, or a replacement candidate?
 - Which controls, markers, policies, schemas, docs or releases may be affected?
 - Is the change report-only or blocking?
 - Is a new baseline release required?
+
+## Replacement Candidates
+
+When a new source document may match or replace an existing source document, register it as:
+
+```yaml
+status: candidate
+candidate_replacement_for:
+  - ARCH-SDD-SRC-001
+similarity_assessment:
+  assessment: replacement_candidate
+  compared_to:
+    - source_id: ARCH-SDD-SRC-001
+      similarity: high
+      notes: Same framework family with newer date or version.
+```
+
+Use `candidate` when the repository should remember the document but no derived controls, markers, policies or baselines should change yet.
+
+After review:
+
+| Decision | Register action |
+|---|---|
+| New independent source | Set new document to `intake`; keep `supersedes: null`. |
+| Duplicate or not relevant | Set new document to `retired` and record notes. |
+| Replacement confirmed | Set new document to `intake` with `supersedes: <old-id>`; set old document to `superseded` with `superseded_by: <new-id>`. |
+
+Only after a replacement is confirmed should derived artifacts be moved to the new source document and the lineage report updated.
 
 ## Step 3: Impact Analysis
 
@@ -203,7 +233,7 @@ The repository currently enforces:
 - registered source paths must exist
 - registered source paths must be under `docs/governance/source-documents/`
 - every file under `docs/governance/source-documents/` must be registered
-- every registered source document must have a source-lineage entry
+- every non-draft, non-candidate source document must have a source-lineage entry
 - source-lineage report must have no missing derived artifacts
 - governance change impact report must be generatable
 

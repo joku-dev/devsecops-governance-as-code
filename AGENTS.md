@@ -115,6 +115,7 @@ DevSecOps supports manual mode selection. Architecture is currently demonstrated
 - Do not edit status indexes by hand when an intake or generator script should be used.
 - Do not delete historical status results unless explicitly requested.
 - Preserve source-document lineage when adding new governance artifacts.
+- New source documents that may duplicate or replace existing sources should be registered as `candidate` first. Do not derive controls, markers, policies or baselines from a candidate until review confirms the decision.
 
 ## Useful Starting Points
 
