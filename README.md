@@ -151,6 +151,22 @@ python3 scripts/generate_devsecops_governance_report.py \
   --output-md generated/demo/ha-cpswms-devsecops-governance-report.md
 ```
 
+Generate the combined end-to-end demo report:
+
+```bash
+python3 scripts/generate_end_to_end_governance_report.py \
+  --architecture-json generated/demo/ha-cpswms-architecture-governance-report.json \
+  --devsecops-json generated/demo/ha-cpswms-devsecops-governance-report.json \
+  --output-json generated/demo/ha-cpswms-end-to-end-governance-report.json \
+  --output-md generated/demo/ha-cpswms-end-to-end-governance-report.md
+```
+
+The detailed live demo runbook is:
+
+```text
+docs/demo-end-to-end-governance.md
+```
+
 The reusable GitHub Actions template for application repositories is:
 
 ```text

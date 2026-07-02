@@ -185,6 +185,29 @@ def validate_generated_demo_report(errors: list[str]) -> None:
         errors.append(f"Architecture governance report generation failed: {result.stderr.strip() or result.stdout.strip()}")
 
 
+def validate_generated_end_to_end_demo_report(errors: list[str]) -> None:
+    architecture_report = ROOT / "generated" / "demo" / "ha-cpswms-architecture-governance-report.json"
+    devsecops_report = ROOT / "generated" / "demo" / "ha-cpswms-devsecops-governance-report.json"
+    if not architecture_report.exists() or not devsecops_report.exists():
+        return
+
+    command = [
+        sys.executable,
+        str(ROOT / "scripts" / "generate_end_to_end_governance_report.py"),
+        "--architecture-json",
+        str(architecture_report),
+        "--devsecops-json",
+        str(devsecops_report),
+        "--output-json",
+        str(ROOT / "generated" / "demo" / "ha-cpswms-end-to-end-governance-report.json"),
+        "--output-md",
+        str(ROOT / "generated" / "demo" / "ha-cpswms-end-to-end-governance-report.md"),
+    ]
+    result = subprocess.run(command, capture_output=True, text=True, check=False)
+    if result.returncode != 0:
+        errors.append(f"End-to-end governance report generation failed: {result.stderr.strip() or result.stdout.strip()}")
+
+
 def validate_architecture_levels(errors: list[str]) -> None:
     marker_ids = {
         marker["id"]
@@ -257,6 +280,7 @@ def main() -> int:
     validate_architecture_levels(errors)
     validate_generated_traceability(errors)
     validate_generated_demo_report(errors)
+    validate_generated_end_to_end_demo_report(errors)
     validate_opa_policy(errors)
 
     if errors:
