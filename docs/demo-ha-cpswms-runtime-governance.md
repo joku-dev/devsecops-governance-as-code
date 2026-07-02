@@ -108,7 +108,7 @@ python3 scripts/generate_architecture_governance_report.py \
   --output-md generated/demo/ha-cpswms-architecture-governance-report.md
 ```
 
-The Markdown report can be used as GitHub Actions step summary or as a demo artifact.
+The Markdown report can be used as GitHub Actions step summary or as a demo artifact. It includes gate status, findings and recommended remediation actions with expected evidence types.
 
 Expected finding categories:
 

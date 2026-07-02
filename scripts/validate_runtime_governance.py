@@ -246,6 +246,13 @@ def main() -> int:
         except Exception as exc:  # noqa: BLE001
             errors.append(f"{schema_path} is not valid JSON: {exc}")
 
+    try:
+        remediation_payload = yaml.safe_load((ROOT / "architecture" / "remediation-actions.yaml").read_text(encoding="utf-8"))
+        if not remediation_payload.get("remediations"):
+            errors.append("architecture/remediation-actions.yaml contains no remediations")
+    except Exception as exc:  # noqa: BLE001
+        errors.append(f"Could not load architecture/remediation-actions.yaml: {exc}")
+
     validate_marker_catalogue(errors)
     validate_architecture_levels(errors)
     validate_generated_traceability(errors)

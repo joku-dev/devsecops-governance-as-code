@@ -7,6 +7,8 @@ import json
 import shutil
 import subprocess
 
+import yaml
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -69,6 +71,27 @@ def load_target_summary(input_path: Path) -> dict:
     return payload.get("target_repository", {})
 
 
+def load_remediations() -> list[dict]:
+    path = ROOT / "architecture" / "remediation-actions.yaml"
+    if not path.exists():
+        return []
+    payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+    return payload.get("remediations", [])
+
+
+def match_remediations(findings: list[str], remediations: list[dict]) -> list[dict]:
+    matched = []
+    seen = set()
+    for finding in findings:
+        normalized = finding.lower()
+        for remediation in remediations:
+            match = remediation.get("match", "").lower()
+            if match and match in normalized and remediation["id"] not in seen:
+                matched.append(remediation)
+                seen.add(remediation["id"])
+    return matched
+
+
 def render_markdown(target: dict, gate_results: list[dict]) -> str:
     lines = [
         "# Architecture Runtime Governance Report",
@@ -99,6 +122,13 @@ def render_markdown(target: dict, gate_results: list[dict]) -> str:
         else:
             for finding in gate["findings"]:
                 lines.append(f"- {finding}")
+            if gate.get("remediations"):
+                lines.extend(["", "Recommended actions:"])
+                for remediation in gate["remediations"]:
+                    evidence = ", ".join(f"`{item}`" for item in remediation.get("evidence", []))
+                    lines.append(f"- **{remediation['title']}**: {remediation['action']}")
+                    if evidence:
+                        lines.append(f"  Evidence: {evidence}")
         lines.append("")
 
     return "\n".join(lines).rstrip() + "\n"
@@ -118,6 +148,7 @@ def main() -> int:
     output_md.parent.mkdir(parents=True, exist_ok=True)
 
     gate_results = []
+    remediations = load_remediations()
     for gate in GATES:
         findings = run_opa(ROOT / gate["policy"], input_path, gate["query"])
         gate_results.append(
@@ -126,6 +157,7 @@ def main() -> int:
                 "title": gate["title"],
                 "status": "pass" if not findings else "findings",
                 "findings": findings,
+                "remediations": match_remediations(findings, remediations),
             }
         )
 
