@@ -320,6 +320,8 @@ python3 scripts/generate_devsecops_governance_report.py \
   --output-md generated/demo/ha-cpswms-devsecops-governance-report.md
 ```
 
+By default, this is report-only. Add `--fail-on-findings` when the same check should behave as a blocking gate.
+
 Generate the combined end-to-end demo report:
 
 ```bash

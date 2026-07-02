@@ -258,6 +258,7 @@ Interpretation:
 
 - The app repository currently satisfies the demo DevSecOps release governance gate.
 - The result depends on approved DevSecOps evidence in `.governance/devsecops/release-evidence.json`.
+- The local command is report-only by default. Add `--fail-on-findings` when a manual run should behave as a blocking gate.
 
 ## Step 7: Generate Combined End-To-End Report
 

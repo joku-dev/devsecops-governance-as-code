@@ -69,6 +69,11 @@ def main() -> int:
     parser.add_argument("--input", required=True, help="DevSecOps release input JSON")
     parser.add_argument("--output-json", required=True, help="Output JSON report path")
     parser.add_argument("--output-md", required=True, help="Output Markdown report path")
+    parser.add_argument(
+        "--fail-on-findings",
+        action="store_true",
+        help="Return a non-zero exit code when the report contains findings.",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input).resolve()
@@ -96,6 +101,9 @@ def main() -> int:
     print(f"Generated {output_json}")
     print(f"Generated {output_md}")
     print(f"- findings: {len(findings)}")
+    if findings and args.fail_on_findings:
+        print("Failing because --fail-on-findings is enabled.")
+        return 1
     return 0
 
 
