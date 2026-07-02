@@ -137,6 +137,20 @@ python3 scripts/generate_architecture_governance_report.py \
   --output-md generated/demo/ha-cpswms-architecture-governance-report.md
 ```
 
+Generate a demo DevSecOps governance report:
+
+```bash
+python3 scripts/collect_devsecops_release_input.py \
+  --repo /workspace/ha-CPsWMS \
+  --output generated/demo/ha-cpswms-devsecops-release-input.json \
+  --release-id ha-CPsWMS-demo
+
+python3 scripts/generate_devsecops_governance_report.py \
+  --input generated/demo/ha-cpswms-devsecops-release-input.json \
+  --output-json generated/demo/ha-cpswms-devsecops-governance-report.json \
+  --output-md generated/demo/ha-cpswms-devsecops-governance-report.md
+```
+
 The reusable GitHub Actions template for application repositories is:
 
 ```text

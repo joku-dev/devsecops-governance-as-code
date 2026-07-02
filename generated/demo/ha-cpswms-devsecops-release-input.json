@@ -1,0 +1,75 @@
+{
+  "release_candidate": true,
+  "target_repository": {
+    "path": "/workspace/ha-CPsWMS",
+    "commit": "002db4e",
+    "release_id": "ha-CPsWMS-demo"
+  },
+  "repository": {
+    "protected_branch": false,
+    "direct_push_allowed": true,
+    "review_required": false
+  },
+  "evidence": {
+    "sbom": {
+      "exists": false,
+      "linked_to_artifact": false
+    },
+    "vulnerability_scan": {
+      "exists": false
+    }
+  },
+  "artifact": {
+    "digest": {
+      "exists": false,
+      "linked_to_artifact": false
+    },
+    "signature": {
+      "exists": false
+    }
+  },
+  "pipeline": {
+    "security_gates": {
+      "enforced": false
+    },
+    "security_thresholds_exceeded": false,
+    "external_direct_downloads_detected": false
+  },
+  "dependencies": [
+    {
+      "name": "ha-sync/requirements.txt",
+      "source_approved": false
+    },
+    {
+      "name": "query-api/requirements.txt",
+      "source_approved": false
+    },
+    {
+      "name": "semantic-enrichment/requirements.txt",
+      "source_approved": false
+    },
+    {
+      "name": "world-model-chat/requirements.txt",
+      "source_approved": false
+    }
+  ],
+  "infrastructure": {
+    "iac_repository": {
+      "exists": true,
+      "version_controlled": true
+    }
+  },
+  "deployment": {
+    "required": true
+  },
+  "release": {
+    "release_id": "ha-CPsWMS-demo",
+    "approval_status": "draft",
+    "approved_waiver": {
+      "exists": false
+    }
+  },
+  "vulnerabilities": [],
+  "waivers": [],
+  "evidence_refs": []
+}
