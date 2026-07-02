@@ -11,6 +11,8 @@ import argparse
 import json
 import os
 import re
+import shutil
+import subprocess
 import sys
 import tempfile
 import zipfile
@@ -41,7 +43,6 @@ def github_get_json(url: str, token: str | None) -> dict:
 
 def github_download(url: str, destination: Path, token: str | None) -> None:
     headers = {
-        "Accept": "application/vnd.github+json",
         "User-Agent": "devsecops-governance-result-intake",
     }
     if token:
@@ -148,6 +149,34 @@ def find_governance_input(extract_dir: Path) -> dict:
     return {}
 
 
+def download_artifact_with_gh(repository_id: str, run_id: str, artifact_name: str, destination: Path, token: str | None) -> bool:
+    if not shutil.which("gh"):
+        return False
+    destination.mkdir(parents=True, exist_ok=True)
+    env = os.environ.copy()
+    if token:
+        env.setdefault("GH_TOKEN", token)
+    result = subprocess.run(
+        [
+            "gh",
+            "run",
+            "download",
+            run_id,
+            "--repo",
+            repository_id,
+            "--name",
+            artifact_name,
+            "--dir",
+            str(destination),
+        ],
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return result.returncode == 0
+
+
 def write_snapshot(
     *,
     repository_id: str,
@@ -238,20 +267,23 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="governance-result-intake-") as tempdir:
         temp = Path(tempdir)
         archive = temp / "artifact.zip"
+        extract_dir = temp / "artifact"
+        extract_dir.mkdir()
         try:
             github_download(selected_artifact["archive_download_url"], archive, token)
         except HTTPError as error:
             if error.code in {401, 403, 404}:
-                raise RuntimeError(
-                    "Could not download the GitHub Actions artifact. "
-                    "Set GH_RESULT_INTAKE_TOKEN to a token with Actions artifact read access "
-                    f"for {args.repository_id}."
-                ) from error
-            raise
-        extract_dir = temp / "artifact"
-        extract_dir.mkdir()
-        with zipfile.ZipFile(archive) as handle:
-            handle.extractall(extract_dir)
+                if not download_artifact_with_gh(args.repository_id, args.run_id, args.artifact_name, extract_dir, token):
+                    raise RuntimeError(
+                        "Could not download the GitHub Actions artifact. "
+                        "Set GH_RESULT_INTAKE_TOKEN to a token with Actions artifact read access "
+                        f"for {args.repository_id}."
+                    ) from error
+            else:
+                raise
+        if archive.exists():
+            with zipfile.ZipFile(archive) as handle:
+                handle.extractall(extract_dir)
         report = load_json(find_report(extract_dir))
         governance_input = find_governance_input(extract_dir)
 
