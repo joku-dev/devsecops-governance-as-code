@@ -338,6 +338,12 @@ The detailed live demo runbook is:
 docs/demo-end-to-end-governance.md
 ```
 
+The detailed ha-CPsWMS architecture governance result explanation is:
+
+```text
+docs/ha-cpswms-architecture-governance-results.md
+```
+
 The reusable GitHub Actions template for application repositories is:
 
 ```text
