@@ -95,6 +95,12 @@ The addendum keeps the original framework document as the normative reference an
 - A normalized central results index exists in `status/repository-results-index.json`.
 - `ha-CPsWMS` has already been validated successfully against the central governance baseline on a protected `main` branch.
 
+## AI And Agent Navigation
+
+- Agent instructions: `AGENTS.md`
+- AI navigation index: `docs/ai-index.md`
+- AI working rules: `docs/operations/ai-working-rules.md`
+
 ## Local Commands
 
 Validate repository consistency:

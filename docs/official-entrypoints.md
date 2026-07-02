@@ -16,6 +16,8 @@ It is intended for:
 - Repository overview: `README.md`
 - Documentation landing page: `docs/index.md`
 - Role-based documentation paths: `docs/paths/index.md`
+- AI navigation index: `docs/ai-index.md`
+- Agent instructions: `AGENTS.md`
 
 ## Role-Based Paths
 
@@ -42,6 +44,7 @@ It is intended for:
 ## Operations Documents
 
 - How to use this repository: `docs/operations/how-to-use-this-repo.md`
+- AI working rules: `docs/operations/ai-working-rules.md`
 - Beginner step-by-step operations guide: `docs/operations/beginner-step-by-step-operations-guide.md`
 - Governance evidence contract: `docs/operations/governance-evidence-contract.md`
 - How to update baseline input documents: `docs/operations/how-to-update-baseline-input-documents.md`
