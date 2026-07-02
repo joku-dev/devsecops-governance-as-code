@@ -28,6 +28,7 @@ Prefer these sources when changing behavior:
 | Area | Primary files |
 |---|---|
 | Source documents | `docs/governance/source-documents/` |
+| Source document intake | `model/documents/source-document-register.yaml`, `docs/governance/governance-change-lifecycle.md` |
 | DevSecOps controls | `model/controls/` |
 | Platform mapping | `model/platform/`, `model/traceability/` |
 | Architecture governance | `architecture/` |
@@ -122,9 +123,9 @@ Read these first for most future work:
 ```text
 docs/ai-index.md
 docs/official-entrypoints.md
+docs/governance/governance-change-lifecycle.md
 docs/demo-end-to-end-governance.md
 docs/operations/governance-result-intake-and-viewer-usage.md
 docs/releases/index.md
 generated/reports/source-lineage-report.md
 ```
-

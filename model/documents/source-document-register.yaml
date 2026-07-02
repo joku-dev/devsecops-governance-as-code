@@ -1,0 +1,87 @@
+schema_version: "1.0.0"
+documents:
+  - id: DEVSECOPS-POL-SRC-001
+    title: DevSecOps Policy Version 1 draft 3
+    status: draft
+    source_path: docs/governance/source-documents/DevSecOps_Policy_Version_1_draft3.docx
+    governance_domains:
+      - policy
+      - devsecops
+    owner: governance-owners
+    version: "1 draft 3"
+    intake_date: "2026-06-26"
+    supersedes: null
+    derived_artifact_areas:
+      - docs/governance/devsecops-policy.md
+      - model/documents/governance-documents.yaml
+      - model/traceability/document-to-control.yaml
+    notes: Policy source currently imported as draft governance material.
+  - id: DEVSECOPS-DIR-SRC-001
+    title: DevSecOps Directive Version 0 draft 1
+    status: draft
+    source_path: docs/governance/source-documents/DevSecOps_Directive_Version_0_draft1.docx
+    governance_domains:
+      - directive
+      - devsecops
+    owner: governance-owners
+    version: "0 draft 1"
+    intake_date: "2026-06-26"
+    supersedes: null
+    derived_artifact_areas:
+      - docs/governance/devsecops-directive.md
+      - model/documents/governance-documents.yaml
+      - model/traceability/document-to-control.yaml
+    notes: Directive source currently imported as draft governance material.
+  - id: DSCB-STD-SRC-001
+    title: DevSecOps Control Baseline Standard aligned with Platform Levels
+    status: intake
+    source_path: docs/governance/source-documents/DevSecOps-Control-Baseline-Standard_aligned_with_Platform_Levels.docx
+    governance_domains:
+      - devsecops
+    owner: devsecops-owners
+    version: imported
+    intake_date: "2026-06-26"
+    supersedes: null
+    derived_artifact_areas:
+      - model/controls
+      - model/evidence
+      - policies/opa
+      - releases/l1
+      - generated/reports
+    notes: Main source for the DevSecOps control baseline and L1 release package.
+  - id: PRA-STD-SRC-001
+    title: DevSecOps Platform Reference Architecture Standard aligned with Control Baseline
+    status: intake
+    source_path: docs/governance/source-documents/DevSecOps-Platform-Reference-Architecture-Standard_aligned_with_Control_Baseline.docx
+    governance_domains:
+      - platform
+      - devsecops
+    owner: platform-owners
+    version: imported
+    intake_date: "2026-06-26"
+    supersedes: null
+    derived_artifact_areas:
+      - model/platform
+      - pipeline-baseline
+      - model/traceability
+      - generated/reports
+      - generated/viewer
+    notes: Main source for platform capabilities, pipeline baseline and DevSecOps platform traceability.
+  - id: ARCH-SDD-SRC-001
+    title: SDD Architecture Governance Framework
+    status: intake
+    source_path: docs/governance/source-documents/SDD_Architecture_Governance_Framework_20260630v2.md
+    governance_domains:
+      - architecture
+    owner: architecture-owners
+    version: 20260630v2
+    intake_date: "2026-07-02"
+    supersedes: null
+    derived_artifact_areas:
+      - architecture
+      - policies/opa/architecture_*.rego
+      - schemas/architecture-*.json
+      - releases/architecture
+      - status/architecture-results-index.json
+      - generated/viewer
+    notes: Source for the architecture runtime governance addendum and released architecture L1 baseline.

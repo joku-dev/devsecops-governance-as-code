@@ -191,6 +191,13 @@ def build_report() -> dict:
 
     for item in source_documents:
         lineage.setdefault(item["path"], [])
+        add_lineage(
+            lineage,
+            item["path"],
+            "model/documents/source-document-register.yaml",
+            "governance_model",
+            "source_document_intake",
+        )
 
     missing_artifacts = []
     for source_path, artifacts in lineage.items():

@@ -14,6 +14,7 @@ Use it as the first navigation point after `AGENTS.md`.
 | Run the live demo | `docs/demo-end-to-end-governance.md` |
 | Understand current ha-CPsWMS status | `docs/operations/ha-cpswms-governance-validation-status.md`, `docs/ha-cpswms-architecture-governance-results.md` |
 | Understand source-document lineage | `generated/reports/source-lineage-report.md` |
+| Intake updated input documents | `docs/governance/governance-change-lifecycle.md`, `model/documents/source-document-register.yaml` |
 | Understand DevSecOps baseline releases | `docs/releases/index.md`, `docs/releases/l1-baseline-v1.1.3.md` |
 | Understand architecture baseline releases | `docs/releases/architecture-baseline-l1-v0.1.0.md` |
 | Understand intake and viewer | `docs/operations/governance-result-intake-and-viewer-usage.md` |
@@ -43,6 +44,14 @@ When adding or changing derived governance artifacts, update or validate lineage
 ```bash
 python3 scripts/generate_source_lineage_report.py
 python3 scripts/validate_governance_repo.py
+```
+
+Use the lifecycle and template for future updates:
+
+```text
+docs/governance/governance-change-lifecycle.md
+docs/governance/change-requests/TEMPLATE.md
+model/documents/source-document-register.yaml
 ```
 
 ## DevSecOps Governance Map
@@ -148,4 +157,3 @@ git status --short
 ```
 
 Commit only intentional files. Do not add `.DS_Store`.
-

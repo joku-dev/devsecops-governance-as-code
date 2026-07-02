@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-07-02T16:24:01Z",
+  "generated_at": "2026-07-02T16:41:53Z",
   "source_document_root": "docs/governance/source-documents",
   "source_documents": [
     {
@@ -62,6 +62,12 @@
           "artifact_path": "model/controls/dscb-l3.yaml",
           "artifact_type": "governance_model",
           "role": "DSCB-STD-001",
+          "exists": true
+        },
+        {
+          "artifact_path": "model/documents/source-document-register.yaml",
+          "artifact_type": "governance_model",
+          "role": "source_document_intake",
           "exists": true
         },
         {
@@ -208,6 +214,12 @@
           "exists": true
         },
         {
+          "artifact_path": "model/documents/source-document-register.yaml",
+          "artifact_type": "governance_model",
+          "role": "source_document_intake",
+          "exists": true
+        },
+        {
           "artifact_path": "model/platform/platform-capabilities.yaml",
           "artifact_type": "governance_model",
           "role": "PRA-STD-001",
@@ -285,6 +297,12 @@
           "exists": true
         },
         {
+          "artifact_path": "model/documents/source-document-register.yaml",
+          "artifact_type": "governance_model",
+          "role": "source_document_intake",
+          "exists": true
+        },
+        {
           "artifact_path": "model/traceability/document-to-control.yaml",
           "artifact_type": "traceability_mapping",
           "role": "DEVSECOPS-DIR-001",
@@ -299,6 +317,12 @@
           "artifact_path": "docs/governance/devsecops-policy.md",
           "artifact_type": "governance_document",
           "role": "DEVSECOPS-POL-001",
+          "exists": true
+        },
+        {
+          "artifact_path": "model/documents/source-document-register.yaml",
+          "artifact_type": "governance_model",
+          "role": "source_document_intake",
           "exists": true
         },
         {
@@ -397,6 +421,12 @@
           "exists": true
         },
         {
+          "artifact_path": "model/documents/source-document-register.yaml",
+          "artifact_type": "governance_model",
+          "role": "source_document_intake",
+          "exists": true
+        },
+        {
           "artifact_path": "policies/opa/architecture_integration_readiness.rego",
           "artifact_type": "policy_as_code",
           "role": "architecture_runtime_governance",
@@ -468,7 +498,7 @@
   "summary": {
     "source_document_count": 5,
     "lineage_source_count": 5,
-    "derived_artifact_count": 69,
+    "derived_artifact_count": 74,
     "missing_derived_artifacts": 0
   },
   "missing_derived_artifacts": []

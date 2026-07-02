@@ -86,6 +86,7 @@ def validate_source_lineage_report(errors):
     report = load_json(report_path)
     if report.get("summary", {}).get("missing_derived_artifacts", 0):
         errors.append("Source lineage report contains missing derived artifacts")
+    return report
 
 
 def validate_source_document_path(errors, source_path: str, source_label: str):
@@ -105,6 +106,49 @@ def validate_source_document_path(errors, source_path: str, source_label: str):
         )
 
 
+def validate_source_document_register(errors, source_document_register, source_lineage_report):
+    registered_sources = []
+    seen_ids = set()
+    seen_paths = set()
+
+    for document in source_document_register.get("documents", []):
+        document_id = document.get("id")
+        source_path = document.get("source_path")
+        if document_id in seen_ids:
+            errors.append(f"Duplicate source document register id: {document_id}")
+        seen_ids.add(document_id)
+        if source_path in seen_paths:
+            errors.append(f"Duplicate source document register path: {source_path}")
+        seen_paths.add(source_path)
+        registered_sources.append(source_path)
+        validate_source_document_path(
+            errors,
+            source_path,
+            f"model/documents/source-document-register.yaml {document_id}",
+        )
+
+    source_files = sorted(
+        str(path.relative_to(ROOT))
+        for path in SOURCE_DOCUMENT_ROOT.iterdir()
+        if path.is_file()
+    )
+    missing_from_register = sorted(set(source_files) - set(registered_sources))
+    if missing_from_register:
+        errors.append(f"Source documents missing from register: {missing_from_register}")
+
+    registered_but_missing_file = sorted(set(registered_sources) - set(source_files))
+    if registered_but_missing_file:
+        errors.append(f"Registered source documents not found in source directory: {registered_but_missing_file}")
+
+    lineage_sources = {
+        item.get("source_document")
+        for item in source_lineage_report.get("lineage", [])
+    }
+    missing_lineage = sorted(set(registered_sources) - lineage_sources)
+    if missing_lineage:
+        errors.append(f"Registered source documents missing lineage entries: {missing_lineage}")
+
+
 def validate_waiver_authority(errors, waiver, waiver_authorities, source_label: str):
     risk = waiver.get("risk_classification")
     expected_authority = waiver_authorities.get(risk, {}).get("approval_authority")
@@ -122,6 +166,7 @@ def main() -> int:
     capabilities = load_yaml(MODEL / "platform" / "platform-capabilities.yaml")
     evidence_catalog = load_yaml(MODEL / "evidence" / "evidence-types.yaml")
     governance_documents = load_yaml(MODEL / "documents" / "governance-documents.yaml")
+    source_document_register = load_yaml(MODEL / "documents" / "source-document-register.yaml")
     document_traceability = load_yaml(MODEL / "traceability" / "document-to-control.yaml")
     waiver_authorities = load_yaml(MODEL / "waivers" / "waiver-authorities.yaml").get("authorities", {})
     governance_run_input_example = load_json(ROOT / "docs" / "governance-run-input.example.json")
@@ -133,6 +178,7 @@ def main() -> int:
     validate_schema(errors, ROOT / "schemas" / "control.schema.json", MODEL / "controls" / "dscb-gov.yaml")
     validate_schema(errors, ROOT / "schemas" / "control-coverage.schema.json", MODEL / "controls" / "control-coverage.yaml")
     validate_schema(errors, ROOT / "schemas" / "governance-document-catalog.schema.json", MODEL / "documents" / "governance-documents.yaml")
+    validate_schema(errors, ROOT / "schemas" / "source-document-register.schema.json", MODEL / "documents" / "source-document-register.yaml")
     validate_schema(errors, ROOT / "schemas" / "document-control-traceability.schema.json", MODEL / "traceability" / "document-to-control.yaml")
     validate_schema(errors, ROOT / "schemas" / "governance-document-rendering.schema.json", MODEL / "documents" / "governance-document-rendering.yaml")
     validate_schema(errors, ROOT / "schemas" / "governance-compliance-result.schema.json", ROOT / "docs" / "governance-compliance-result.example.json")
@@ -221,7 +267,8 @@ def main() -> int:
                 str(architecture_path.relative_to(ROOT)),
             )
 
-    validate_source_lineage_report(errors)
+    source_lineage_report = validate_source_lineage_report(errors) or {}
+    validate_source_document_register(errors, source_document_register, source_lineage_report)
 
     for mapping in traceability.get("mappings", []):
         control_id = mapping["control"]
@@ -257,6 +304,7 @@ def main() -> int:
     for level in ["L1", "L2", "L3", "GOV"]:
         print(f"- {level}: {sum(1 for item in controls if item.get('_level_file') == level)}")
     print(f"- traceability mappings: {len(traced)}")
+    print(f"- registered source documents: {len(source_document_register.get('documents', []))}")
     print(f"- policy candidates: {sum(1 for item in controls if item.get('policy_as_code', {}).get('candidate'))}")
     return 0
 

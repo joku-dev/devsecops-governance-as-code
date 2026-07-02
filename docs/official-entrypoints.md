@@ -30,10 +30,13 @@ It is intended for:
 
 - Policy: `docs/governance/devsecops-policy.md`
 - Directive: `docs/governance/devsecops-directive.md`
+- Governance change lifecycle: `docs/governance/governance-change-lifecycle.md`
 - Policy, Directive, Baseline, Verification, and Governance as Code: `docs/governance/policy-directive-baseline-verification-and-governance-as-code-explained.md`
 - Source of Truth: `docs/governance/source-of-truth.md`
 - Operating Model: `docs/governance/operating-model.md`
 - Governance Document Hierarchy: `docs/governance/governance-document-hierarchy.md`
+- Source document register: `model/documents/source-document-register.yaml`
+- Governance change request template: `docs/governance/change-requests/TEMPLATE.md`
 
 ## Onboarding Documents
 

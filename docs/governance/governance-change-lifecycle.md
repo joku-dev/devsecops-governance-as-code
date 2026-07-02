@@ -1,0 +1,196 @@
+# Governance Change Lifecycle
+
+## Purpose
+
+This lifecycle defines how new or updated input documents become governed repository changes.
+
+It is intentionally lightweight in version `0.1`: enough structure to make changes traceable and reviewable, without slowing down early repository development.
+
+## Scope
+
+Use this lifecycle for changes that affect:
+
+- source documents under `docs/governance/source-documents/`
+- DevSecOps controls
+- architecture markers, levels, guardrails or gates
+- OPA policies
+- evidence contracts or schemas
+- status intake and viewer behavior
+- released baselines
+
+Documentation-only changes may still use the pull request checklist, but usually do not need a full change request.
+
+## Lifecycle Overview
+
+| Step | Purpose | Output |
+|---|---|---|
+| 1. Source intake | Register the new or updated input document | `model/documents/source-document-register.yaml` |
+| 2. Change request | Explain why the change exists and what it may affect | `docs/governance/change-requests/GCR-*.md` |
+| 3. Impact analysis | Identify affected controls, markers, policies, schemas, releases and downstream repositories | Change request impact section or generated report |
+| 4. Derived artifact update | Update controls, architecture models, policies, schemas, docs and generated outputs | Repository changes |
+| 5. Pull request | Introduce the change through review | GitHub pull request |
+| 6. Validation | Prove repository consistency | CI and local validation output |
+| 7. Release decision | Decide whether a new baseline is required | No release, release candidate or baseline release |
+| 8. Merge and publish | Make the change official | Merge commit, optional tag and release package |
+
+## Step 1: Source Intake
+
+All input documents must live under:
+
+```text
+docs/governance/source-documents/
+```
+
+Every input document must be registered in:
+
+```text
+model/documents/source-document-register.yaml
+```
+
+The register records:
+
+- stable source ID
+- title
+- status
+- source path
+- owner
+- version
+- intake date
+- governance domains
+- derived artifact areas
+- superseded source, if any
+
+Allowed statuses:
+
+| Status | Meaning |
+|---|---|
+| `draft` | Source exists but is not yet approved or fully derived. |
+| `intake` | Source has been accepted into the repo for analysis and derivation. |
+| `review` | Derived artifacts are under review. |
+| `approved` | Source is approved for governed derivation. |
+| `superseded` | Source was replaced by a newer source. |
+| `retired` | Source is retained for history but no longer active. |
+
+## Step 2: Change Request
+
+Create a change request from:
+
+```text
+docs/governance/change-requests/TEMPLATE.md
+```
+
+Recommended filename:
+
+```text
+docs/governance/change-requests/GCR-YYYY-NNN-short-title.md
+```
+
+The change request should answer:
+
+- What changed in the input document?
+- Why does it matter?
+- Which controls, markers, policies, schemas, docs or releases may be affected?
+- Is the change report-only or blocking?
+- Is a new baseline release required?
+
+## Step 3: Impact Analysis
+
+At v0.1, impact analysis may be written directly into the change request.
+
+Minimum impact categories:
+
+| Area | Questions |
+|---|---|
+| Source documents | Which input documents are new, changed, superseded or retired? |
+| DevSecOps controls | Are L1, L2, L3 or GOV controls added, changed or removed? |
+| Architecture governance | Are markers, guardrails, gates, levels or remediations affected? |
+| OPA policies | Does executable governance behavior change? |
+| Schemas | Does downstream evidence shape change? |
+| Viewer and intake | Does result interpretation or status rendering change? |
+| Releases | Is a new baseline or release candidate needed? |
+| Downstream repositories | Do consumers need migration work? |
+
+Future versions may generate an impact report automatically.
+
+## Step 4: Derived Artifact Update
+
+Update derived artifacts in the correct layer:
+
+| Change type | Typical files |
+|---|---|
+| DevSecOps control change | `model/controls/`, `model/traceability/`, `policies/opa/` |
+| Platform change | `model/platform/`, `pipeline-baseline/`, `model/traceability/` |
+| Architecture change | `architecture/`, `policies/opa/architecture_*.rego`, `schemas/architecture-*.json` |
+| Evidence contract change | `model/evidence/`, `schemas/`, `docs/operations/governance-evidence-contract.md` |
+| Viewer/status change | `scripts/generate_status_viewer.py`, `status/`, `generated/viewer/status-viewer.html` |
+| Release change | `docs/releases/`, `releases/`, `.github/workflows/*baseline*` |
+
+Preserve source-document lineage when adding new derived artifacts.
+
+## Step 5: Pull Request
+
+Governance behavior should enter the repository through pull requests.
+
+The PR should include:
+
+- source document update or reference
+- source-document register update
+- change request or impact explanation
+- derived artifact changes
+- validation evidence
+- release decision
+- report-only or blocking decision
+
+## Step 6: Validation
+
+Run:
+
+```bash
+python3 scripts/validate_runtime_governance.py
+python3 scripts/validate_governance_repo.py
+python3 -m unittest discover -s tests
+```
+
+The validator checks that registered source documents exist, live under the source-document root, and have lineage entries.
+
+## Step 7: Release Decision
+
+Not every change creates a release.
+
+| Change | Release decision |
+|---|---|
+| Editorial documentation update | No release |
+| Register or lineage cleanup | No release |
+| Working model update with no downstream behavior change | No release or release candidate |
+| Policy, schema or evidence behavior change | Release candidate recommended |
+| Downstream reusable workflow or baseline package change | New baseline release required |
+
+Versioning guidance:
+
+| Release type | Use when |
+|---|---|
+| Patch | Bug fix or clarification that preserves intended behavior |
+| Minor | Additive controls, markers, evidence or report-only checks |
+| Major | Breaking evidence contract or enforcement change |
+
+## Step 8: Merge And Publish
+
+After merge:
+
+- viewer and generated reports should reflect the merged state
+- official entrypoints should link new major documents
+- release docs and tags should exist if a new baseline was published
+- downstream app repositories should be notified if migration is required
+
+## Current v0.1 Controls
+
+The repository currently enforces:
+
+- source document register schema validation
+- registered source paths must exist
+- registered source paths must be under `docs/governance/source-documents/`
+- every file under `docs/governance/source-documents/` must be registered
+- every registered source document must have a source-lineage entry
+- source-lineage report must have no missing derived artifacts
+
+This gives governance over the governance repository without requiring full automated semantic extraction from source documents yet.

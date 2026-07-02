@@ -101,6 +101,12 @@ The addendum keeps the original framework document as the normative reference an
 - AI navigation index: `docs/ai-index.md`
 - AI working rules: `docs/operations/ai-working-rules.md`
 
+## Governance Change Lifecycle
+
+- Governance change lifecycle: `docs/governance/governance-change-lifecycle.md`
+- Source document register: `model/documents/source-document-register.yaml`
+- Change request template: `docs/governance/change-requests/TEMPLATE.md`
+
 ## Local Commands
 
 Validate repository consistency:

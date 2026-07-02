@@ -115,7 +115,7 @@ Current expected summary:
 |---|---:|
 | Source documents | `5` |
 | Source documents with lineage entries | `5` |
-| Derived artifact links | `69` |
+| Derived artifact links | `74` |
 | Missing derived artifacts | `0` |
 
 Interpretation:

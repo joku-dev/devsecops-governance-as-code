@@ -70,7 +70,7 @@ The healthy demo state is:
 
 ```text
 Source documents: 5
-Derived artifact links: 69
+Derived artifact links: 74
 Missing derived artifacts: 0
 ```
 
@@ -213,4 +213,3 @@ Inspect current latest DevSecOps result:
 ```bash
 jq '.repositories[] | select(.repository_id=="joku-dev/ha-CPsWMS")' status/repository-results-index.json
 ```
-

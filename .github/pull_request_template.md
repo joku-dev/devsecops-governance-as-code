@@ -8,9 +8,12 @@ Describe the governance change in 2-5 bullets.
 
 Mark all that apply.
 
+- [ ] Source document intake or update
+- [ ] Governance change request
 - [ ] Policy update
 - [ ] Directive update
 - [ ] Control catalog update
+- [ ] Architecture governance update
 - [ ] Traceability update
 - [ ] Evidence contract update
 - [ ] Policy-as-code or workflow update
@@ -26,6 +29,33 @@ Explain the governance, platform, audit, or consumer reason for the change.
 List the main files or folders changed.
 
 - 
+
+## Source Document And Change Governance
+
+Choose all that apply and explain briefly.
+
+- [ ] No source document impact
+- [ ] Source document added or replaced under `docs/governance/source-documents/`
+- [ ] `model/documents/source-document-register.yaml` updated
+- [ ] Governance Change Request added under `docs/governance/change-requests/`
+- [ ] Source lineage regenerated or confirmed unchanged
+
+Governance change notes:
+
+-
+
+## Governance Behavior
+
+Choose one and explain briefly.
+
+- [ ] Documentation-only
+- [ ] Report-only behavior
+- [ ] Blocking behavior
+- [ ] Release packaging only
+
+Behavior notes:
+
+-
 
 ## Downstream Impact
 
@@ -69,6 +99,7 @@ Release notes:
 
 Confirm what was run.
 
+- [ ] `python3 scripts/validate_runtime_governance.py`
 - [ ] `python3 scripts/validate_governance_repo.py`
 - [ ] `python3 -m unittest discover -s tests`
 - [ ] Viewer or generated artifacts refreshed if needed
@@ -76,7 +107,10 @@ Confirm what was run.
 
 ## Reviewer Checklist
 
+- [ ] Source document register and lineage are complete
+- [ ] Governance Change Request or impact explanation is sufficient
 - [ ] Policy/Directive intent is clear
 - [ ] Control and traceability impact is clear
+- [ ] Architecture governance impact is clear
 - [ ] Downstream impact is clear
 - [ ] Release documentation is sufficient
