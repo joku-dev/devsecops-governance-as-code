@@ -2,7 +2,7 @@
   "release_candidate": true,
   "target_repository": {
     "path": "/workspace/ha-CPsWMS",
-    "commit": "3babb93",
+    "commit": "0ccc0e9",
     "release_id": "ha-CPsWMS-demo",
     "detected_services": 5
   },
@@ -418,7 +418,9 @@
       "exists": false,
       "baseline_version": "ha-CPsWMS-demo-baseline",
       "approved": false,
-      "declaration_id": ""
+      "declaration_id": "",
+      "approved_by": "",
+      "approval_date": ""
     },
     "solution_baseline": {
       "exists": false,

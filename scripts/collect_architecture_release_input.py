@@ -57,7 +57,41 @@ def compact(items: list[str | None]) -> list[str]:
     return [item for item in items if item]
 
 
+def load_app_evidence(repo: Path) -> dict[str, dict]:
+    evidence_dir = repo / ".governance" / "architecture"
+    evidence = {}
+    if not evidence_dir.exists():
+        return evidence
+
+    for path in sorted(evidence_dir.glob("*.json")):
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        evidence_type = payload.get("evidence_type")
+        if evidence_type:
+            payload["_path"] = str(path.relative_to(repo))
+            evidence[evidence_type] = payload
+    return evidence
+
+
+def evidence_approved(evidence: dict, evidence_type: str) -> bool:
+    return evidence.get(evidence_type, {}).get("status") == "approved"
+
+
+def evidence_present(evidence: dict, evidence_type: str) -> bool:
+    return evidence_type in evidence
+
+
+def evidence_refs(evidence: dict, evidence_type: str) -> list[str]:
+    item = evidence.get(evidence_type, {})
+    refs = [item.get("_path")]
+    refs.extend(item.get("evidence_refs", []))
+    return compact(refs)
+
+
 def collect(repo: Path, release_id: str, baseline: str) -> dict:
+    app_evidence = load_app_evidence(repo)
     architecture_doc = exists(repo, "docs/ARCHITECTURE.md")
     deployment_doc = exists(repo, "docs/DEPLOYMENT.md")
     compose_file = exists(repo, "docker-compose.yml")
@@ -78,10 +112,13 @@ def collect(repo: Path, release_id: str, baseline: str) -> dict:
     has_resilience = any(keyword in architecture_text + deployment_text for keyword in ["restart", "failure", "failover", "recovery", "degraded"])
     has_performance = bool(benchmark_reports)
     has_runtime_observability = any(keyword in deployment_text + compose_text for keyword in ["logs", "health", "metrics", "monitor", "dashboard"])
-    has_feedback_evidence = any_exists(repo, ["*incident*", "docs/*FEEDBACK*", "docs/*feedback*", "benchmark/reports/performance_evolution_summary.md"])
-    has_release_baseline = any_exists(repo, ["*baseline*", "docs/*BASELINE*", "docs/*baseline*"])
-    has_compatibility_declaration = any_exists(repo, ["*compatibility*", "docs/*COMPATIBILITY*", "docs/*compatibility*"])
+    has_feedback_evidence = evidence_present(app_evidence, "feedback_evidence") or any_exists(repo, ["*incident*", "docs/*FEEDBACK*", "docs/*feedback*", "benchmark/reports/performance_evolution_summary.md"])
+    has_release_baseline = evidence_present(app_evidence, "solution_baseline") or any_exists(repo, ["*baseline*", "docs/*BASELINE*", "docs/*baseline*"])
+    has_compatibility_declaration = evidence_present(app_evidence, "release_compatibility_declaration") or any_exists(repo, ["*compatibility*", "docs/*COMPATIBILITY*", "docs/*compatibility*"])
     has_security_tests = any_exists(repo, ["*security*", "tests/**/*security*.py", ".github/workflows/*security*"])
+    has_security_evidence = evidence_present(app_evidence, "security_evidence") or has_security_notes
+    has_resilience_evidence = evidence_present(app_evidence, "resilience_evidence") or has_resilience
+    has_operation_evidence = evidence_present(app_evidence, "operation_evidence") or has_runtime_observability
 
     deployment_evidence_refs = compact(
         [
@@ -92,24 +129,35 @@ def collect(repo: Path, release_id: str, baseline: str) -> dict:
     )
     compatibility_refs = compact(
         [
+            *evidence_refs(app_evidence, "release_compatibility_declaration"),
+            *evidence_refs(app_evidence, "solution_baseline"),
             evidence_ref(repo, "docs/ARCHITECTURE.md"),
             *schemas[:20],
         ]
     )
     security_refs = compact(
         [
-            evidence_ref(repo, "docs/DEPLOYMENT.md") if has_security_notes else None,
+            *evidence_refs(app_evidence, "security_evidence"),
+            evidence_ref(repo, "docs/DEPLOYMENT.md") if has_security_evidence else None,
             *[path for path in tests if "security" in path.lower()],
+        ]
+    )
+    resilience_refs = compact(
+        [
+            *evidence_refs(app_evidence, "resilience_evidence"),
+            *deployment_evidence_refs,
         ]
     )
     runtime_refs = compact(
         [
-            evidence_ref(repo, "docs/DEPLOYMENT.md") if has_runtime_observability else None,
-            evidence_ref(repo, "docker-compose.yml") if has_runtime_observability else None,
+            *evidence_refs(app_evidence, "operation_evidence"),
+            evidence_ref(repo, "docs/DEPLOYMENT.md") if has_operation_evidence else None,
+            evidence_ref(repo, "docker-compose.yml") if has_operation_evidence else None,
         ]
     )
     feedback_refs = compact(
         [
+            *evidence_refs(app_evidence, "feedback_evidence"),
             evidence_ref(repo, "benchmark/reports/performance_evolution_summary.md") if has_feedback_evidence else None,
         ]
     )
@@ -130,7 +178,7 @@ def collect(repo: Path, release_id: str, baseline: str) -> dict:
         {"id": "B2", "score": score(architecture_doc and deployment_doc), "evidence": minimum_architecture_refs},
         {"id": "B3", "score": score(has_process_description), "evidence": minimum_architecture_refs},
         {"id": "B4", "score": score(has_ownership_hint), "evidence": minimum_architecture_refs},
-        {"id": "B5", "score": score(has_feedback_evidence, False), "evidence": feedback_refs},
+        {"id": "B5", "score": score(has_feedback_evidence, evidence_approved(app_evidence, "feedback_evidence")), "evidence": feedback_refs},
         {"id": "P0", "score": score(architecture_doc), "evidence": minimum_architecture_refs},
         {"id": "P1", "score": score(architecture_doc), "evidence": minimum_architecture_refs},
         {"id": "P2", "score": score(architecture_doc), "evidence": minimum_architecture_refs},
@@ -144,20 +192,20 @@ def collect(repo: Path, release_id: str, baseline: str) -> dict:
         {"id": "S4", "score": score(bool(schemas), bool(schemas)), "evidence": compatibility_refs},
         {"id": "S7", "score": score(bool(tests), bool(tests)), "evidence": tests[:20]},
         {"id": "P4", "score": score(architecture_doc), "evidence": minimum_architecture_refs},
-        {"id": "E6", "score": score(has_security_notes, has_security_tests), "evidence": security_refs},
+        {"id": "E6", "score": score(has_security_evidence, has_security_tests or evidence_approved(app_evidence, "security_evidence")), "evidence": security_refs},
         {"id": "E7", "score": score(bool(tests or requirements), bool(tests)), "evidence": tests[:20] + requirements},
         {"id": "E8", "score": score(compose_file or bool(dockerfiles), deployment_doc), "evidence": deployment_evidence_refs},
         {"id": "S3", "score": score(has_interfaces, bool(schemas)), "evidence": compatibility_refs},
-        {"id": "S5", "score": score(has_security_notes, has_security_tests), "evidence": security_refs},
-        {"id": "S6", "score": score(has_release_baseline, has_compatibility_declaration), "evidence": compatibility_refs},
-        {"id": "S8", "score": score(has_resilience, False), "evidence": deployment_evidence_refs},
+        {"id": "S5", "score": score(has_security_evidence, has_security_tests or evidence_approved(app_evidence, "security_evidence")), "evidence": security_refs},
+        {"id": "S6", "score": score(has_release_baseline, has_compatibility_declaration and evidence_approved(app_evidence, "release_compatibility_declaration")), "evidence": compatibility_refs},
+        {"id": "S8", "score": score(has_resilience_evidence, evidence_approved(app_evidence, "resilience_evidence")), "evidence": resilience_refs},
         {"id": "P5", "score": score(compose_file or bool(dockerfiles), deployment_doc and compose_file), "evidence": deployment_evidence_refs},
         {"id": "P6", "score": score(has_interfaces or bool(schemas), bool(schemas)), "evidence": compatibility_refs},
-        {"id": "P8", "score": score(has_security_notes, has_security_tests), "evidence": security_refs},
+        {"id": "P8", "score": score(has_security_evidence, has_security_tests or evidence_approved(app_evidence, "security_evidence")), "evidence": security_refs},
         {"id": "P9", "score": score(has_performance, has_performance), "evidence": benchmark_reports[-10:]},
-        {"id": "P10", "score": score(has_resilience, False), "evidence": deployment_evidence_refs},
-        {"id": "P11", "score": score(has_runtime_observability, False), "evidence": runtime_refs},
-        {"id": "P13", "score": score(has_compatibility_declaration, False), "evidence": compatibility_refs},
+        {"id": "P10", "score": score(has_resilience_evidence, evidence_approved(app_evidence, "resilience_evidence")), "evidence": resilience_refs},
+        {"id": "P11", "score": score(has_operation_evidence, evidence_approved(app_evidence, "operation_evidence")), "evidence": runtime_refs},
+        {"id": "P13", "score": score(has_compatibility_declaration, evidence_approved(app_evidence, "release_compatibility_declaration")), "evidence": compatibility_refs},
     ]
 
     service_count = len(re.findall(r"^  [a-zA-Z0-9_-]+:", read_text(repo / "docker-compose.yml"), flags=re.MULTILINE))
@@ -174,14 +222,16 @@ def collect(repo: Path, release_id: str, baseline: str) -> dict:
             "marker_assessments": marker_assessments,
             "release_compatibility_declaration": {
                 "exists": has_compatibility_declaration,
-                "baseline_version": baseline,
-                "approved": False,
-                "declaration_id": "",
+                "baseline_version": app_evidence.get("release_compatibility_declaration", {}).get("baseline_version", baseline),
+                "approved": evidence_approved(app_evidence, "release_compatibility_declaration"),
+                "declaration_id": app_evidence.get("release_compatibility_declaration", {}).get("_path", ""),
+                "approved_by": app_evidence.get("release_compatibility_declaration", {}).get("approved_by", ""),
+                "approval_date": app_evidence.get("release_compatibility_declaration", {}).get("approval_date", ""),
             },
             "solution_baseline": {
                 "exists": has_release_baseline,
-                "baseline_id": baseline,
-                "version": baseline,
+                "baseline_id": app_evidence.get("solution_baseline", {}).get("_path", baseline),
+                "version": app_evidence.get("solution_baseline", {}).get("baseline_version", baseline),
             },
             "compatibility_evidence": {
                 "exists": bool(compatibility_refs),

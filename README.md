@@ -150,6 +150,12 @@ pipeline-baseline/templates/github-actions/app-repo-architecture-governance.yml
 pipeline-baseline/templates/github-actions/ADOPTION.md
 ```
 
+Optional app-repo evidence templates are available in:
+
+```text
+pipeline-baseline/templates/app-architecture-evidence/
+```
+
 ## Important Principle
 
 Not every requirement should become executable policy. Some requirements are governance obligations, some are evidence obligations, and some are enforceable technical gates. The repository keeps these concerns connected but distinct.

@@ -1,7 +1,7 @@
 {
   "target": {
     "path": "/workspace/ha-CPsWMS",
-    "commit": "3babb93",
+    "commit": "0ccc0e9",
     "release_id": "ha-CPsWMS-demo",
     "detected_services": 5
   },

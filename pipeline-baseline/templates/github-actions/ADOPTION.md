@@ -37,6 +37,22 @@ The workflow generates:
 | `architecture-governance-report.json` | Machine-readable gate result report. |
 | `architecture-governance-report.md` | Human-readable Markdown report for demo, review and GitHub Step Summary. |
 
+## Optional App-Repo Evidence
+
+To close findings deliberately, an application repository can add structured evidence files under:
+
+```text
+.governance/architecture/
+```
+
+Starter templates are available in:
+
+```text
+pipeline-baseline/templates/app-architecture-evidence/.governance/architecture/
+```
+
+The collector reads these files and treats `status: approved` as verified governance evidence.
+
 ## Gates
 
 The generated report evaluates:
