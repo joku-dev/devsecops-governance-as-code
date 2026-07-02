@@ -41,9 +41,14 @@ The first addendum version introduces these structured files:
 | `architecture/quality-markers.yaml` | Defines initial BAPO, Solution and Product markers with score evidence expectations. |
 | `architecture/guardrails.yaml` | Defines initial runtime, DevSecOps, interface and exception guardrails. |
 | `architecture/review-gates.yaml` | Defines architecture, integration, release and operation readiness gates. |
+| `architecture/arch-l1.yaml` | Defines architecture minimum evidence requirements. |
+| `architecture/arch-l2.yaml` | Defines integration and release readiness requirements. |
+| `architecture/arch-l3.yaml` | Defines runtime and continuous improvement requirements. |
+| `architecture/arch-gov.yaml` | Defines architecture governance requirements for guardrails, gates and exceptions. |
 | `schemas/quality-marker.schema.json` | JSON Schema for marker catalogues. |
 | `schemas/architecture-guardrail.schema.json` | JSON Schema for guardrail catalogues. |
 | `schemas/review-gate.schema.json` | JSON Schema for runtime review gates. |
+| `schemas/architecture-level.schema.json` | JSON Schema for architecture level requirement sets. |
 | `schemas/architecture-release-candidate.schema.json` | JSON Schema for architecture release candidate policy input. |
 | `schemas/architecture-exception.schema.json` | JSON Schema for reusable architecture exception records. |
 | `policies/opa/architecture_release_readiness.rego` | OPA policy for release-readiness checks. |
@@ -61,6 +66,21 @@ The runtime gate model is derived from the framework's marker scoring model.
 | Operation readiness | Operation-critical markers have runtime evidence and feedback loops. |
 
 The first executable policy implements release readiness because it has the clearest runtime decision boundary.
+
+## Architecture Level Model
+
+The architecture addendum uses the same mechanics as the DevSecOps control baseline: structured YAML requirements, schema validation, evidence expectations, automation classification and policy-as-code candidates.
+
+The architecture levels use architecture-specific semantics:
+
+| Level | Meaning | Primary decision |
+|---|---|---|
+| `ARCH-L1` | Architecture minimum evidence | Is the architecture sufficiently described, owned and traceable to start implementation? |
+| `ARCH-L2` | Integration and release readiness | Can products be integrated and released against a solution baseline with evidence? |
+| `ARCH-L3` | Runtime and continuous improvement | Is the running capability observable, measured and improved through feedback? |
+| `ARCH-GOV` | Architecture governance | Are guardrails, review gates and exceptions governed as reusable enterprise assets? |
+
+The levels are not intended to replace Enterprise, Solution and Product Architecture. They provide a runtime governance progression across those architecture scopes.
 
 ## Release Readiness Rule
 

@@ -54,6 +54,10 @@ The repository now includes a first runtime governance addendum for the SDD Arch
 - `architecture/quality-markers.yaml`
 - `architecture/guardrails.yaml`
 - `architecture/review-gates.yaml`
+- `architecture/arch-l1.yaml`
+- `architecture/arch-l2.yaml`
+- `architecture/arch-l3.yaml`
+- `architecture/arch-gov.yaml`
 - `policies/opa/architecture_release_readiness.rego`
 
 The addendum keeps the original framework document as the normative reference and adds machine-readable marker, guardrail, gate and policy artifacts for executable governance.
